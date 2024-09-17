@@ -10,11 +10,12 @@ const pool = new Pool({
 
 const setup = async () => {
   await pool.query(`
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-      
     CREATE TABLE IF NOT EXISTS Users (
-      user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-      name VARCHAR(100) NOT NULL
+      id SERIAL PRIMARY KEY,
+      google_id VARCHAR(255) UNIQUE NOT NULL,
+      name VARCHAR(255),
+      email VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     `
   )
