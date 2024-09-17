@@ -1,7 +1,12 @@
 const express = require('express');
+const passport = require('passport');
+const session = require('express-session');
+require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
-const query = require('./database/psqlWrapper');
+const authRoutes = require('./routes/authRoutes');
+require('./config/googleStrategy');
+const requireAuth = require('./middleware/requireAuth');
 
 const app = express();
 
@@ -9,40 +14,29 @@ app.listen(3000);
 
 app.use(express.json());
 
+app.use( 
+    session({ 
+      resave: false, 
+      saveUninitialized: false, 
+      secret: process.env.cookieKey, 
+    }) 
+  );
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use((req, res, next) => {
     console.log(`METHOD: ${req.method}, Path: ${req.path}`);
     next();
 });
 
-app.get('/', async (req, res) => {
-    try{
-        const users = await query('SELECT * FROM Users');
-        
-        res.status(200).send(users.rows);
-    }   
-    catch(error){
-        res.status(400).send(error.message);
-    }
-});
 
-app.post('/create', async (req, res) => {
+app.use('/auth', authRoutes);
 
-    try{
-        const user = await query(
-            'INSERT INTO Users (name) VALUES ($1) RETURNING *',
-            [req.body.name]
-        );
-
-        res.send(user.rows[0]);
-    }
-    catch(error){
-        res.send(error.message);
-    }
-
-});
+app.use(requireAuth);
 
 app.use('/user', userRoutes);
 
 app.use((req, res) => {
-    res.status(400).send("Error 404");
+    res.status(400).send("Error 404!");
 })

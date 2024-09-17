@@ -1,9 +1,33 @@
 const express = require('express');
+const query = require('../database/psqlWrapper')
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.status(200).send("user Noice");
-})
+router.get('/', async (req, res) => {
+    try{
+        const users = await query('SELECT * FROM Users');
+        
+        res.status(200).send(users.rows);
+    }   
+    catch(error){
+        res.status(400).send(error.message);
+    }
+});
+
+router.post('/create', async (req, res) => {
+
+    try{
+        const user = await query(
+            'INSERT INTO Users (name) VALUES ($1) RETURNING *',
+            [req.body.name]
+        );
+
+        res.send(user.rows[0]);
+    }
+    catch(error){
+        res.send(error.message);
+    }
+
+});
 
 module.exports = router;
