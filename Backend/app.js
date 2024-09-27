@@ -38,9 +38,10 @@ app.use((req, res, next) => {
 
 
 app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
 
 app.use(requireAuth);
+
+app.use('/user', userRoutes);
 
 app.use('/home', (req, res) => {
   res.status(200).send("Home Page for " + req.user.name);
