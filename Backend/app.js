@@ -7,20 +7,26 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
+const {setup} = require('./database/psqlWrapper');
 
 const app = express();
 
-app.listen(3000);
+setup()
+  .then(() => {
+    app.listen(3000);
+    console.log('Connected to PostgreSQL...')
+  })
+  .catch((err) => console.log('Error:', err));
 
 app.use(express.json());
 
 app.use( 
-    session({ 
-      resave: false, 
-      saveUninitialized: false, 
-      secret: process.env.cookieKey, 
-    }) 
-  );
+  session({ 
+    resave: false, 
+    saveUninitialized: false, 
+    secret: process.env.SESSION_KEY, 
+  }) 
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -32,10 +38,13 @@ app.use((req, res, next) => {
 
 
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 app.use(requireAuth);
 
-app.use('/user', userRoutes);
+app.use('/home', (req, res) => {
+  res.status(200).send("Home Page for " + req.user.name);
+})
 
 app.use((req, res) => {
     res.status(400).send("Error 404!");

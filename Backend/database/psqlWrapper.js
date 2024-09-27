@@ -8,24 +8,63 @@ const pool = new Pool({
   port: 5432,
 });
 
-const setup = async () => {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS Users (
-      id SERIAL PRIMARY KEY,
-      google_id VARCHAR(255) UNIQUE NOT NULL,
-      name VARCHAR(255),
-      email VARCHAR(255),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    `
-  )
-}
+const setup = async function() {
 
-const query = async (query, params) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS Users (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        google_id VARCHAR(64) UNIQUE NOT NULL,
+        name VARCHAR(64) NOT NULL,
+        email VARCHAR(64) UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
   
-  await setup();
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'repo_visibility') THEN
+          CREATE TYPE repo_visibility AS ENUM ('pdf', 'docx', 'image');
+        END IF;
+      END $$;
 
-  return await pool.query(query, params);
+      CREATE TABLE IF NOT EXISTS repos (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name VARCHAR(64) NOT NULL,
+        user_id UUID REFERENCES users(id) NOT NULL,
+        visibility repo_visibility DEFAULT 'public',
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+  
+      CREATE TABLE IF NOT EXISTS folders (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name VARCHAR(128) NOT NULL,
+        parent_id UUID REFERENCES folders(id), -- NULL if it's a root folder
+        repo_id UUID REFERENCES repos(id),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS files (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name VARCHAR(255),
+        path TEXT, -- Storing the actual file
+        folder_id UUID REFERENCES folders(id), -- NULL if the file is directly in the repository's root
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      `
+    )
+  }
+  catch(error){
+    console.log("Error:", error.message);
+  }
+
 }
 
-module.exports = query;
+const query = async (text, values) => {
+  return await pool.query(text, values);
+}
+
+module.exports = {
+  setup,
+  query
+};
