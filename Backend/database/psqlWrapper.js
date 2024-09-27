@@ -14,8 +14,9 @@ const setup = async function() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS Users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        google_id VARCHAR(64) UNIQUE NOT NULL,
+        google_id VARCHAR(64) UNIQUE,
         name VARCHAR(64) NOT NULL,
+        password VARCHAR(72),
         email VARCHAR(64) UNIQUE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -23,7 +24,7 @@ const setup = async function() {
       DO $$
       BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'repo_visibility') THEN
-          CREATE TYPE repo_visibility AS ENUM ('pdf', 'docx', 'image');
+          CREATE TYPE repo_visibility AS ENUM ('public', 'private');
         END IF;
       END $$;
 
