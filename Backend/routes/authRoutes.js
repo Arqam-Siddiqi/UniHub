@@ -1,14 +1,19 @@
 const express = require('express');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
 router.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email', 'openid']
+    scope: ['profile', 'email']
 }));
 
 router.get('/google/callback', passport.authenticate('google'), (req, res) => {
-    res.status(200).send({"User Authorized": req.user});
+    
+    const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, { expiresIn: '3d' })
+    
+    res.cookie('jwtToken', token);
+    res.status(200).send({user: req.user.name, jwt: token});
 })
 
 module.exports = router;

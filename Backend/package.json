@@ -16,8 +16,9 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "googleapis": "^95.0.0",
+    "jsonwebtoken": "^9.0.2",
     "node-oauth2-server": "^2.4.0",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.12.0"

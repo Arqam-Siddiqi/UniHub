@@ -1,4 +1,4 @@
-const query = require('../database/psqlWrapper')
+const {query} = require('../database/psqlWrapper')
 
 const getAllUsers = async (req, res) => {
     try{
@@ -27,7 +27,22 @@ const createUser = async (req, res) => {
 
 }
 
+const updateUserByEmail = async (req, res) => {
+
+    try{
+        const {email} = req.body;
+        
+        
+        res.status(200).send();
+    }
+    catch(error){
+        res.status(400).send(error.message);
+    }
+
+}
+
 module.exports = {
     getAllUsers,
-    createUser
+    createUser,
+    updateUserByEmail
 }
