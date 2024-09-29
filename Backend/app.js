@@ -36,6 +36,9 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use('/nonAuth', (req, res) => {
+  res.status(200).send("non Auth API works.");
+})
 
 app.use('/auth', authRoutes);
 
