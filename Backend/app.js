@@ -7,7 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
-const {setup} = require('./database/psqlWrapper');
+const {setup, query} = require('./database/psqlWrapper');
 
 const app = express();
 

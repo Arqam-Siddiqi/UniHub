@@ -1,17 +1,23 @@
 const Pool = require("pg").Pool;
 
+// const pool = new Pool({
+//   user: "postgres",
+//   host: "localhost",
+//   database: "unihub",
+//   password: "fast",
+//   port: 5432,
+// });
+
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "unihub",
-  password: "fast",
-  port: 5432,
+  connectionString: "postgresql://unihub:gKXmdgfuVsk1h5ockYv9gaNjqVvlZnm8@dpg-crslt9jtq21c73dgpb6g-a.singapore-postgres.render.com/unihub_rdpy" + "?sslmode=require"
 });
 
 const setup = async function() {
 
   try {
     await pool.query(`
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
       CREATE TABLE IF NOT EXISTS Users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         google_id VARCHAR(64) UNIQUE,
