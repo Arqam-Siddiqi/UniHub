@@ -3,26 +3,30 @@ const jwt = require('jsonwebtoken');
 
 const requireAuth = async (req, res, next) => {
 
-    const { authorization } = req.headers;
+    const { user } = req.cookies;
 
-    if(!authorization){
+    if(!user){
         return res.status(401).send("Authorization token required.");
     }
 
-    const token = authorization.split(' ')[1];
+    const token = user.jwt;
+
+    if(!token){
+        return res.status(401).send("Authorization token required.");
+    }
 
     const {id} = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await query(`
+    const match = await query(`
             SELECT * FROM Users
             WHERE id = ($1)
         `, [id]);
     
-    if(user.rows.length == 0){
+    if(match.rows.length == 0){
         return res.status(401).send("Invalid token.");
     }
 
-    req.user = user.rows[0];
+    req.user = match.rows[0];
     
     console.log(req.user.name, "has been authorized.");
     next();

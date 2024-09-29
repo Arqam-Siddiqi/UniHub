@@ -11,16 +11,12 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }));
 
-router.get('/google/callback', passport.authenticate('google'), (req, res) => {
-    
-    const token = createJWT(req.user.id);
-    
-    res.cookie('jwtToken', token);
-    res.status(200).send({user: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false});
-});
+router.get('/google/callback', passport.authenticate('google'), authController.googleSignIn);
 
 router.post('/signup', authController.signup);
 
 router.post('/login', authController.login);
+
+router.get('/logout', authController.logout);
 
 module.exports = router;
