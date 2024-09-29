@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
@@ -30,6 +31,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cookieParser());
 
 app.use((req, res, next) => {
     console.log(`METHOD: ${req.method}, Path: ${req.path}`);

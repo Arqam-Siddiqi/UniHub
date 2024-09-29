@@ -3,6 +3,25 @@ const bcrypt = require('bcrypt');
 const {query} = require('../database/psqlWrapper');
 const {validateUserParams, createJWT} = require('../utils/userUtils');
 
+const googleSignIn = async (req, res) => {
+
+    try{
+        const token = createJWT(req.user.id);
+        
+        res.cookie(
+            'user', 
+            {name: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false}, 
+            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
+        );
+
+        res.status(200).send({user: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false});
+    }
+    catch(error){
+        res.status(400).send(error.message);
+    }
+
+}
+
 const signup = async (req, res) => {
 
     try{
@@ -15,8 +34,14 @@ const signup = async (req, res) => {
         `, [name, password, email])).rows[0];
 
         const token = createJWT(user.id);
-        
-        res.status(200).send({user: user.name, jwt: token, googleVerified: false});
+
+        res.cookie(
+            'user', 
+            {name: user.name, jwt: token, googleVerified: false}, 
+            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
+        );
+
+        res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
         res.status(400).send(error.message);
@@ -46,7 +71,13 @@ const login = async (req, res) => {
 
         const token = createJWT(user.id);
 
-        res.status(200).send({user: user.name, jwt: token, googleVerified: false});
+        res.cookie(
+            'user', 
+            {name: user.name, jwt: token, googleVerified: false}, 
+            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
+        );
+
+        res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
         res.status(400).send(error.message);
@@ -54,7 +85,20 @@ const login = async (req, res) => {
 
 }
 
+const logout = async (req, res) => {
+
+    try{
+        res.clearCookie('user', { httpOnly: true, secure: true });
+        res.status(200).send("Logout successful.");
+    }
+    catch(error){
+        res.status(400).send(error.message);
+    }
+}
+
 module.exports = {
     signup,
-    login
+    login,
+    logout,
+    googleSignIn
 }
