@@ -1,16 +1,22 @@
 const Pool = require("pg").Pool;
 
-// const pool = new Pool({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "unihub",
-//   password: "fast",
-//   port: 5432,
-// });
+let pool;
 
-const pool = new Pool({
-  connectionString: "postgresql://unihub:gKXmdgfuVsk1h5ockYv9gaNjqVvlZnm8@dpg-crslt9jtq21c73dgpb6g-a.singapore-postgres.render.com/unihub_rdpy" + "?sslmode=require"
-});
+if(process.env.RENDER){
+  pool = new Pool({
+    connectionString: "postgresql://unihub:gKXmdgfuVsk1h5ockYv9gaNjqVvlZnm8@dpg-crslt9jtq21c73dgpb6g-a.singapore-postgres.render.com/unihub_rdpy" + "?sslmode=require"
+  });
+}
+else{
+  pool = new Pool({
+    user: "postgres",
+    host: "localhost",
+    database: "unihub",
+    password: "fast",
+    port: 5432,
+  });  
+}
+
 
 const setup = async function() {
 

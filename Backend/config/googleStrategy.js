@@ -14,8 +14,7 @@ passport.deserializeUser( (user, done) => {
 passport.use(new GoogleStrategy({
     clientID: credentials.web.client_id,
     clientSecret: credentials.web.client_secret,
-    // callbackURL: "http://localhost:3000/auth/google/callback",
-    callbackURL: "https://unihub-86y9.onrender.com/auth/google/callback",
+    callbackURL: process.env.RENDER ? "https://unihub-86y9.onrender.com/auth/google/callback" : "http://localhost:3000/auth/google/callback",
     passReqToCallback: true
   },
   async function(req, accessToken, refreshToken, profile, done) {
