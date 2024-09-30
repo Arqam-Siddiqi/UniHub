@@ -14,7 +14,6 @@ const googleSignIn = async (req, res) => {
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
-        res.redirect('https://uni-hub-frontend.vercel.app/home');
         res.status(200).send({user: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false});
     }
     catch(error){
@@ -42,7 +41,6 @@ const signup = async (req, res) => {
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
-        res.redirect('https://uni-hub-frontend.vercel.app/home');
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
