@@ -35,7 +35,7 @@ app.use(passport.session());
 
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 app.use((req, res, next) => {
     console.log(`METHOD: ${req.method}, Path: ${req.path}`);
