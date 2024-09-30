@@ -14,6 +14,7 @@ const googleSignIn = async (req, res) => {
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
+        res.redirect(process.env.SUCCESS_REDIRECT);
         res.status(200).send({user: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false});
     }
     catch(error){
