@@ -10,7 +10,7 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }));
 
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: 'https://uni-hub-frontend.vercel.app/home' }), authController.googleSignIn);
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FAILIURE_REDIRECT }), authController.googleSignIn);
 
 router.post('/signup', authController.signup);
 
