@@ -7,7 +7,7 @@ const getAllUsers = async (req, res) => {
         res.status(200).send(users.rows);
     }   
     catch(error){
-        res.status(400).send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 }
 
@@ -22,11 +22,12 @@ const createUser = async (req, res) => {
         res.send(user.rows[0]);
     }
     catch(error){
-        res.send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 
 }
 
+// incomplete
 const updateUserByEmail = async (req, res) => {
 
     try{
@@ -36,7 +37,7 @@ const updateUserByEmail = async (req, res) => {
         res.status(200).send();
     }
     catch(error){
-        res.status(400).send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 
 }

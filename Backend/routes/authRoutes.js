@@ -3,7 +3,6 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
 const authController = require('../controllers/authController');
-const {createJWT} = require('../utils/userUtils');
 
 const router = express.Router();
 
@@ -11,7 +10,7 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }));
 
-router.get('/google/callback', passport.authenticate('google'), authController.googleSignIn);
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: 'https://uni-hub-frontend.vercel.app/home' }), authController.googleSignIn);
 
 router.post('/signup', authController.signup);
 
