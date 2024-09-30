@@ -3,12 +3,13 @@ const passport = require('passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
-const {setup, query} = require('./database/psqlWrapper');
+const {setup } = require('./database/psqlWrapper');
 
 const app = express();
 
@@ -34,6 +35,8 @@ app.use(passport.session());
 
 app.use(cookieParser());
 
+app.use(cors());
+
 app.use((req, res, next) => {
     console.log(`METHOD: ${req.method}, Path: ${req.path}`);
     next();
@@ -47,11 +50,11 @@ app.use('/auth', authRoutes);
 
 app.use(requireAuth);
 
-app.use('/user', userRoutes);
-
-app.use('/home', (req, res) => {
+app.use('/', (req, res) => {
   res.status(200).send("Home Page for " + req.user.name);
 })
+
+app.use('/user', userRoutes);
 
 app.use((req, res) => {
     res.status(400).send("Error 404!");
