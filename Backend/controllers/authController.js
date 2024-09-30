@@ -14,10 +14,11 @@ const googleSignIn = async (req, res) => {
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
+        res.redirect('https://uni-hub-frontend.vercel.app/home');
         res.status(200).send({user: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false});
     }
     catch(error){
-        res.status(400).send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 
 }
@@ -41,10 +42,11 @@ const signup = async (req, res) => {
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
+        res.redirect('https://uni-hub-frontend.vercel.app/home');
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
-        res.status(400).send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 
 }
@@ -77,10 +79,11 @@ const login = async (req, res) => {
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
+        res.redirect('https://uni-hub-frontend.vercel.app/home');
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
-        res.status(400).send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 
 }
@@ -89,10 +92,10 @@ const logout = async (req, res) => {
 
     try{
         res.clearCookie('user', { httpOnly: true, secure: true });
-        res.status(200).send("Logout successful.");
+        res.status(200).send({"Message": "Logout successful."});
     }
     catch(error){
-        res.status(400).send(error.message);
+        res.status(400).send({"Error": error.message});
     }
 }
 
