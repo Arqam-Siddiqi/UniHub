@@ -15,7 +15,6 @@ const googleSignIn = async (req, res) => {
         );
 
         res.redirect(process.env.SUCCESS_REDIRECT);
-        res.status(200).send({user: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false});
     }
     catch(error){
         res.status(400).send({"Error": error.message});
