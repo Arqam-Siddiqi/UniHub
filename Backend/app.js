@@ -48,8 +48,7 @@ app.use('/nonAuth', (req, res) => {
 
 app.use('/auth', authRoutes);
 
-
-app.use('/user', userRoutes);
+app.use('/user', userRoutes); //move this below requireAuth
 
 app.use(requireAuth);
 
