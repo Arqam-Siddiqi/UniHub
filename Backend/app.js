@@ -48,13 +48,15 @@ app.use('/nonAuth', (req, res) => {
 
 app.use('/auth', authRoutes);
 
+
+app.use('/user', userRoutes);
+
 app.use(requireAuth);
 
 app.use('/', (req, res) => {
   res.status(200).send("Home Page for " + req.user.name);
 })
 
-app.use('/user', userRoutes);
 
 app.use((req, res) => {
     res.status(400).send("Error 404!");
