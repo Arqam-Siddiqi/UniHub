@@ -11,6 +11,7 @@ passport.deserializeUser( (user, done) => {
   done(null, user);
 });
 
+console.log(process.env.HOSTING_SITE ? `${process.env.HOSTING_SITE}/auth/google/callback` : `http://localhost:${process.env.BACKEND_PORT}/auth/google/callback`);
 passport.use(new GoogleStrategy({
     clientID: credentials.web.client_id,
     clientSecret: credentials.web.client_secret,
