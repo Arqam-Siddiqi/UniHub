@@ -2,10 +2,15 @@ const Pool = require("pg").Pool;
 
 let pool;
 
-if(process.env.HOSTING_SITE){
+if(process.env.HOSTING_SITE === 'https://unihub-86y9.onrender.com'){
   pool = new Pool({
     connectionString: "postgresql://unihub:gKXmdgfuVsk1h5ockYv9gaNjqVvlZnm8@dpg-crslt9jtq21c73dgpb6g-a.singapore-postgres.render.com/unihub_rdpy" + "?sslmode=require"
   });
+}
+else if(process.env.HOSTING_SITE === 'https://unihub-backend.vercel.app'){
+  pool = new Pool({
+    connectionString: "postgres://default:7AZPRsYb9pkD@ep-bold-dust-a1jl4jiz.ap-southeast-1.aws.neon.tech:5432/verceldb?sslmode=require"
+  })
 }
 else{
   pool = new Pool({
