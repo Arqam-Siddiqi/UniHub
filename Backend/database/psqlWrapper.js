@@ -2,7 +2,7 @@ const Pool = require("pg").Pool;
 
 let pool;
 
-if(process.env.RENDER){
+if(process.env.HOSTING_SITE){
   pool = new Pool({
     connectionString: "postgresql://unihub:gKXmdgfuVsk1h5ockYv9gaNjqVvlZnm8@dpg-crslt9jtq21c73dgpb6g-a.singapore-postgres.render.com/unihub_rdpy" + "?sslmode=require"
   });
