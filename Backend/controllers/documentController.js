@@ -10,11 +10,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: {fileSize: 30000000}, // 30 MB
+  limits: {fileSize: 30000000},   // 30 MB
   fileFilter: (req, file, cb) => {
     checkFileType(file, cb);
   }
 }).single('document');
+
 
 const uploadFile = (req, res) => {
 
@@ -43,7 +44,7 @@ function checkFileType(file, cb) {
     if (mimetype && extname) {
       return cb(null, true);
     } else {
-      cb('Error: Only documents (PDF, DOC, DOCX, TXT) are allowed!');
+      cb('Error: Only documents (PDF, DOC, DOCX, TXT, PNG, JPG, JPEG) are allowed!');
     }
     
   }
