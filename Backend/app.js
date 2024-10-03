@@ -14,6 +14,8 @@ const documentRoutes = require('./routes/documentRoutes');
 
 const app = express();
 
+app.use(cors({ origin: "*" }));
+
 setup()
   .then(() => {
     app.listen(3000);
@@ -35,8 +37,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(cookieParser());
-
-app.use(cors({ origin: "*" }));
 
 app.use((req, res, next) => {
     console.log(`METHOD: ${req.method}, Path: ${req.path}`);
