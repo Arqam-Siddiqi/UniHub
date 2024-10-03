@@ -1,12 +1,7 @@
 const path = require('path');
 const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: './downloads/',
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -21,11 +16,12 @@ const uploadFile = (req, res) => {
 
     try{
         upload(req, res, (err) => {
-            
+          
             if(err || !req.file){
                 return res.status(400).send({"Error": err});
             }
     
+            console.log(req.file);
             res.status(200).send({"Message": "File uploaded."});
         });
     }
