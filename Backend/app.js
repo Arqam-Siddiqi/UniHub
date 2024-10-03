@@ -56,7 +56,7 @@ app.use('/document', documentRoutes); // move this below requireAuth
 app.use(requireAuth);
 
 
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
   res.status(200).send("Home Page for " + req.user.name);
 })
 
