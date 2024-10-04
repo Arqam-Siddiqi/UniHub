@@ -14,7 +14,7 @@ const documentRoutes = require('./routes/documentRoutes');
 
 const app = express();
 
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 setup()
   .then(() => {
