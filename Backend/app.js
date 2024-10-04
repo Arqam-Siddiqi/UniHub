@@ -19,7 +19,7 @@ app.use(cors({ origin: [process.env.FRONTEND, 'http://localhost:5173', 'http://l
 setup()
   .then(() => {
     app.listen(3000);
-    console.log('Connected to PostgreSQL...')
+    console.log('Connected to PostgreSQL...');
   })
   .catch((err) => console.log('Error:', err));
 
