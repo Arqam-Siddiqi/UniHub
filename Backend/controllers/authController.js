@@ -11,7 +11,7 @@ const googleSignIn = async (req, res) => {
         res.cookie(
             'user', 
             {name: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false}, 
-            { httpOnly: true, secure:true, maxAge: 1 * 60 * 60 * 1000 }
+            { httpOnly: true, secure:true, maxAge: 1 * 60 * 60 * 1000, sameSite:'none' }
         );
 
         res.redirect(process.env.SUCCESS_REDIRECT);
@@ -38,7 +38,7 @@ const signup = async (req, res) => {
         res.cookie(
             'user', 
             {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
-            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
+            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000, sameSite:'none' }
         );
 
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
@@ -75,7 +75,7 @@ const login = async (req, res) => {
         res.cookie(
             'user', 
             {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
-            { httpOnly: true,  secure: true, maxAge: 1 * 60 * 60 * 1000 }
+            { httpOnly: true,  secure: true, maxAge: 1 * 60 * 60 * 1000, sameSite:'none' }
         );
 
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
