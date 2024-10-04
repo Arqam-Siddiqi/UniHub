@@ -11,7 +11,7 @@ const googleSignIn = async (req, res) => {
         res.cookie(
             'user', 
             {name: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false}, 
-            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
+            { httpOnly: true, secure:true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
         res.redirect(process.env.SUCCESS_REDIRECT);
@@ -37,7 +37,7 @@ const signup = async (req, res) => {
 
         res.cookie(
             'user', 
-            {name: user.name, jwt: token, googleVerified: false}, 
+            {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
             { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
@@ -58,7 +58,8 @@ const login = async (req, res) => {
             SELECT * FROM Users
             WHERE email = $1;  
         `, [email])).rows[0];
-
+        
+        
         if(!user || !user.password){
             throw Error("Invalid credentials.");
         }
@@ -73,11 +74,10 @@ const login = async (req, res) => {
 
         res.cookie(
             'user', 
-            {name: user.name, jwt: token, googleVerified: false}, 
-            { httpOnly: true, secure: true, maxAge: 1 * 60 * 60 * 1000 }
+            {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
+            { httpOnly: true,  secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
-        res.redirect('https://uni-hub-frontend.vercel.app/home');
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
