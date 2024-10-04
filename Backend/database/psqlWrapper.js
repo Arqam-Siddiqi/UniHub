@@ -26,6 +26,7 @@ else{
 const setup = async function() {
 
   try {
+    
     await pool.query(`
       CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 

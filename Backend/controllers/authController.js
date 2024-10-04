@@ -10,8 +10,8 @@ const googleSignIn = async (req, res) => {
         
         res.cookie(
             'user', 
-            {name: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false}, 
-            { secure: true, maxAge: 1 * 60 * 60 * 1000, sameSite:'none' }
+            {name: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false},
+            { secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
         res.redirect(process.env.SUCCESS_REDIRECT);
@@ -37,8 +37,8 @@ const signup = async (req, res) => {
 
         res.cookie(
             'user', 
-            {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
-            { secure: true, maxAge: 1 * 60 * 60 * 1000, sameSite:'none'}
+            {name: user.name, jwt: token, googleVerified: user.google_id ? true : false},
+            { secure: true, maxAge: 1 * 60 * 60 * 1000 }
         );
 
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
@@ -72,10 +72,11 @@ const login = async (req, res) => {
 
         const token = createJWT(user.id);
 
+        console.log(process.env.FRONTEND);
         res.cookie(
             'user', 
             {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
-            { secure: true, maxAge: 1 * 60 * 60 * 1000, sameSite:'none' }
+            { secure: true, maxAge: 1 * 60 * 60 * 1000  }
         );
 
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
@@ -95,7 +96,7 @@ const logout = async (req, res) => {
             throw Error("User is not logged in.");
         }
 
-        res.clearCookie('user', { httpOnly: true, secure: true });
+        res.clearCookie('user', { secure: true });
         res.status(200).send({"Message": "Logout successful."});
     }
     catch(error){
