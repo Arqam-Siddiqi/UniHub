@@ -1,7 +1,6 @@
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const cors = require('cors');
 
@@ -14,7 +13,7 @@ const documentRoutes = require('./routes/documentRoutes');
 
 const app = express();
 
-app.use(cors({ origin: [process.env.FRONTEND, 'http://localhost:5173', 'http://localhost:3000'], credentials: true }));
+app.use(cors({ origin: [process.env.FRONTEND, 'http://localhost:5173', 'http://localhost:3000'] }));
 
 setup()
   .then(() => {
@@ -36,6 +35,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use((req, res, next) => {
     console.log(`METHOD: ${req.method}, Path: ${req.path}`);
     next();
@@ -48,14 +48,19 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
-app.use('/user', userRoutes); // move this below requireAuth
-app.use('/document', documentRoutes); // move this below requireAuth
 
 app.use(requireAuth);
 
+app.use('/user', userRoutes);
+app.use('/document', documentRoutes);
 
-app.get('/', (req, res) => {
-  res.status(200).send("Home Page for " + req.user.name);
+
+app.get('/', async (req, res) => {
+  const userQuery = require('./database/userQuery');
+
+  const user = await userQuery.queryUserByID(req.user);
+
+  res.status(200).send("Home Page for " + user.name + '.');
 })
 
 

@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
-const {query} = require('../database/psqlWrapper');
+const authQuery = require('../database/authQuery');
+const userQuery = require('../database/userQuery');
 const {validateUserParams, createJWT} = require('../utils/userUtils');
 
 const googleSignIn = async (req, res) => {
@@ -27,11 +28,7 @@ const signup = async (req, res) => {
     try{
         const {name, password, email} = await validateUserParams(req.body);
         
-        const user = (await query(`
-            INSERT INTO Users(name, password, email)
-            VALUES ($1, $2, $3)
-            RETURNING *; 
-        `, [name, password, email])).rows[0];
+        const user = await authQuery.createLocalUser(name, password, email);
 
         const token = createJWT(user.id);
 
@@ -48,11 +45,7 @@ const login = async (req, res) => {
     try{
         const {email, password} = req.body;
 
-        const user = (await query(`
-            SELECT * FROM Users
-            WHERE email = $1;  
-        `, [email])).rows[0];
-        
+        const user = await userQuery.queryUserByEmail(email);
         
         if(!user || !user.password){
             throw Error("Invalid credentials.");

@@ -1,4 +1,4 @@
-const {query} = require('../database/psqlWrapper');
+const userQuery = require('../database/userQuery');
 const jwt = require('jsonwebtoken');
 
 const requireAuth = async (req, res, next) => {
@@ -6,7 +6,7 @@ const requireAuth = async (req, res, next) => {
     const { authorization } = req.headers;
     
     if(!authorization){
-        return res.status(401).send({error: "Authorization token required."});
+        return res.status(401).send({Error: "Authorization token required."});
     }
 
     const token = authorization.split(' ')[1];
@@ -14,22 +14,19 @@ const requireAuth = async (req, res, next) => {
     try{
         const {id} = jwt.verify(token, process.env.JWT_SECRET);
 
-        const match = await query(`
-            SELECT * FROM Users
-            WHERE id = ($1)
-        `, [id]);
+        const match = await userQuery.queryUserByID(id);
         
-        if(match.rows.length == 0){
+        if(!match){
             return res.status(401).send("Invalid token.");
         }
 
-        req.user = match.rows[0];
+        req.user = match.id;
         
-        console.log(req.user.name, "has been authorized.");
+        console.log(match.name, "has been authorized.");
         next();
     }
     catch(error){
-        res.status(401).send({error: "Request is not authorized."});
+        res.status(401).send({Error: "Request is not authorized."});
     }
 
 }

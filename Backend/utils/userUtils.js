@@ -2,7 +2,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const {query} = require('../database/psqlWrapper');
+const userQuery = require('../database/userQuery');
 
 const createJWT = (payload) => {
     return jwt.sign({id: payload}, process.env.JWT_SECRET, {expiresIn: '3d'});
@@ -23,10 +23,7 @@ const validateUserParams = async ({name, password, email}) => {
         throw Error("Invalid email.");
     }
 
-    const exists = (await query(`
-        SELECT email FROM Users
-        WHERE email = $1
-    `, [email])).rows[0]
+    const exists = await userQuery.queryUserByEmail(email);
 
     if(exists){
         throw Error("User with this email already exists.");
@@ -43,7 +40,27 @@ const validateUserParams = async ({name, password, email}) => {
 
 }
 
+const validateUserParamsForPatch = async ({name, password}) => {
+
+    if(password && !validator.isStrongPassword(password)){
+        throw Error("Password should have atleast 8 characters, 1 lower-case character, 1 upper-case character, 1 symbol, and 1 number.");
+    }
+
+    let hash;
+    if(password){
+        const salt = await bcrypt.genSalt(10);
+        hash = await bcrypt.hash(password, salt);
+    }
+
+    return {
+        name,
+        password: hash
+    }
+
+}
+
 module.exports = {
     validateUserParams,
+    validateUserParamsForPatch,
     createJWT
 }
