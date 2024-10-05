@@ -60,9 +60,22 @@ const updateUserByID = async (id, body) => {
     return updated_user.rows[0];
 }
 
+const deleteUserByID = async (id) => {
+
+    const user = await query(`
+        DELETE FROM Users
+        WHERE id = $1
+        RETURNING *;    
+    `, [id]);
+    
+    return user.rows[0];
+
+}
+
 module.exports = {
     queryAllUsers,
     queryUserByID,
     queryUserByEmail,
-    updateUserByID
+    updateUserByID,
+    deleteUserByID
 }

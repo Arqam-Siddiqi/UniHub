@@ -2,6 +2,7 @@ const userQuery = require('../database/userQuery');
 const uuid = require('uuid');
 
 const getAllUsers = async (req, res) => {
+    
     try{
         const users = await userQuery.queryAllUsers();
         
@@ -41,6 +42,21 @@ const updateUserByJWT = async (req, res) => {
 
 }
 
+const deleteUserByJWT = async (req, res) => {
+
+    try{
+        const id = req.user;
+
+        const user = await userQuery.deleteUserByID(id);
+
+        res.status(200).send(user);
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 const getUserByID = async (req, res) => {
 
     try{
@@ -63,5 +79,6 @@ module.exports = {
     getAllUsers,
     getUserByJWT,
     updateUserByJWT,
+    deleteUserByJWT,
     getUserByID
 }
