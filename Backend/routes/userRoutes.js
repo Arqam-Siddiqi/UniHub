@@ -5,9 +5,11 @@ const router = express.Router();
 
 router.get('/', userController.getAllUsers);
 
-router.get('/profile', userController.getUserByJWT);
+router.get('/self', userController.getUserByJWT);
 
-router.patch('/profile', userController.updateUserByJWT);
+router.patch('/self', userController.updateUserByJWT);
+
+router.delete('/self', userController.deleteUserByJWT);
 
 router.get('/:id', userController.getUserByID);
 

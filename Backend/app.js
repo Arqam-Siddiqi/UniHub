@@ -8,14 +8,15 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
-const { setup } = require('./database/psqlWrapper');
+const { dbSetup } = require('./database/psqlWrapper');
 const documentRoutes = require('./routes/documentRoutes');
+const repoRoutes = require('./routes/repoRoutes');
 
 const app = express();
 
 app.use(cors({ origin: [process.env.FRONTEND, 'http://localhost:5173', 'http://localhost:3000'] }));
 
-setup()
+dbSetup()
   .then(() => {
     app.listen(3000);
     console.log('Connected to PostgreSQL...');
@@ -37,8 +38,8 @@ app.use(passport.session());
 
 
 app.use((req, res, next) => {
-    console.log(`METHOD: ${req.method}, Path: ${req.path}`);
-    next();
+  console.log(`METHOD: ${req.method}, Path: ${req.path}`);
+  next();
 });
 
 
@@ -51,8 +52,10 @@ app.use('/auth', authRoutes);
 
 app.use(requireAuth);
 
+// protected endpoints
 app.use('/user', userRoutes);
 app.use('/document', documentRoutes);
+app.use('/repo', repoRoutes);
 
 
 app.get('/', async (req, res) => {
@@ -65,5 +68,5 @@ app.get('/', async (req, res) => {
 
 
 app.use((req, res) => {
-    res.status(400).send("Error 404!");
+  res.status(400).send("Error 404!");
 })

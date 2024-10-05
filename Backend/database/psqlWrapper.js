@@ -23,7 +23,7 @@ else{
 }
 
 
-const setup = async function() {
+const dbSetup = async function() {
 
   try {
     
@@ -49,25 +49,25 @@ const setup = async function() {
       CREATE TABLE IF NOT EXISTS repos (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(64) NOT NULL,
-        user_id UUID REFERENCES users(id) NOT NULL,
+        user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
         visibility repo_visibility DEFAULT 'public',
-        description TEXT,
+        description TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
   
       CREATE TABLE IF NOT EXISTS folders (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(128) NOT NULL,
-        parent_id UUID REFERENCES folders(id), -- NULL if it's a root folder
-        repo_id UUID REFERENCES repos(id),
+        parent_id UUID REFERENCES folders(id) ON DELETE CASCADE, -- NULL if it's a root folder
+        repo_id UUID REFERENCES repos(id) ON DELETE CASCADE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE TABLE IF NOT EXISTS files (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255),
-        path TEXT, -- Storing the actual file
-        folder_id UUID REFERENCES folders(id), -- NULL if the file is directly in the repository's root
+        path TEXT UNIQUE NOT NULL, -- Storing the file path
+        folder_id UUID REFERENCES folders(id) ON DELETE CASCADE, -- NULL if the file is directly in the repository's root
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
       `
@@ -84,6 +84,6 @@ const query = async (text, values) => {
 }
 
 module.exports = {
-  setup,
+  dbSetup,
   query
 };

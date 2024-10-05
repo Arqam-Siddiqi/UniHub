@@ -2,7 +2,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const userQuery = require('../database/userQuery');
+const {query} = require('../database/psqlWrapper');
 
 const createJWT = (payload) => {
     return jwt.sign({id: payload}, process.env.JWT_SECRET, {expiresIn: '3d'});
@@ -22,8 +22,12 @@ const validateUserParams = async ({name, password, email}) => {
     if(!validator.isEmail(email)){
         throw Error("Invalid email.");
     }
+    
+    const exists = (await query(`
+        SELECT * FROM Users
+        WHERE email = ($1);
+    `, [email])).rows[0];
 
-    const exists = await userQuery.queryUserByEmail(email);
 
     if(exists){
         throw Error("User with this email already exists.");
