@@ -7,14 +7,14 @@ const googleSignIn = async (req, res) => {
 
     try{
         const token = createJWT(req.user.id);
-        
-        res.cookie(
-            'user', 
-            {name: req.user.name, jwt: token, googleVerified: req.user.google_id ? true : false},
-            { secure: true, maxAge: 1 * 60 * 60 * 1000 }
-        );
 
-        res.redirect(process.env.SUCCESS_REDIRECT);
+        const params = new URLSearchParams({
+            name: req.user.name,
+            jwt: token,
+            googleVerified: true
+        }).toString();
+
+        res.redirect(`${process.env.SUCCESS_REDIRECT}?${params}`);
     }
     catch(error){
         res.status(400).send({"Error": error.message});
@@ -34,12 +34,6 @@ const signup = async (req, res) => {
         `, [name, password, email])).rows[0];
 
         const token = createJWT(user.id);
-
-        res.cookie(
-            'user', 
-            {name: user.name, jwt: token, googleVerified: user.google_id ? true : false},
-            { secure: true, maxAge: 1 * 60 * 60 * 1000 }
-        );
 
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
@@ -72,13 +66,6 @@ const login = async (req, res) => {
 
         const token = createJWT(user.id);
 
-        console.log(process.env.FRONTEND);
-        res.cookie(
-            'user', 
-            {name: user.name, jwt: token, googleVerified: user.google_id ? true : false}, 
-            { secure: true, maxAge: 1 * 60 * 60 * 1000  }
-        );
-
         res.status(200).send({name: user.name, jwt: token, googleVerified: false});
     }
     catch(error){
@@ -87,26 +74,8 @@ const login = async (req, res) => {
 
 }
 
-const logout = async (req, res) => {
-
-    try{
-        const {user} = req.cookies;
-
-        if(!user){
-            throw Error("User is not logged in.");
-        }
-
-        res.clearCookie('user', { secure: true });
-        res.status(200).send({"Message": "Logout successful."});
-    }
-    catch(error){
-        res.status(400).send({"Error": error.message});
-    }
-
-}
 module.exports = {
     signup,
     login,
-    logout,
     googleSignIn
 }
