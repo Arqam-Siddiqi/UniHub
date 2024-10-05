@@ -9,7 +9,7 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }));
 
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FAILIURE_REDIRECT }), authController.googleSignIn);
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: `${process.env.FRONTEND}/home` }), authController.googleSignIn);
 
 router.post('/signup', authController.signup);
 

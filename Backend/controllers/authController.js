@@ -14,7 +14,7 @@ const googleSignIn = async (req, res) => {
             googleVerified: true
         }).toString();
 
-        res.redirect(`${process.env.SUCCESS_REDIRECT}?${params}`);
+        res.redirect(`${process.env.FRONTEND}/user-page?${params}`);
     }
     catch(error){
         res.status(400).send({"Error": error.message});
