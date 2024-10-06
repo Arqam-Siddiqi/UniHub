@@ -14,7 +14,7 @@ const repoRoutes = require('./routes/repoRoutes');
 
 const app = express();
 
-app.use(cors({ origin: [process.env.FRONTEND, 'http://localhost:5173', 'http://localhost:3000'] }));
+app.use(cors({ origin: '*' }));
 
 dbSetup()
   .then(() => {
@@ -49,12 +49,12 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
+app.use('/document', documentRoutes);
 
 app.use(requireAuth);
 
 // protected endpoints
 app.use('/user', userRoutes);
-app.use('/document', documentRoutes);
 app.use('/repo', repoRoutes);
 
 
