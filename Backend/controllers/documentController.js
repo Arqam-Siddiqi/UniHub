@@ -1,10 +1,11 @@
-const path = require('path');
 const multer = require('multer');
+const cloud = require('../cloud_storage/cloud');
+const path = require('path');
 
 const storage = multer.diskStorage({
   destination: './downloads/',
   filename: (req, file, cb) => {
-    cb(null, `${file.originalname}`);
+    cb(null, `${`temp${path.extname(file.originalname)}`}`);
   }
 });
 
@@ -20,12 +21,14 @@ const upload = multer({
 const uploadFile = async (req, res) => {
 
     try{
-        await upload(req, res, (err) => {
-            console.log(req.file);
+        await upload(req, res, async (err) => {
+
             if(err || !req.file){
                 return res.status(400).send({"Error": err});
             }
-    
+          
+            const pathOfFile = req.file.destination + req.file.filename
+            await cloud.upload('folder', 'C:/Users/Hp/Downloads/Testing.txt')
             res.status(200).send({"Message": "File uploaded."});
         });
     }
@@ -54,19 +57,23 @@ const downloadFile = (req, res) => {
 }
 
 // Allowed extensions
-function checkFileType(file, cb) {
+const checkFileType = (file, cb) => {
+  const allowedTypes = [
+    'image/png',
+    'image/jpg',
+    'image/jpeg',
+    'application/pdf',
+    'text/plain',
+    'application/msword',             // DOC
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // DOCX
+  ];
 
-    const filetypes = /pdf|doc|docx|txt|png|jpg|jpeg/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-  
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb('Error: Only documents (PDF, DOC, DOCX, TXT, PNG, JPG, JPEG) are allowed!');
-    }
-    
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true); // Accept file
+  } else {
+    cb(new Error('Invalid file type. Only PNG, JPG, JPEG, TXT, PDF, DOC, and DOCX are allowed.'));
   }
+};
 
 module.exports = {
     uploadFile,
