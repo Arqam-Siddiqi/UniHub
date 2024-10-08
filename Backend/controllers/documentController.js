@@ -1,7 +1,6 @@
+const multer = require('multer');
+const path = require('path');
 const cloud = require('../cloud_storage/cloud');
-// const multer = require('multer');
-
-// const path = require('path');
 
 // const storage = multer.diskStorage({
 //   destination: './downloads/',
