@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const cloud = require('../cloud_storage/cloud');
 
+// This is the problem for Vercel. Change it to memoryStorage and pray it works
 const storage = multer.diskStorage({
   destination: './downloads/',
   filename: (req, file, cb) => {
@@ -9,13 +10,13 @@ const storage = multer.diskStorage({
   }
 });
 
-// const upload = multer({
-//   storage: storage,
-//   limits: {fileSize: 30000000},   // 30 MB
-//   fileFilter: (req, file, cb) => {
-//     checkFileType(file, cb);
-//   }
-// }).single('document');
+const upload = multer({
+  storage: storage,
+  limits: {fileSize: 30000000},   // 30 MB
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  }
+}).single('document');
 
 
 const uploadFile = async (req, res) => {
