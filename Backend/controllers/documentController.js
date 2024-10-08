@@ -21,16 +21,17 @@ const upload = multer({
 const uploadFile = async (req, res) => {
 
     try{
-        await upload(req, res, async (err) => {
 
-            if(err || !req.file){
-                return res.status(400).send({"Error": err});
-            }
-          
-            const pathOfFile = req.file.destination + req.file.filename
-            await cloud.upload('folder', 'C:/Users/Hp/Downloads/Testing.txt')
-            res.status(200).send({"Message": "File uploaded."});
+        await upload(req, res, async (err) => {
+          if(err){
+            console.log(err);
+            return res.status(400).send({"Error": err});
+          }
+          const pathOfFile = req.file.destination + req.file.filename;  
+          await cloud.upload('f3', pathOfFile);
         });
+
+        res.status(200).send({"Message": "File uploaded."});
     }
     catch(error){
         res.status(400).send({"Error": error.message});
