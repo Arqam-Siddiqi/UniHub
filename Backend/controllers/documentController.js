@@ -2,12 +2,12 @@ const multer = require('multer');
 const path = require('path');
 const cloud = require('../cloud_storage/cloud');
 
-// const storage = multer.diskStorage({
-//   destination: './downloads/',
-//   filename: (req, file, cb) => {
-//     cb(null, `${`temp${path.extname(file.originalname)}`}`);
-//   }
-// });
+const storage = multer.diskStorage({
+  destination: './downloads/',
+  filename: (req, file, cb) => {
+    cb(null, `${`temp${path.extname(file.originalname)}`}`);
+  }
+});
 
 // const upload = multer({
 //   storage: storage,
