@@ -2,50 +2,75 @@ const {Storage} = require('megajs');
 const path = require('path');
 const fs = require('fs');
 
-const storage = new Storage({
-  email: 'mirzasaad363@gmail.com',
-  password: 'madeeha1984'
-}, error => {
-  if(error)
-  return console.log('Login failed', err);
-  else {
-      console.log("Logged in successfully to Mega Cloud Storage.");
-      
-  }
-}).ready
+let storage;
 
+const initializeStorage = async () => {
+  try {
+
+    storage = await new Storage({
+      email: 'mirzasaad363@gmail.com',
+      password: 'madeeha1984'
+    }).ready;
+    
+    console.log("Successfully logged into Mega.");
+  } catch (error) {
+    console.error('Error initializing storage:', error);
+  }
+};
+
+initializeStorage();
+
+//first we will save the file recieved/ assume for noe the path given below is the path of this saved file
+//destination will be the path to the directory on the cloud in which u want to save the file, e.g: repo1/newfolder2/newfolder3 where repo1 is in the root directory 
 const upload = async (destination, pathOfFile) => {
 
-  //first we will save the file recieved/ assume for noe the path given below is the path of this saved file
-  //destination will be the path to the directory on the cloud in which u want to save the file, e.g: repo1/newfolder2/newfolder3 where repo1 is in the root directory 
-
-  let fileSize;
-  try {
-    const stats = fs.statSync(pathOfFile);
-    fileSize = stats.size; 
-  
-  } catch (err) {
-      console.error('Error getting file stats:', err);
+  if(!storage){
+    console.log("Mega Storage is not initialized.");
+    return;
   }
-  console.log(`File Size: ${fileSize}`);
-  
-  const readstream = fs.createReadStream(pathOfFile);
-  
-  const t1 = performance.now();
 
-  console.log(destination);
-  await storage.root.navigate(destination).upload({
-    name: path.basename(pathOfFile),
-    size: fileSize,
-  }, readstream).complete
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const stats = fs.statSync(pathOfFile);
+      const fileSize = stats.size; 
+    
+      const readstream = fs.createReadStream(pathOfFile);
+      
+      const t1 = performance.now();
+
+      await storage.root.navigate(destination).upload({
+        name: path.basename(pathOfFile),
+        size: fileSize,
+      }, readstream).complete.then(() => {
+        const t2=performance.now();
+        
+        readstream.destroy();
+
+        fs.unlinkSync(pathOfFile);
+
+        console.log('Upload Complete.');
+        console.log('Time taken to upload file: ', t2-t1 , 'ms.\n');
+        resolve();
+      })
+      .catch((err) => reject(err));
+     
+    }
+    catch (err) {
+      console.error({"Error": err});
+    }
+
+  });
   
-  const t2=performance.now();
-  
-  readstream.destroy();
-  console.log('Upload Complete\nTime taken to upload file: ', t2-t1 , 'ms.' );
 }
 
 const importFile = async (pathToFile) => {
+
+  if(!storage){
+    console.log("Mega Storage is not initialized.");
+    return;
+  }
+
   return new Promise((resolve, reject) => {
     const wstream = fs.createWriteStream(path.basename(pathToFile));
     storage.root.find(path.basename(pathToFile), true).download().pipe(wstream);
@@ -60,12 +85,17 @@ const importFile = async (pathToFile) => {
       reject(error);
     });
 
-  })
+  });
 }
 
 //pass flag=1 if making a folder within a folder that you made. Pass flag=0 if making a folder in root directory i.e making a new user repository.
 const createFolder = async (name, folderPath, flag) => {
-  
+
+  if(!storage){
+    console.log("Mega Storage is not initialized.");
+    return;
+  }
+
   try{
     let folder;
     if(flag == 1){
@@ -89,6 +119,12 @@ const createFolder = async (name, folderPath, flag) => {
 
 //also works for folders
 const deleteFileAndFolder = async (pathToFile) => {
+
+  if(!storage){
+    console.log("Mega Storage is not initialized.");
+    return;
+  }
+
   try{
     const data=await storage.root.find(path.basename(pathToFile), true).delete();  
     if(storage.root.find(path.basename(pathToFile), true).directory)
@@ -102,6 +138,7 @@ const deleteFileAndFolder = async (pathToFile) => {
     else console.log('Error deleting file', err);
   }
 }
+
 
 module.exports = {
   upload,
