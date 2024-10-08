@@ -9,7 +9,7 @@ const authRoutes = require('./routes/authRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
 const { dbSetup } = require('./database/psqlWrapper');
-// const documentRoutes = require('./routes/documentRoutes');
+const documentRoutes = require('./routes/documentRoutes');
 const repoRoutes = require('./routes/repoRoutes');
 
 const app = express();
@@ -49,7 +49,7 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
-// app.use('/document', documentRoutes);
+app.use('/document', documentRoutes);
 
 app.use(requireAuth);
 

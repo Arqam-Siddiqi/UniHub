@@ -1,21 +1,22 @@
-const multer = require('multer');
 const cloud = require('../cloud_storage/cloud');
-const path = require('path');
+// const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: './downloads/',
-  filename: (req, file, cb) => {
-    cb(null, `${`temp${path.extname(file.originalname)}`}`);
-  }
-});
+// const path = require('path');
 
-const upload = multer({
-  storage: storage,
-  limits: {fileSize: 30000000},   // 30 MB
-  fileFilter: (req, file, cb) => {
-    checkFileType(file, cb);
-  }
-}).single('document');
+// const storage = multer.diskStorage({
+//   destination: './downloads/',
+//   filename: (req, file, cb) => {
+//     cb(null, `${`temp${path.extname(file.originalname)}`}`);
+//   }
+// });
+
+// const upload = multer({
+//   storage: storage,
+//   limits: {fileSize: 30000000},   // 30 MB
+//   fileFilter: (req, file, cb) => {
+//     checkFileType(file, cb);
+//   }
+// }).single('document');
 
 
 const uploadFile = async (req, res) => {
