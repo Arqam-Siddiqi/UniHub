@@ -45,9 +45,9 @@ const upload = async (destination, pathOfFile, fileName) => {
       }, readstream).complete.then(() => {
         const t2=performance.now();
         
-        // readstream.destroy();
+        readstream.destroy();
 
-        // fs.unlinkSync(pathOfFile);
+        fs.unlinkSync(pathOfFile);
 
         console.log('Upload Complete.');
         console.log('Time taken to upload file: ', t2-t1 , 'ms.\n');
