@@ -17,8 +17,7 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:5173', // Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Allow cookies to be sent if needed
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 dbSetup()
