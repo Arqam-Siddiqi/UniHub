@@ -3,12 +3,13 @@ const path = require('path');
 const cloud = require('../cloud_storage/cloud');
 
 // This is the problem for Vercel. Change it to memoryStorage and pray it works
-const storage = multer.diskStorage({
-  destination: './downloads/',
-  filename: (req, file, cb) => {
-    cb(null, `${`${Date.now()}${path.extname(file.originalname)}`}`);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: './downloads/',
+//   filename: (req, file, cb) => {
+//     cb(null, `${`${Date.now()}${path.extname(file.originalname)}`}`);
+//   }
+// });
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -19,7 +20,6 @@ const upload = multer({
 }).single('document');
 
 
-// how do I use the original name?
 const uploadFile = async (req, res) => {
 
     try{
@@ -31,9 +31,10 @@ const uploadFile = async (req, res) => {
           }
           
           const fileName = req.file.originalname;
-          const pathOfFile = req.file.destination + req.file.filename;  
+          // const pathOfFile = req.file.destination + req.file.filename;
+          const fileBuffer = req.file.buffer;  
           
-          await cloud.upload('f3', pathOfFile, fileName);
+          await cloud.upload('f3', fileBuffer, fileName);
         });
 
         res.status(200).send({"Message": "File uploaded."});
