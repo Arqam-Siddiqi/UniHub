@@ -1,47 +1,24 @@
-const multer = require('multer');
 const path = require('path');
 const cloud = require('../cloud_storage/cloud');
 
-// This is the problem for Vercel. Change it to memoryStorage and pray it works
-// const storage = multer.diskStorage({
-//   destination: './downloads/',
-//   filename: (req, file, cb) => {
-//     cb(null, `${`${Date.now()}${path.extname(file.originalname)}`}`);
-//   }
-// });
-const storage = multer.memoryStorage();
-
-const upload = multer({
-  storage: storage,
-  limits: {fileSize: 30000000},   // 30 MB
-  fileFilter: (req, file, cb) => {
-    checkFileType(file, cb);
-  }
-}).single('document');
-
-
 const uploadFile = async (req, res) => {
 
-    try{
-
-        await upload(req, res, async (err) => {
-          if(err){
-            console.log(err);
-            return res.status(400).send({"Error": err});
-          }
-          
-          const fileName = req.file.originalname;
-          // const pathOfFile = req.file.destination + req.file.filename;
-          const fileBuffer = req.file.buffer;  
-          
-          await cloud.upload('f3', fileBuffer, fileName);
-        });
-
-        res.status(200).send({"Message": "File uploaded."});
+  try {
+    if (!req.file) {
+      return res.status(400).send({ "Error": "No file uploaded" });
     }
-    catch(error){
-        res.status(400).send({"Error": error.message});
-    }
+    
+    const fileName = req.file.originalname;
+    const fileBuffer = req.file.buffer;
+
+    await cloud.upload('f3', fileBuffer, fileName);
+
+    res.status(200).send({ "Message": "File uploaded." });
+  } 
+  catch (error) {
+    res.status(400).send({ "Error": error.message });
+  }
+
 }
 
 const downloadFile = (req, res) => {
@@ -63,24 +40,7 @@ const downloadFile = (req, res) => {
 
 }
 
-// Allowed extensions
-const checkFileType = (file, cb) => {
-  const allowedTypes = [
-    'image/png',
-    'image/jpg',
-    'image/jpeg',
-    'application/pdf',
-    'text/plain',
-    'application/msword',             // DOC
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // DOCX
-  ];
 
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true); // Accept file
-  } else {
-    cb(new Error('Invalid file type. Only PNG, JPG, JPEG, TXT, PDF, DOC, and DOCX are allowed.'));
-  }
-};
 
 module.exports = {
     uploadFile,

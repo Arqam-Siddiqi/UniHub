@@ -1,8 +1,9 @@
 const router = require('express').Router();
 
+const upload = require('../middleware/multerLayer');
 const documentController = require('../controllers/documentController');
 
-router.post('/upload', documentController.uploadFile);
+router.post('/upload', upload, documentController.uploadFile);
 
 router.get('/download', documentController.downloadFile);
 
