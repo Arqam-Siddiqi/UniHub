@@ -6,7 +6,7 @@ const cloud = require('../cloud_storage/cloud');
 const storage = multer.diskStorage({
   destination: './downloads/',
   filename: (req, file, cb) => {
-    cb(null, `${`temp${path.extname(file.originalname)}`}`);
+    cb(null, `${`${Date.now()}${path.extname(file.originalname)}`}`);
   }
 });
 
@@ -28,8 +28,11 @@ const uploadFile = async (req, res) => {
             console.log(err);
             return res.status(400).send({"Error": err});
           }
+          
+          const fileName = req.file.originalname;
           const pathOfFile = req.file.destination + req.file.filename;  
-          await cloud.upload('f3', pathOfFile);
+          
+          await cloud.upload('f3', pathOfFile, fileName);
         });
 
         res.status(200).send({"Message": "File uploaded."});

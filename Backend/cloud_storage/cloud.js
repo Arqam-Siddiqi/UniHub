@@ -22,7 +22,7 @@ initializeStorage();
 
 //first we will save the file recieved/ assume for noe the path given below is the path of this saved file
 //destination will be the path to the directory on the cloud in which u want to save the file, e.g: repo1/newfolder2/newfolder3 where repo1 is in the root directory 
-const upload = async (destination, pathOfFile) => {
+const upload = async (destination, pathOfFile, fileName) => {
 
   if(!storage){
     console.log("Mega Storage is not initialized.");
@@ -40,7 +40,7 @@ const upload = async (destination, pathOfFile) => {
       const t1 = performance.now();
 
       await storage.root.navigate(destination).upload({
-        name: path.basename(pathOfFile),
+        name: fileName,
         size: fileSize,
       }, readstream).complete.then(() => {
         const t2=performance.now();
