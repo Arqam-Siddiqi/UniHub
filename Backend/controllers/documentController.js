@@ -1,4 +1,3 @@
-const path = require('path');
 const cloud = require('../cloud_storage/cloud');
 
 const uploadFile = async (req, res) => {

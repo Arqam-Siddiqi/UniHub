@@ -15,9 +15,7 @@ const repoRoutes = require('./routes/repoRoutes');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: '*'
 }));
 
 dbSetup()
