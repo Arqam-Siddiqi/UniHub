@@ -12,7 +12,7 @@ const initializeStorage = async () => {
       password: 'madeeha1984'
     }).ready;
     
-    console.log("Successfully logged into Mega.");
+    console.log("Successfully logged into Mega...");
   } catch (error) {
     console.error('Error initializing storage:', error);
   }
