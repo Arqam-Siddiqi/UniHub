@@ -4,7 +4,7 @@ const uploadFile = async (req, res) => {
 
   try {
     if (!req.file) {
-      return res.status(400).send({ "Error": "No file uploaded" });
+      return res.status(400).send({ "Error": "No file uploaded." });
     }
     
     const fileName = req.file.originalname;

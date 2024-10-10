@@ -1,6 +1,6 @@
 const multer = require('multer');
 
-// This is the problem for Vercel. Change it to memoryStorage and pray it works
+// This is the problem for Vercel.
 // const storage = multer.diskStorage({
 //   destination: './downloads/',
 //   filename: (req, file, cb) => {
