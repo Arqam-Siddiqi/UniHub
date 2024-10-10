@@ -64,28 +64,38 @@ const upload = async (destination, fileBuffer, fileName) => {
   
 }
 
-const importFile = async (pathToFile) => {
+const download = async (pathToFile) => {
 
   if(!storage){
     console.log("Mega Storage is not initialized.");
     return;
   }
 
-  return new Promise((resolve, reject) => {
-    const wstream = fs.createWriteStream(path.basename(pathToFile));
-    storage.root.find(path.basename(pathToFile), true).download().pipe(wstream);
+  const t1 = performance.now();
+  
+  const data = await storage.root.find(path.basename(pathToFile), true).downloadBuffer();
 
-    wstream.on('finish', () => {
-      console.log(`File downloaded to ${pathToFile}`);
-      resolve();
-    });
+  const t2 = performance.now();
 
-    wstream.on('error', (error) => {
-      console.error('Error writing file:', error);
-      reject(error);
-    });
+  console.log('Download Complete.');
+  console.log('Time taken to download file: ', t2-t1 , 'ms.\n');
 
-  });
+  return data;
+  // return new Promise((resolve, reject) => {
+  //   const wstream = fs.createWriteStream(path.basename(pathToFile));
+  //   storage.root.find(path.basename(pathToFile), true).download().pipe(wstream);
+
+  //   wstream.on('finish', () => {
+  //     console.log(`File downloaded to ${pathToFile}`);
+  //     resolve(wstream);
+  //   });
+
+  //   wstream.on('error', (error) => {
+  //     console.error('Error writing file:', error);
+  //     reject(error);
+  //   });
+
+  // });
 }
 
 //pass flag=1 if making a folder within a folder that you made. Pass flag=0 if making a folder in root directory i.e making a new user repository.
@@ -142,7 +152,7 @@ const deleteFileAndFolder = async (pathToFile) => {
 
 module.exports = {
   upload,
-  importFile,
+  download,
   createFolder,
   deleteFileAndFolder
 }
@@ -152,14 +162,3 @@ module.exports = {
 // await importFile('Testing.txt');
 // await deleteFileAndFolder('f3');
 // await storage.close();
-
-
-
-// const run = async () => {
-
-  
-  
-//   return 'Done';
-// }
-
-// run().then(data => console.log(data));

@@ -1,4 +1,5 @@
 const cloud = require('../cloud_storage/cloud');
+const path = require('path');
 
 const uploadFile = async (req, res) => {
 
@@ -20,18 +21,20 @@ const uploadFile = async (req, res) => {
 
 }
 
-const downloadFile = (req, res) => {
+const downloadFile = async (req, res) => {
 
   try{
-    const filePath = './downloads/' + 'APznzaZfTXy8AzjdtzpkMg-0O4meK62R8nVED-5LuM3pbkrAXl42Cd1xV0LjsVmIYVQSVr7hpJYELcVY8m-aI1pB_Zr2JsI-y9Ce0ymXm1XEnYNq91qJMZ-c8hf96Njq0kH22zF-4LQ9NdDLLsjr5G-rI2dJROtPa7Xtc5hsvwH6UO1YAS_kYANF_cq0V3DecJ5LQPy8C8ocSUoH5nYXPXYoO5ZcU2.pdf'
+    const filePath = req.body.filePath;
+    const fileName = path.basename(filePath);
 
-    res.download(filePath, (err) => {
-      if (err) {
-        console.error(err);
-        res.status(404).send('File not found');
-      }
-    });
+    const fileBuffer = await cloud.download(filePath);
+    
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileBuffer.length);
 
+    // Send the file buffer as response
+    res.status(200).send(fileBuffer);
   }
   catch(error){
     res.status(400).send({"Error": error.message});

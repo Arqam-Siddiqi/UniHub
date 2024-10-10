@@ -53,11 +53,7 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
-// app.use('/document', documentRoutes);
-
-app.get('/document/upload', (req, res) => {
-  res.send({"Message": "This is the proxy doc upload page."});
-})
+app.use('/document', documentRoutes);
 
 app.use(requireAuth);
 
