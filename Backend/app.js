@@ -3,6 +3,7 @@ const passport = require('passport');
 const session = require('express-session');
 require('dotenv').config();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -25,6 +26,7 @@ dbSetup()
   })
   .catch((err) => console.log('Error:', err));
 
+app.use
 app.use(express.json());
 
 app.use( 
@@ -51,7 +53,11 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
-app.use('/document', documentRoutes);
+// app.use('/document', documentRoutes);
+
+app.get('/document/upload', (req, res) => {
+  res.send({"Message": "This is the proxy doc upload page."});
+})
 
 app.use(requireAuth);
 
