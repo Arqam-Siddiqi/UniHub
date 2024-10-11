@@ -18,11 +18,7 @@ const initializeStorage = async () => {
   }
 };
 
-initializeStorage();
-
-//first we will save the file recieved/ assume for noe the path given below is the path of this saved file
-//destination will be the path to the directory on the cloud in which u want to save the file, e.g: repo1/newfolder2/newfolder3 where repo1 is in the root directory 
-const upload = async (destination, fileBuffer, fileName) => {
+const upload = async (fileBuffer, fileName) => {
 
   if(!storage){
     console.log("Mega Storage is not initialized.");
@@ -39,7 +35,7 @@ const upload = async (destination, fileBuffer, fileName) => {
       
       const t1 = performance.now();
 
-      await storage.root.navigate(destination).upload({
+      await storage.root.upload({
         name: fileName,
         size: fileBuffer.length
       }, fileBuffer).complete.then(() => {
@@ -64,28 +60,38 @@ const upload = async (destination, fileBuffer, fileName) => {
   
 }
 
-const importFile = async (pathToFile) => {
+const download = async (pathToFile) => {
 
   if(!storage){
     console.log("Mega Storage is not initialized.");
     return;
   }
 
-  return new Promise((resolve, reject) => {
-    const wstream = fs.createWriteStream(path.basename(pathToFile));
-    storage.root.find(path.basename(pathToFile), true).download().pipe(wstream);
+  const t1 = performance.now();
+  
+  const data = await storage.root.find(path.basename(pathToFile), true).downloadBuffer();
 
-    wstream.on('finish', () => {
-      console.log(`File downloaded to ${pathToFile}`);
-      resolve();
-    });
+  const t2 = performance.now();
 
-    wstream.on('error', (error) => {
-      console.error('Error writing file:', error);
-      reject(error);
-    });
+  console.log('Download Complete.');
+  console.log('Time taken to download file: ', t2-t1 , 'ms.\n');
 
-  });
+  return data;
+  // return new Promise((resolve, reject) => {
+  //   const wstream = fs.createWriteStream(path.basename(pathToFile));
+  //   storage.root.find(path.basename(pathToFile), true).download().pipe(wstream);
+
+  //   wstream.on('finish', () => {
+  //     console.log(`File downloaded to ${pathToFile}`);
+  //     resolve(wstream);
+  //   });
+
+  //   wstream.on('error', (error) => {
+  //     console.error('Error writing file:', error);
+  //     reject(error);
+  //   });
+
+  // });
 }
 
 //pass flag=1 if making a folder within a folder that you made. Pass flag=0 if making a folder in root directory i.e making a new user repository.
@@ -117,7 +123,6 @@ const createFolder = async (name, folderPath, flag) => {
   
 }
 
-//also works for folders
 const deleteFileAndFolder = async (pathToFile) => {
 
   if(!storage){
@@ -142,9 +147,9 @@ const deleteFileAndFolder = async (pathToFile) => {
 
 module.exports = {
   upload,
-  importFile,
-  createFolder,
-  deleteFileAndFolder
+  download,
+  deleteFileAndFolder,
+  initializeStorage
 }
 
 // upload('folder', "C:/Users/Hp/Downloads/Testing.txt");
@@ -152,14 +157,3 @@ module.exports = {
 // await importFile('Testing.txt');
 // await deleteFileAndFolder('f3');
 // await storage.close();
-
-
-
-// const run = async () => {
-
-  
-  
-//   return 'Done';
-// }
-
-// run().then(data => console.log(data));

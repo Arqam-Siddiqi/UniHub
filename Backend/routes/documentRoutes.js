@@ -5,6 +5,6 @@ const documentController = require('../controllers/documentController');
 
 router.post('/upload', upload, documentController.uploadFile);
 
-router.get('/download', documentController.downloadFile);
+router.post('/download', documentController.downloadFile);
 
 module.exports = router;

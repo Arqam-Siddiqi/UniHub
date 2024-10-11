@@ -6,7 +6,7 @@ const queryAllRepos = async () => {
     const repos = await query(`
         SELECT * FROM Repos;   
     `);
-    console.log(repos.rows);
+    
     return repos.rows;
 
 }
@@ -18,7 +18,7 @@ const createRepo = async (user_id,{name,  description, visibility,}) => {
         ($1, $2, $3, $4)
         RETURNING *;
     `, [name, user_id, visibility, description]);
-    console.log(repo.rows[0]);
+    
     return repo.rows[0];
 
 }
@@ -30,7 +30,6 @@ const queryAllReposOfUser = async (user_id) => {
         WHERE user_id = $1    
     `, [user_id]);
 
-    console.log(repos.rows);
     return repos.rows;
 }
 
@@ -40,7 +39,6 @@ const queryRepoNameOfUser = async (id)=>{
         WHERE id = $1   
     `, [id]);
 
-    console.log(repos.rows);
     return repos.rows;
 }
 

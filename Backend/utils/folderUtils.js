@@ -1,13 +1,8 @@
-const validateRepoParams = (user_id, parameters, type) => {
-    if(parameters.visibility){
-        const possible_visibilities = ['public', 'private'];
-        if(!possible_visibilities.includes(parameters.visibility)){
-            throw Error("Invalid Repository Visibility.");
-        }
-    }
+const validateRepoParams = (parameters, type) => {
+    
     
     if(type==='c'){
-        if(!user_id || !parameters.name || !parameters.visibility || !parameters.description){
+        if( !parameters.name || !parameters.repo_id){
             throw Error("Please fill all the required fields.");
         }
     
@@ -15,8 +10,9 @@ const validateRepoParams = (user_id, parameters, type) => {
         
        
     }
+    
     else if(type==='u'){
-        if(!parameters.id || (!parameters.name && !parameters.description && !parameters.visibility)){
+        if(!parameters.id || (!parameters.name && !parameters.parent_id)){
             throw Error("Please fill all the required fields.");
         } 
     }
