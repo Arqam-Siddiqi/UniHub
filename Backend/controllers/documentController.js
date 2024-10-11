@@ -1,8 +1,9 @@
 const cloud = require('../cloud_storage/cloud');
 const path = require('path');
+const fileQuery = require('../database/fileQuery');
 
 const uploadFile = async (req, res) => {
-
+  
   try {
     if (!req.file) {
       return res.status(400).send({ "Error": "No file uploaded." });
@@ -16,6 +17,8 @@ const uploadFile = async (req, res) => {
     res.status(200).send({ "Message": "File uploaded." });
   } 
   catch (error) {
+    await fileQuery.deleteFileByID(req.file.id);
+
     res.status(400).send({ "Error": error.message });
   }
 

@@ -19,14 +19,21 @@ const getAllFilesFromRepo = async (req, res) => {
 
 }
 
-const createFile = async (req, res) => {
+const createFile = async (req, res, next) => {
 
     try{
-        const validated_params = await validateFileParams(req.body);
+        if(!req.file){
+            throw Error("File was not uploaded.");
+        }
+
+        const validated_params = await validateFileParams(req.file, req.body);
 
         const file = await fileQuery.createFile(validated_params);
+        req.file.originalname = file.id + "." + file.extension;
+        req.file.id = file.id;
+        req.file.repo_id = file.repo_id;
 
-        res.status(200).send(file);
+        next();
     }
     catch(error){
         res.status(400).send({"Error": error.message});
