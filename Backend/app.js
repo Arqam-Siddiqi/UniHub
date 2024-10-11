@@ -11,7 +11,7 @@ const requireAuth = require('./middleware/requireAuth');
 const { dbSetup } = require('./database/psqlWrapper');
 const documentRoutes = require('./routes/documentRoutes');
 const repoRoutes = require('./routes/repoRoutes');
-
+const folderRoutes = require('./routes/folderRoutes');
 const app = express();
 
 app.use(cors({
@@ -58,6 +58,7 @@ app.use(requireAuth);
 // protected endpoints
 app.use('/user', userRoutes);
 app.use('/repo', repoRoutes);
+app.use('/folder',folderRoutes);
 
 
 app.get('/', async (req, res) => {
