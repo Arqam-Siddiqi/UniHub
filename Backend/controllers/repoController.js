@@ -86,7 +86,7 @@ const deleteRepo = async (req, res)=>{
         const repos = await repoQuery.queryAllReposOfUser(user_id);
         const ids = repos.map(data => data.id);
 
-        const validated_params = validateRepoParams(user_id,req.body, 'd');
+        const validated_params = validateRepoParams(user_id, req.body, 'd');
 
         if(!ids.includes(req.body.id)){
             throw Error(`This user does not have a Repository with id "${req.body.id}".`);

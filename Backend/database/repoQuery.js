@@ -67,11 +67,29 @@ const deleteRepoOfUser = async ( {id} )=>{
     return repos.rows[0];
 }
 
+const doesUserOwnRepo = async (user_id, repo_id) => {
+
+    const repos = await query(`
+        SELECT * FROM Repos
+        WHERE user_id = $1    
+    `, [user_id]);
+
+    const repo_ids = repos.rows.map(data => data.id);
+
+    if(repo_ids.includes(repo_id)){
+        return true;
+    }
+
+    return false;
+
+}
+
 module.exports = {
     queryAllRepos,
     createRepo,
     queryAllReposOfUser,
     queryRepoNameOfUser,
     updateRepoOfUser,
-    deleteRepoOfUser
+    deleteRepoOfUser,
+    doesUserOwnRepo
 }

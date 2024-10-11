@@ -42,8 +42,35 @@ const createFile = async ({name, extension, fileSize, repo_id, folder_id}) => {
 
 }
 
+const updateFileByID = async (id, {name, extension, folder_id}) => {
+
+    const file = await query(`
+        UPDATE Files
+        SET name = COALESCE($1, name), extension = COALESCE($2, extension)
+        WHERE id = $3
+        RETURNING *;
+    `, [name, extension, id]);
+
+    return file.rows[0];
+
+}
+
+const deleteFileByID = async (id) => {
+
+    const file = await query(`
+        DELETE FROM Files
+        WHERE id = $1
+        RETURNING *;
+    `, [id]);
+
+    return file.rows[0];
+
+}
+
 module.exports = {
     queryFilesFromRepo,
     queryFilesByParent,
-    createFile
+    createFile,
+    updateFileByID,
+    deleteFileByID
 }
