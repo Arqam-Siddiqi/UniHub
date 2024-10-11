@@ -11,7 +11,7 @@ const uploadFile = async (req, res) => {
     const fileName = req.file.originalname;
     const fileBuffer = req.file.buffer;
 
-    await cloud.upload('f3', fileBuffer, fileName);
+    await cloud.upload(fileBuffer, fileName);
 
     res.status(200).send({ "Message": "File uploaded." });
   } 
