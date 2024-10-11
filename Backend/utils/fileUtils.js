@@ -3,7 +3,16 @@ const repoQuery = require('../database/repoQuery');
 const folderQuery = require('../database/folderQuery');
 
 // call with await
-const validateFileParams = async ({name, extension, fileSize, repo_id, folder_id}) => {
+const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) => {
+
+    if(!originalname || !size){
+        throw Error("File was not properly parsed by upload().");
+    }
+
+    const arr = originalname.split('.');
+    const name = arr[0];
+    const extension = arr[1];
+    const fileSize = size;
 
     if(!name || !extension || !fileSize || !repo_id){
         throw Error("Please fill all the required fields.");
