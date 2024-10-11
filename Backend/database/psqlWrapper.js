@@ -67,6 +67,7 @@ const dbSetup = async function() {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         extension VARCHAR(8) NOT NULL,
+        fileSize INT NOT NULL,
         repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE NOT NULL,
         folder_id UUID REFERENCES Folders(id) ON DELETE CASCADE, -- NULL if the file is directly in the repository's root
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
