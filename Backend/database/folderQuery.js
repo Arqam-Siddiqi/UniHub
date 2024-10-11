@@ -39,6 +39,23 @@ const queryFoldersByParent = async({repo_id, parent_id})=>{
     return folders.rows;
 } 
 
+const doesRepoOwnFolder = async (repo_id, folder_id) => {
+
+    const folders = await query(`
+        SELECT * FROM Folders
+        WHERE repo_id = $1    
+    `, [repo_id]);
+
+    const folder_ids = folders.rows.map(data => data.id);
+
+    if(folder_ids.includes(folder_id)){
+        return true;
+    }
+
+    return false;
+
+}
+
 const createFolder = async({name, parent_id, repo_id})=>{
     if(parent_id === undefined){
         parent_id = null;
@@ -70,5 +87,6 @@ module.exports={
     queryAllFolders,
     queryFoldersByRepo,
     queryFoldersByParent,
-    createFolder
+    createFolder,
+    doesRepoOwnFolder
 }
