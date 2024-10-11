@@ -12,6 +12,7 @@ const requireAuth = require('./middleware/requireAuth');
 const { dbSetup } = require('./database/psqlWrapper');
 const documentRoutes = require('./routes/documentRoutes');
 const repoRoutes = require('./routes/repoRoutes');
+const {initializeStorage} = require('./cloud_storage/cloud');
 
 const app = express();
 
@@ -20,9 +21,10 @@ app.use(cors({
 }));
 
 dbSetup()
-  .then(() => {
-    app.listen(3000);
+  .then(async () => {
     console.log('Connected to PostgreSQL...');
+    await initializeStorage();
+    app.listen(3000);
   })
   .catch((err) => console.log('Error:', err));
 

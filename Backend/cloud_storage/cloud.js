@@ -18,11 +18,7 @@ const initializeStorage = async () => {
   }
 };
 
-initializeStorage();
-
-//first we will save the file recieved/ assume for noe the path given below is the path of this saved file
-//destination will be the path to the directory on the cloud in which u want to save the file, e.g: repo1/newfolder2/newfolder3 where repo1 is in the root directory 
-const upload = async (destination, fileBuffer, fileName) => {
+const upload = async (fileBuffer, fileName) => {
 
   if(!storage){
     console.log("Mega Storage is not initialized.");
@@ -39,7 +35,7 @@ const upload = async (destination, fileBuffer, fileName) => {
       
       const t1 = performance.now();
 
-      await storage.root.navigate(destination).upload({
+      await storage.root.upload({
         name: fileName,
         size: fileBuffer.length
       }, fileBuffer).complete.then(() => {
@@ -127,7 +123,6 @@ const createFolder = async (name, folderPath, flag) => {
   
 }
 
-//also works for folders
 const deleteFileAndFolder = async (pathToFile) => {
 
   if(!storage){
@@ -153,8 +148,8 @@ const deleteFileAndFolder = async (pathToFile) => {
 module.exports = {
   upload,
   download,
-  createFolder,
-  deleteFileAndFolder
+  deleteFileAndFolder,
+  initializeStorage
 }
 
 // upload('folder', "C:/Users/Hp/Downloads/Testing.txt");
