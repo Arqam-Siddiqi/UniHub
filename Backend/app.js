@@ -9,10 +9,11 @@ const authRoutes = require('./routes/authRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
 const { dbSetup } = require('./database/psqlWrapper');
+const {initializeStorage} = require('./cloud_storage/cloud');
 const documentRoutes = require('./routes/documentRoutes');
 const repoRoutes = require('./routes/repoRoutes');
 const folderRoutes = require('./routes/folderRoutes');
-const {initializeStorage} = require('./cloud_storage/cloud');
+const fileRoutes = require('./routes/fileRoutes');
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/user', userRoutes);
 app.use('/repo', repoRoutes);
 app.use('/folder', folderRoutes);
 app.use('/document', documentRoutes);
+app.use('/file', fileRoutes);
 
 
 app.get('/', async (req, res) => {
