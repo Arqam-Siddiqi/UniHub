@@ -75,5 +75,5 @@ app.get('/', async (req, res) => {
 
 
 app.use((req, res) => {
-  res.status(400).send("Error 404!");
+  res.status(400).send({"Error": "This API doesn't exist."});
 })
