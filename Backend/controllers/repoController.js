@@ -53,23 +53,25 @@ const getReposByJWT = async (req, res) => {
 
 const updateRepo =async (req, res)=>{
     try {
-        const user_id=req.user;
+        const user_id = req.user;
         const validated_params = validateRepoParams(user_id, req.body, 'u');
         const repo = await repoQuery.queryAllReposOfUser(user_id);
         const ids = repo.map(data => data.id);
         const names = repo.map(data=>data.name);
-        const currName=await repoQuery.queryRepoNameOfUser( req.body.id);
+        const currName= await repoQuery.queryRepoNameOfUser( req.body.id);
+        
         if(!ids.includes(req.body.id)){
-            throw Error(`There is no repo with id  "${req.body.id}".`);
+            throw Error(`This user does not have a Repository with id  "${req.body.id}".`);
         }
-        if(currName[0].name!==req.body.name){
+
+        if(currName[0].name !== req.body.name){
             if(names.includes(req.body.name) ){
                 throw Error(`There is already a repo named "${req.body.name}".`)
             }
         }
        
-        
-        const repos= await repoQuery.update(validated_params);
+        const repos= await repoQuery.updateRepoOfUser(validated_params);
+       
         res.status(200).send(repos);
     } catch (error) {
         res.status(400).send({"Error": error.message});
@@ -78,15 +80,20 @@ const updateRepo =async (req, res)=>{
 
 const deleteRepo = async (req, res)=>{
     try {
+        
         const user_id=req.user;
-        const repo = await repoQuery.queryAllReposOfUser(user_id);
-        const ids = repo.map(data => data.id);
+        
+        const repos = await repoQuery.queryAllReposOfUser(user_id);
+        const ids = repos.map(data => data.id);
+
         const validated_params = validateRepoParams(user_id,req.body, 'd');
+
         if(!ids.includes(req.body.id)){
-            throw Error(`There is no repo with id  "${req.body.id}".`);
+            throw Error(`This user does not have a Repository with id "${req.body.id}".`);
         }
-        const repos=await repoQuery._delete(validated_params);
-        res.status(200).send(repos);
+        
+        const repo = await repoQuery.deleteRepoOfUser(validated_params);
+        res.status(200).send(repo);
     } catch (error) {
         res.status(400).send({"Error": error.message});
     }

@@ -1,4 +1,3 @@
-const { user } = require('pg/lib/defaults');
 const {query} = require('./psqlWrapper');
 
 const queryAllRepos = async () => {
@@ -11,7 +10,7 @@ const queryAllRepos = async () => {
 
 }
 
-const createRepo = async (user_id,{name,  description, visibility,}) => {
+const createRepo = async (user_id, {name,  description, visibility} ) => {
 
     const repo = await query(`
         INSERT INTO Repos (name, user_id, visibility, description) VALUES
@@ -34,6 +33,7 @@ const queryAllReposOfUser = async (user_id) => {
 }
 
 const queryRepoNameOfUser = async (id)=>{
+
     const repos = await query(`
         SELECT name FROM Repos
         WHERE id = $1   
@@ -42,27 +42,29 @@ const queryRepoNameOfUser = async (id)=>{
     return repos.rows;
 }
 
-const update = async ({id,name, description, visibility})=>{
-    const repos= await query(
-        `UPDATE Repos
+const updateRepoOfUser = async ({id, name, description, visibility})=>{
+
+    const repos= await query(`
+        UPDATE Repos
         SET name = COALESCE($2, name),
             description = COALESCE($3, description),
             visibility = COALESCE($4, visibility)
-        WHERE id = $1`
-        ,[id,name, description, visibility]
-    );
+        WHERE id = $1
+        RETURNING *;
+    `, [id, name, description, visibility]);
     
-    return `Repo updated successfully.`;
+    return repos.rows[0];
 }
 
-const _delete = async ({id})=>{
-    const repos = await query(
-        `DELETE FROM Repos
-        WHERE id = $1`
-        ,[id]
-    );
-    return `Repo deleted successfully.`;
+const deleteRepoOfUser = async ( {id} )=>{
+    
+    const repos = await query(`
+        DELETE FROM Repos
+        WHERE id = $1
+        RETURNING *;
+    `, [id]);
 
+    return repos.rows[0];
 }
 
 module.exports = {
@@ -70,6 +72,6 @@ module.exports = {
     createRepo,
     queryAllReposOfUser,
     queryRepoNameOfUser,
-    update,
-    _delete
+    updateRepoOfUser,
+    deleteRepoOfUser
 }
