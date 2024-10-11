@@ -46,29 +46,38 @@ const dbSetup = async function() {
         END IF;
       END $$;
 
-      CREATE TABLE IF NOT EXISTS repos (
+      CREATE TABLE IF NOT EXISTS Repos (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(64) NOT NULL,
-        user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-        visibility repo_visibility DEFAULT 'public',
+        user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+        visibility repo_visibility DEFAULT 'public' NOT NULL,
         description TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
   
-      CREATE TABLE IF NOT EXISTS folders (
+      CREATE TABLE IF NOT EXISTS Folders (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(128) NOT NULL,
-        parent_id UUID REFERENCES folders(id) ON DELETE CASCADE, -- NULL if it's a root folder
-        repo_id UUID REFERENCES repos(id) ON DELETE CASCADE NOT NULL,
+        parent_id UUID REFERENCES Folders(id) ON DELETE CASCADE, -- NULL if it's a root folder
+        repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
-      CREATE TABLE IF NOT EXISTS files (
+      CREATE TABLE IF NOT EXISTS Files (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255),
-        path TEXT UNIQUE NOT NULL, -- Storing the file path
-        folder_id UUID REFERENCES folders(id) ON DELETE CASCADE, -- NULL if the file is directly in the repository's root
+        name VARCHAR(255) NOT NULL,
+        extension VARCHAR(8) NOT NULL,
+        repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE NOT NULL,
+        folder_id UUID REFERENCES Folders(id) ON DELETE CASCADE, -- NULL if the file is directly in the repository's root
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      
+      CREATE TABLE IF NOT EXISTS Comments (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE NOT NULL,
+        user_id UUID  REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
       `
     )

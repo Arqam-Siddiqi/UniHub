@@ -3,6 +3,7 @@ const passport = require('passport');
 const session = require('express-session');
 require('dotenv').config();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -12,6 +13,8 @@ const { dbSetup } = require('./database/psqlWrapper');
 const documentRoutes = require('./routes/documentRoutes');
 const repoRoutes = require('./routes/repoRoutes');
 const folderRoutes = require('./routes/folderRoutes');
+const {initializeStorage} = require('./cloud_storage/cloud');
+
 const app = express();
 
 app.use(cors({
@@ -19,12 +22,14 @@ app.use(cors({
 }));
 
 dbSetup()
-  .then(() => {
-    app.listen(3000);
+  .then(async () => {
     console.log('Connected to PostgreSQL...');
+    await initializeStorage();
+    app.listen(3000);
   })
   .catch((err) => console.log('Error:', err));
 
+app.use
 app.use(express.json());
 
 app.use( 
@@ -58,7 +63,7 @@ app.use(requireAuth);
 // protected endpoints
 app.use('/user', userRoutes);
 app.use('/repo', repoRoutes);
-app.use('/folder',folderRoutes);
+app.use('/folder', folderRoutes);
 
 
 app.get('/', async (req, res) => {
