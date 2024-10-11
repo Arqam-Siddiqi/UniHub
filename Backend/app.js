@@ -3,7 +3,6 @@ const passport = require('passport');
 const session = require('express-session');
 require('dotenv').config();
 const cors = require('cors');
-const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -56,14 +55,14 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
-app.use('/document', documentRoutes);
 
 app.use(requireAuth);
 
-// protected endpoints
+// Protected Endpoints
 app.use('/user', userRoutes);
 app.use('/repo', repoRoutes);
 app.use('/folder', folderRoutes);
+app.use('/document', documentRoutes);
 
 
 app.get('/', async (req, res) => {

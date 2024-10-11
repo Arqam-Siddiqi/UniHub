@@ -1,38 +1,48 @@
 const {query} = require('./psqlWrapper');
-const queryAllFolders = async ()=>{
-    const folders=await query(
+
+const queryAllFolders = async () => {
+    const folders = await query(
         `SELECT * FROM folders`
     );
     console.log(folders.rows);
     return folders.rows;
 }
 
-const getFoldersByRepo = async(id)=>{
+const queryFoldersByRepo = async(id)=>{
     const folders= await query(
         `SELECT * FROM folders
         WHERE repo_id = $1`
          ,[id]
     );
-    console.log(folders.rows);
+    return folders.rows;
+}
+
+const queryFoldersByParent = async({repo_id, parent_id})=>{
+    
+    let folders;
+
+    if(!parent_id){
+        folders = await query(`
+            SELECT * FROM folders
+            WHERE repo_id = $1 AND parent_id IS NULL;
+        `, [repo_id]
+        );
+    }
+    else{
+        folders = await query(`
+            SELECT * FROM folders
+            WHERE repo_id = $1 AND parent_id = $2;
+        `, [repo_id, parent_id]
+        );
+    }
+    
     return folders.rows;
 } 
 
-// const createRootFolder = async (name,  repo_id)=>{
-//     const folder= await query(
-//         `INSERT INTO folders (name,  repo_id)
-//          VALUES ($1,$2)
-//          RETURNING *;`
-//          ,[name ,repo_id]
-//     );
-//     console.log(folder.rows[0]);
-//     return folder.rows[0];
-// }
-
-const createFolder = async({name, parent_id,repo_id})=>{
-    if(parent_id===undefined){
-        parent_id=null;
+const createFolder = async({name, parent_id, repo_id})=>{
+    if(parent_id === undefined){
+        parent_id = null;
     }
-    console.log('Received:', { name, parent_id, repo_id });
 
     const folder= await query(
         `INSERT INTO folders (name, parent_id, repo_id)
@@ -40,23 +50,25 @@ const createFolder = async({name, parent_id,repo_id})=>{
          RETURNING *;`
          ,[name, parent_id ,repo_id]
     );
-    console.log(folder.rows[0]);
+    
     return folder.rows[0];
 }
 
 const updateFolder = async ({id,name, parent_id})=>{
-    const repos= await query(
+    const folders = await query(
         `UPDATE folders
         SET name = COALESCE($2, name),
             parent_id = $3,
-        WHERE id = $1`
-        ,[id,name, parent_id]
+        WHERE id = $1
+        RETURNING *;
+        `, [id, name, parent_id]
     );
     
-    return `Folder updated successfully.`;
+    return folders.rows[0];
 }
 module.exports={
     queryAllFolders,
-    getFoldersByRepo,
+    queryFoldersByRepo,
+    queryFoldersByParent,
     createFolder
 }
