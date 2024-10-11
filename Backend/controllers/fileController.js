@@ -29,6 +29,8 @@ const createFile = async (req, res, next) => {
         const validated_params = await validateFileParams(req.file, req.body);
 
         const file = await fileQuery.createFile(validated_params);
+
+        // customization for documentController
         req.file.originalname = file.id + "." + file.extension;
         req.file.id = file.id;
         req.file.repo_id = file.repo_id;
