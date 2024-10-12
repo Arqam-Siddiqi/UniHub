@@ -97,10 +97,39 @@ const deleteFileByID = async (req, res) => {
 
 }
 
+const getFileDetails = async (req, res, next) => {
+    
+    try{
+        const params = req.body;
+        if(!params.id){
+            throw Error("Please send the id of the file.");
+        }
+
+        // if(!params.repo_id){
+        //     throw Error("Please send the repo_id.");
+        // }
+
+        const file = await fileQuery.queryFileByID(params.id);
+        
+        if(!file){
+            throw Error("File does not exist.");
+        }
+        
+        req.file = file.id + "." + file.extension;
+        
+        next();
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 module.exports = {
     getAllFilesFromFolder,
     getAllFilesFromRepo,
     createFile,
     updateFileByID,
-    deleteFileByID
+    deleteFileByID,
+    getFileDetails
 }

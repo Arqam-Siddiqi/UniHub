@@ -8,6 +8,8 @@ router.post('/', fileController.getAllFilesFromRepo);
 
 router.post('/create', upload, fileController.createFile, documentController.uploadFile);
 
+router.post('/view', fileController.getFileDetails, documentController.downloadFile);
+
 router.post('/parent', fileController.getAllFilesFromFolder);
 
 router.delete('/delete', fileController.deleteFileByID);

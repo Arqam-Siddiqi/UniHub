@@ -67,10 +67,22 @@ const deleteFileByID = async (id) => {
 
 }
 
+const queryFileByID = async (id) => {
+
+    const file = await query(`
+        SELECT * FROM Files
+        WHERE id = $1;
+    `, [id]);
+
+    return file.rows[0];
+
+}
+
 module.exports = {
     queryFilesFromRepo,
     queryFilesByParent,
     createFile,
     updateFileByID,
-    deleteFileByID
+    deleteFileByID,
+    queryFileByID
 }
