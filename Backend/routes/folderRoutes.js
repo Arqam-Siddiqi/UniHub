@@ -10,8 +10,8 @@ router.post('/parent', folderController.getFoldersByParent);
 
 router.post('/create', folderController.createFolder);
 
-//router.patch('/update', folderController.updateFolder);
+router.patch('/update', folderController.updateFolder);
 
-// router.delete('/delete', folderController.deleteRepo);
+router.delete('/delete', folderController.deleteFolder);
 
 module.exports = router;
