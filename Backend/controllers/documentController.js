@@ -27,12 +27,14 @@ const uploadFile = async (req, res) => {
 const downloadFile = async (req, res) => {
 
   try{
-    const filePath = req.body.filePath;
-    const fileName = path.basename(filePath);
+    const filename = req.file
+    if(!filename){
+      throw Error("File path is invalid.");
+    }
 
-    const fileBuffer = await cloud.download(filePath);
+    const fileBuffer = await cloud.download(filename);
     
-    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('Content-Length', fileBuffer.length);
 
