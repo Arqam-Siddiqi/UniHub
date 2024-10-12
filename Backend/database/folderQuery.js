@@ -72,15 +72,53 @@ const createFolder = async({name, parent_id, repo_id})=>{
 }
 
 const updateFolder = async ({id,name, parent_id})=>{
+    let folders;
+    if(parent_id===undefined){
+        folders = await query(
+            `UPDATE folders
+            SET name = COALESCE($2, name)
+            WHERE id = $1
+            RETURNING *;
+            `, [id, name]
+        );
+    }
+    else{
+        folders = await query(
+            `UPDATE folders
+            SET name = COALESCE($2, name),
+                parent_id = $3
+            WHERE id = $1
+            RETURNING *;
+            `, [id, name, parent_id]
+        );
+    } 
+    
+    
+   
+    console.log(folders.rows[0]);
+    return folders.rows[0];
+}
+
+const getFolder = async (id)=>{
     const folders = await query(
-        `UPDATE folders
-        SET name = COALESCE($2, name),
-            parent_id = $3,
+        `SELECT * FROM folders
         WHERE id = $1
-        RETURNING *;
-        `, [id, name, parent_id]
+        ;
+        `, [id]
     );
     
+    return folders.rows[0];
+}
+
+
+
+const deleteFolder = async ({id})=>{
+    const folders = await query(`
+        DELETE FROM folders
+        WHERE id = $1
+        RETURNING *;
+    `, [id]);
+
     return folders.rows[0];
 }
 module.exports={
@@ -88,5 +126,8 @@ module.exports={
     queryFoldersByRepo,
     queryFoldersByParent,
     createFolder,
-    doesRepoOwnFolder
+    doesRepoOwnFolder,
+    getFolder,
+    deleteFolder,
+    updateFolder
 }
