@@ -99,10 +99,30 @@ const deleteRepo = async (req, res)=>{
     }
 }
 
+const getRepoByID = async (req, res) => {
+
+    try{
+        const user_id = req.user;
+        const params = req.params;
+        
+        if(!params.id){
+            throw Error("Repository does not exist or is not owned by this user.");
+        }
+        const repos = await repoQuery.queryReposByID(user_id, params.id);
+        
+        res.status(200).send(repos);
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 module.exports = {
     getAllRepos,
     createRepo,
     getReposByJWT,
     updateRepo,
-    deleteRepo
+    deleteRepo,
+    getRepoByID
 }

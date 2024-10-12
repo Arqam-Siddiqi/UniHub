@@ -32,6 +32,17 @@ const queryAllReposOfUser = async (user_id) => {
     return repos.rows;
 }
 
+const queryReposByID = async (user_id, id) => {
+    
+    const repos = await query(`
+        SELECT * FROM Repos
+        WHERE (visibility='public' OR user_id = $1) AND id = $2;
+    `, [user_id, id]);
+
+    return repos.rows[0];
+
+}
+
 const queryRepoNameOfUser = async (id)=>{
 
     const repos = await query(`
@@ -91,5 +102,6 @@ module.exports = {
     queryRepoNameOfUser,
     updateRepoOfUser,
     deleteRepoOfUser,
-    doesUserOwnRepo
+    doesUserOwnRepo,
+    queryReposByID
 }

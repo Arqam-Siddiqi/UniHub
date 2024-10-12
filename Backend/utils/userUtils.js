@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const {query} = require('../database/psqlWrapper');
 
 const createJWT = (payload) => {
-    return jwt.sign({id: payload}, process.env.JWT_SECRET, {expiresIn: '3d'});
+    return jwt.sign({id: payload}, process.env.JWT_SECRET, {expiresIn: '1h'});
 }
 
 // always call with await
