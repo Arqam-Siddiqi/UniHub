@@ -16,9 +16,8 @@ passport.use(new GoogleStrategy({
     clientID: credentials.web.client_id,
     clientSecret: credentials.web.client_secret,
     callbackURL: process.env.HOSTING_SITE ? `${process.env.HOSTING_SITE}/auth/google/callback` : `http://localhost:${process.env.BACKEND_PORT}/auth/google/callback`,
-    passReqToCallback: true
   },
-  async function(req, accessToken, refreshToken, profile, done) {
+  async function(access_token, refresh_token, profile, done) {
     
     try{
       let user = await authQuery.createGoogleUser(profile);
@@ -26,12 +25,13 @@ passport.use(new GoogleStrategy({
       // if user already has an account
       if(!user){
         result = await userQuery.queryUserByEmail(profile.emails[0].value);
+        console.log("here");
       }
       
-      done(null, result);
+      done(null, {...result, access_token, refresh_token});
     }
     catch(error){
-      console.log("Unable to create user.");
+      console.log("Unable to create user.", error.message);
     }
     
   }

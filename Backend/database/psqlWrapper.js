@@ -4,7 +4,7 @@ let pool;
 
 if(process.env.HOSTING_SITE === 'https://unihub-86y9.onrender.com'){
   pool = new Pool({
-    connectionString: "postgresql://unihub:gKXmdgfuVsk1h5ockYv9gaNjqVvlZnm8@dpg-crslt9jtq21c73dgpb6g-a.singapore-postgres.render.com/unihub_rdpy" + "?sslmode=require"
+    connectionString: "postgresql://unihub_pxz2_user:KUO2JjR26iG94b527k67HEH95qFsZ1Sc@dpg-cs9objbqf0us739jqfqg-a.singapore-postgres.render.com/unihub_pxz2" + "?sslmode=require"
   });
 }
 else if(process.env.HOSTING_SITE === 'https://unihub-backend.vercel.app'){

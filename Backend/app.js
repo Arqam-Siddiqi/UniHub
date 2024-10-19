@@ -23,7 +23,7 @@ app.use(cors({
 dbSetup()
   .then(async () => {
     console.log('Connected to PostgreSQL...');
-    await initializeStorage();
+    // await initializeStorage();
     app.listen(3000);
   })
   .catch((err) => console.log('Error:', err));
