@@ -20,15 +20,17 @@ passport.use(new GoogleStrategy({
   async function(access_token, refresh_token, profile, done) {
     
     try{
-      let user = await authQuery.createGoogleUser(profile);
-      
-      // if user already has an account
-      if(!user){
-        result = await userQuery.queryUserByEmail(profile.emails[0].value);
-        console.log("here");
+      let user = await userQuery.queryUserByEmail(profile.emails[0].value);
+
+      if(user){
+        await authQuery.updateGoogleTokens(user.google_id, access_token, refresh_token);
+        console.log('Updated tokens');
+      } 
+      else {
+        user = await authQuery.createGoogleUser(profile, access_token, refresh_token);
       }
       
-      done(null, {...result, access_token, refresh_token});
+      done(null, {...user, access_token, refresh_token});
     }
     catch(error){
       console.log("Unable to create user.", error.message);

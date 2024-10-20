@@ -4,7 +4,7 @@ let pool;
 
 if(process.env.HOSTING_SITE === 'https://unihub-86y9.onrender.com'){
   pool = new Pool({
-    connectionString: "postgresql://unihub_pxz2_user:KUO2JjR26iG94b527k67HEH95qFsZ1Sc@dpg-cs9objbqf0us739jqfqg-a.singapore-postgres.render.com/unihub_pxz2" + "?sslmode=require"
+    connectionString: "postgresql://unihub_fqmd_user:hbPGBkzBRg3lfV8hxNdipALib9Sbi4eE@dpg-csambiaj1k6c73cr0ts0-a.singapore-postgres.render.com/unihub_fqmd" + "?sslmode=require"
   });
 }
 else if(process.env.HOSTING_SITE === 'https://unihub-backend.vercel.app'){
@@ -30,9 +30,15 @@ const dbSetup = async function() {
     await pool.query(`
       CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+      CREATE TABLE IF NOT EXISTS Google_Tokens (
+        google_id VARCHAR(32) PRIMARY KEY,
+        access_token TEXT,
+        refresh_token TEXT
+      );
+
       CREATE TABLE IF NOT EXISTS Users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        google_id VARCHAR(64) UNIQUE,
+        google_id VARCHAR(32) UNIQUE REFERENCES Google_Tokens(google_id) ON DELETE CASCADE,
         name VARCHAR(64) NOT NULL,
         password VARCHAR(72),
         email VARCHAR(64) UNIQUE NOT NULL,
@@ -76,9 +82,29 @@ const dbSetup = async function() {
       CREATE TABLE IF NOT EXISTS Comments (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE NOT NULL,
-        user_id UUID  REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+        user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
         content TEXT NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS Courses (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        link TEXT NOT NULL,
+        description TEXT,
+        created_at TIMESTAMP NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS Assignments (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        course_id UUID REFERENCES Courses(id) ON DELETE CASCADE NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        link TEXT NOT NULL,
+        description TEXT,
+        max_points INT,
+        due_date TIMESTAMP NOT NULL,
+        created_at TIMESTAMP NOT NULL
       );
       `
     )

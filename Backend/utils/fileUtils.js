@@ -2,6 +2,8 @@ const fileQuery = require('../database/fileQuery');
 const repoQuery = require('../database/repoQuery');
 const folderQuery = require('../database/folderQuery');
 
+const path = require('path');
+
 // call with await
 const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) => {
 
@@ -9,9 +11,8 @@ const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) =>
         throw Error("File was not properly parsed by upload().");
     }
 
-    const arr = originalname.split('.');
-    const name = arr[0];
-    const extension = arr[1];
+    const extension = path.extname(originalname);
+    const name = path.basename(originalname, extension);
     const fileSize = size;
 
     if(!name || !extension || !fileSize || !repo_id){

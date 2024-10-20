@@ -9,57 +9,6 @@ const googleSignIn = async (req, res) => {
 
     try{
         const token = createJWT(req.user.id);
-        
-        // const {access_token, refresh_token} = req.user;
-
-        // const oauth2Client = new google.auth.OAuth2();
-        
-        // oauth2Client.setCredentials({
-        //     access_token: access_token,
-        //     refresh_token: refresh_token 
-        // });
-
-        // const classroom = google.classroom({version: 'v1', auth: oauth2Client});
-        
-        // const courses_res = await classroom.courses.list();
-        // const courses = courses_res.data.courses || [];
-        
-        // const today = new Date();
-        // console.log("");
-        // for(const course of courses){
-        //     const courseId = course.id;
-
-        //     const assignments_res = await classroom.courses.courseWork.list({courseId});
-        //     // the scope for coursework only has .me in it???
-        //     const assignments = assignments_res.data.courseWork || [];
-
-        //     for(const assignment of assignments){
-        //         if(assignment.dueDate && new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day) >= today){
-        //             console.log(`Pending Assignment: ${assignment.title}`);
-        //             console.log(`Course: ${course.name}`);
-        //             console.log(`Due: ${assignment.dueDate ? `${assignment.dueDate.month}/${assignment.dueDate.day}/${assignment.dueDate.year}` : 'No due date'}`);
-        //             console.log('-------------------------------');
-        //         }
-                
-        //         // const submissions_res = await classroom.courses.courseWork.studentSubmissions.list({
-        //         //     courseId,
-        //         //     courseWorkId: assignment.id,
-        //         //     states: ['CREATED', 'NEW']
-        //         // });
-                
-        //         // const submissions = submissions_res.data.studentSubmissions || [];
-                
-        //         // for (const submission of submissions) {
-        //         //     if (submission.state === 'CREATED' || submission.state === 'NEW' and ) {
-                        
-        //         //     }
-        //         // }
-        //     }
-
-        // }
-        
-
-        // console.log(courses);
 
         const params = new URLSearchParams({
             name: req.user.name,
