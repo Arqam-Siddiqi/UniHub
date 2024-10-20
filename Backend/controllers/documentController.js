@@ -33,6 +33,10 @@ const downloadFile = async (req, res) => {
     }
 
     const fileBuffer = await cloud.download(filename);
+
+    if(!fileBuffer){
+      throw Error("This file doesn't exist.");
+    }
     
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Type', 'application/octet-stream');

@@ -72,10 +72,23 @@ const deleteUserByID = async (id) => {
 
 }
 
+const queryUserGoogleTokens = async (id) => {
+
+    const token = await query(`
+        SELECT access_token, refresh_token FROM Users u
+        JOIN Google_Tokens gt ON u.google_id = gt.google_id
+        WHERE id = $1; 
+    `, [id]);
+
+    return token.rows[0];
+
+}
+
 module.exports = {
     queryAllUsers,
     queryUserByID,
     queryUserByEmail,
     updateUserByID,
-    deleteUserByID
+    deleteUserByID,
+    queryUserGoogleTokens
 }
