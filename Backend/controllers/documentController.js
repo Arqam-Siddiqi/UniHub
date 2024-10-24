@@ -38,14 +38,15 @@ const downloadFile = async (req, res) => {
       throw Error("This file doesn't exist.");
     }
     
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+    res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Length', fileBuffer.length);
 
     // Send the file buffer as response
     res.status(200).send(fileBuffer);
   }
   catch(error){
+    console.log(error.message);
     res.status(400).send({"Error": error.message});
   }
 
