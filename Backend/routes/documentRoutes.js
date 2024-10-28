@@ -7,4 +7,6 @@ router.post('/upload', upload, documentController.uploadFile);
 
 router.post('/download', documentController.downloadFile);
 
+router.delete('/delete', documentController.deleteFile)
+
 module.exports = router;

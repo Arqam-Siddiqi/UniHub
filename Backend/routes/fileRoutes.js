@@ -12,7 +12,7 @@ router.post('/view', fileController.getFileDetails, documentController.downloadF
 
 router.post('/parent', fileController.getAllFilesFromFolder);
 
-router.delete('/delete', fileController.deleteFileByID);
+router.delete('/delete', documentController.deleteFile, fileController.deleteFileByID);
 
 router.patch('/update', fileController.updateFileByID);
 
