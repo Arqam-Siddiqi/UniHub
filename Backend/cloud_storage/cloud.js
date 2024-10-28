@@ -8,8 +8,8 @@ const initializeStorage = async () => {
   try {
 
     storage = await new Storage({
-      email: 'mirzasaad363@gmail.com',
-      password: 'madeeha1984'
+      email: process.env.EMAIL,
+      password: process.env.PASSWORD
     }).ready;
     
     console.log("Successfully logged into Mega...");
