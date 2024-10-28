@@ -11,8 +11,11 @@ const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) =>
         throw Error("File was not properly parsed by upload().");
     }
 
-    const extension = path.extname(originalname);
-    const name = path.basename(originalname, extension);
+    const extension = path.extname(originalname).substring(1);
+    
+    let name = path.basename(originalname, extension);
+    name = name.substring(0, name.length - 1);
+
     const fileSize = size;
 
     if(!name || !extension || !fileSize || !repo_id){

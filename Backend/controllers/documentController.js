@@ -46,15 +46,39 @@ const downloadFile = async (req, res) => {
     res.status(200).send(fileBuffer);
   }
   catch(error){
-    console.log(error.message);
+    res.status(400).send({"Error": error.message});
+  }
+
+}
+
+const deleteFile = async (req, res, next) => {
+
+  try{
+    const params = req.body;
+    if(!params.id){
+        throw Error("Please send the id of the file.");
+    }
+
+    const file = await fileQuery.queryFileByID(params.id);
+    if(!file){
+      throw Error("This file doesn't exist.");
+    }
+
+    const filename = file.id + '.' + file.extension;
+    
+    await cloud.deleteFileAndFolder(filename);
+
+    next();
+  }
+  catch(error){
     res.status(400).send({"Error": error.message});
   }
 
 }
 
 
-
 module.exports = {
     uploadFile,
-    downloadFile
+    downloadFile,
+    deleteFile
 }

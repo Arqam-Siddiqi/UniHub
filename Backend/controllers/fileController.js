@@ -30,6 +30,8 @@ const createFile = async (req, res, next) => {
 
         const file = await fileQuery.createFile(validated_params);
 
+        console.log(file);
+
         // customization for documentController
         req.file.originalname = file.id + "." + file.extension;
         req.file.id = file.id;
@@ -82,12 +84,9 @@ const updateFileByID = async (req, res) => {
 const deleteFileByID = async (req, res) => {
 
     try{
-        const params = req.body;
-        if(!params.id){
-            throw Error("Please send the id of the file.");
-        }
+        // Existence Check for params.id is in documentController
 
-        const file = await fileQuery.deleteFileByID(params.id);
+        const file = await fileQuery.deleteFileByID(req.body.id);
 
         res.status(200).send(file);
     }
