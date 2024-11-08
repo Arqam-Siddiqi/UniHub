@@ -106,6 +106,39 @@ const dbSetup = async function() {
         due_date TIMESTAMP NOT NULL,
         created_at TIMESTAMP NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS Buildings (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        name VARCHAR(64) NOT NULL UNIQUE  -- e.g., 'CS', 'EE', 'Multi-purpose'
+      );
+
+      CREATE TABLE IF NOT EXISTS Floors (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        building_id UUID NOT NULL REFERENCES Buildings(id) ON DELETE CASCADE,
+        name VARCHAR(16) NOT NULL,
+        level INTEGER NOT NULL,   -- Floor level, e.g., 1, 2, 3
+        UNIQUE(building_id, level)  -- Ensures no duplicate floors within a building
+      );
+
+      CREATE TABLE IF NOT EXISTS Segments (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        floor_id UUID NOT NULL REFERENCES Floors(id) ON DELETE CASCADE,
+        direction VARCHAR(3) NOT NULL,  -- e.g., 'UR' for Upper Right, or 'LR' for Lower Left, etc.
+        UNIQUE(floor_id, direction)  -- Ensures no duplicate sections within a floor
+      );
+
+      CREATE TABLE IF NOT EXISTS Room_Types (
+        code VARCHAR(4) PRIMARY KEY,  -- Code like 'BR', 'GR', etc.
+        name VARCHAR(64) NOT NULL  -- e.g., Full name 'Boys Common Room', 'Classroom'
+      );
+
+      CREATE TABLE IF NOT EXISTS Rooms (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        segment_id UUID REFERENCES Segments(id) ON DELETE CASCADE,
+        name VARCHAR(32) NOT NULL,  -- e.g., 'C-19', 'B-9'
+        type VARCHAR(3) NOT NULL REFERENCES Room_Types(code) ON DELETE RESTRICT
+      );
+
       `
     )
   }
