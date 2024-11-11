@@ -29,12 +29,12 @@ const queryByRepo = async(repo_id)=>{
     return comments.rows;
 }
 
-const comment = async(user_id, repo_id, content)=>{
+const comment = async(repo_id, content)=>{
     const comment=await query(`
-        INSERT INTO Comments (user_id, repo_id, content)
-        VALUES ($1,$2,$3)
+        INSERT INTO Comments (repo_id, content)
+        VALUES ($1,$2)
         RETURNING *;`,
-    [user_id, repo_id, content]);
+    [repo_id, content]);
 
     return comment.rows[0];
 }
