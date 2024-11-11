@@ -10,6 +10,7 @@ const repoRoutes = require('./routes/repoRoutes');
 const folderRoutes = require('./routes/folderRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const courseRoutes = require('./routes/coursesRoutes');
+const commentRoutes = require('./routes/commentRoutes'):
 
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
@@ -65,6 +66,7 @@ app.use('/repo', repoRoutes);
 app.use('/folder', folderRoutes);
 app.use('/file', fileRoutes);
 app.use('/course', courseRoutes);
+app.use('/comment', commentRoutes);
 
 
 app.get('/', async (req, res) => {
