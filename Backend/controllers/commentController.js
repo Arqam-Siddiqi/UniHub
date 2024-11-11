@@ -42,7 +42,7 @@ const createComment = async (req, res) => {
         const user_id = req.user;
         
         const validated_params = validateCommentParams(user_id,req.body, 'c');
-        const comment=await commentQuery.comment(validated_params.repo_id, validated_params.content);
+        const comment=await commentQuery.comment(user_id,validated_params.repo_id, validated_params.content);
         
         
         res.status(200).send(comment);
