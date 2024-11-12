@@ -1,7 +1,7 @@
 const validateCommentParams = (id, parameters, type) => {
     
     if(type==='c'){
-        if(!parameters.repo_id || !id||!parameters.content){
+        if(!parameters.repo_id || !id || !parameters.content){
             throw Error("Please fill all the required fields.");
         }
     }

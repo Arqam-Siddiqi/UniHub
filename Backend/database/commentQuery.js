@@ -19,11 +19,14 @@ const queryByUser = async (user_id)=>{
     return comments.rows;
 }
 
-const queryByRepo = async(repo_id)=>{
-    const comments=await query(
-        `SELECT * FROM Comments
-        where repo_id=$1`,
-        [repo_id]
+const queryByRepo = async(repo_id) => {
+
+    const comments=await query(`
+        SELECT c.*, u.name AS "username", u.email FROM Comments c 
+        JOIN Users u ON c.user_id = u.id
+        WHERE repo_id=$1
+        ORDER BY c.created_at DESC;
+        `, [repo_id]
     );
 
     return comments.rows;
