@@ -1,5 +1,14 @@
-
 const {query} = require('./psqlWrapper');
+
+const queryByID = async(id) => {
+
+    const comment = await query(`
+        SELECT * FROM Comments
+        WHERE id = $1;
+    `, [id]);
+
+    return comment.rows[0];
+}
 
 const queryAllComments = async ()=>{
     const comments=await query(
@@ -64,11 +73,26 @@ const _delete = async (id)=>{
 
     return comment.rows[0];
 } 
+
+const belongsToUser = async (id, user_id) => {
+
+    const comment = await query(`
+        SELECT c.*, u.name AS "username", u.email FROM Comments c 
+        JOIN Users u ON c.user_id = u.id
+        WHERE c.id = $1 AND c.user_id = $2
+    `, [id, user_id]);
+
+    return comment.rows[0];
+
+}
+
 module.exports={
     queryAllComments,
     queryByUser,
     queryByRepo,
     comment,
     update,
-    _delete
+    _delete,
+    belongsToUser,
+    queryByID
 }

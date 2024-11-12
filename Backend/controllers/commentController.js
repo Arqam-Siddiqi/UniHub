@@ -52,7 +52,7 @@ const getAllRepoComments = async(req, res)=>{
     
     try{
         if(!req.body.repo_id){
-            throw Error('Give a repo id');
+            throw Error('Please send repo_id.');
         }
         const comments = await commentQuery.queryByRepo(req.body.repo_id);
         
@@ -105,22 +105,27 @@ const updateComment =async(req,res)=>{
 }
 
 const deleteComment = async (req,res)=>{
+
     try{
         const user_id = req.user;
         
         const validated_params = validateCommentParams(user_id,req.body, 'd');
-        let owned= await commentQuery.queryByUser(user_id);
-        owned=owned.map(data=>data.id);
-        if(!owned.includes(req.body.id)){
-            throw Error('No such comment exists for this user');
+
+        const check = await commentQuery.belongsToUser(validated_params.id, user_id);
+        
+        if(!check){
+            throw Error("This comment does not belong to this user.");
         }
-        const comment=await commentQuery._delete(validated_params.id); 
+
+        const comment = await commentQuery._delete(validated_params.id);
         await getUser(comment, user_id);
+
         res.status(200).send(comment);
     }
     catch(error){
         res.status(400).send({"Error": error.message});
     }
+
 }
 module.exports={
     getAllComments,
