@@ -1,6 +1,7 @@
 const userQuery = require('../database/userQuery');
 const uuid = require('uuid');
 const { validateUserParamsForPatch } = require('../utils/userUtils');
+const bcrypt = require('bcrypt');
 
 const getAllUsers = async (req, res) => {
     
@@ -51,6 +52,11 @@ const updateUserByJWT = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             const hash = await bcrypt.hash(password, salt);
             validated_params.password = hash;
+        }
+        else{
+            if(password){
+                throw Error("Submit the existing password as well.");
+            }
         }
 
         const user = await userQuery.updateUserByID(id, validated_params);

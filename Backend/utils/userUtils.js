@@ -44,7 +44,7 @@ const validateUserParams = async ({name, password, email}) => {
 
 }
 
-const validateUserParamsForPatch = async ({name, password}) => {
+const validateUserParamsForPatch = ({name, password, existing_password}) => {
 
     if(password && !validator.isStrongPassword(password)){
         throw Error("Password should have atleast 8 characters, 1 lower-case character, 1 upper-case character, 1 symbol, and 1 number.");
@@ -52,7 +52,8 @@ const validateUserParamsForPatch = async ({name, password}) => {
 
     return {
         name,
-        password
+        password,
+        existing_password
     }
 
 }
