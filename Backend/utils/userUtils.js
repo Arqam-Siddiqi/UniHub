@@ -50,15 +50,9 @@ const validateUserParamsForPatch = async ({name, password}) => {
         throw Error("Password should have atleast 8 characters, 1 lower-case character, 1 upper-case character, 1 symbol, and 1 number.");
     }
 
-    let hash;
-    if(password){
-        const salt = await bcrypt.genSalt(10);
-        hash = await bcrypt.hash(password, salt);
-    }
-
     return {
         name,
-        password: hash
+        password
     }
 
 }

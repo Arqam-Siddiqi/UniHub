@@ -1,5 +1,6 @@
 const userQuery = require('../database/userQuery');
 const uuid = require('uuid');
+const { validateUserParamsForPatch } = require('../utils/userUtils');
 
 const getAllUsers = async (req, res) => {
     
@@ -32,7 +33,27 @@ const updateUserByJWT = async (req, res) => {
     try{
         const id = req.user;
 
-        const user = await userQuery.updateUserByID(id, req.body);
+        const validated_params = validateUserParamsForPatch(req.body);
+
+        const {existing_password, password} = validated_params;
+
+        if(existing_password){
+            const exists = await userQuery.queryUserByID(id);
+            const check = await bcrypt.compare(existing_password, exists.password);
+
+            if(!password){
+                throw Error("New Password field is empty.");
+            }
+            else if(!check){
+                throw Error("The existing password is incorrect.");
+            }
+    
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, salt);
+            validated_params.password = hash;
+        }
+
+        const user = await userQuery.updateUserByID(id, validated_params);
 
         res.status(200).send(user);
     }

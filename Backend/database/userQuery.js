@@ -32,13 +32,10 @@ const queryUserByEmail = async (email) => {
 
 }
 
-const updateUserByID = async (id, body) => {
-
-    const validated_params = await validateUserParamsForPatch(body);
+const updateUserByID = async (id, validated_params) => {
 
     const existing_user = await queryUserByID(id);
     let updated_user;
-
 
     if(existing_user.google_id){    // For google users
         updated_user = await query(`
@@ -46,15 +43,15 @@ const updateUserByID = async (id, body) => {
             SET name = $1
             WHERE id = $2
             RETURNING *;
-        `, [validated_params.name ? validated_params.name : existing_user.name, id]);
+        `, [validated_params.name ?? existing_user.name, id]);
     }
     else{
         updated_user = await query(`
             UPDATE Users
-            SET name = $1, password = $3
-            WHERE id = $2
+            SET name = $1, password = $2
+            WHERE id = $3
             RETURNING *;
-        `, [validated_params.name ? validated_params.name : existing_user.name, id, validated_params.password ? validated_params.password : existing_user.password]);
+        `, [validated_params.name ?? existing_user.name, validated_params.password ?? existing_user.password, id]);
     }
 
     return updated_user.rows[0];
