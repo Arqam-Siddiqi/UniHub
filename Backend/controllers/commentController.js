@@ -1,6 +1,7 @@
 const {validateCommentParams} =  require('../utils/commentUtils');
 const commentQuery=require('../database/commentQuery');
 const userQuery = require('../database/userQuery');
+const repoQuery = require('../database/repoQuery');
 const getUser = async (comment, user_id)=>{
     const user= await userQuery.queryUserByID(user_id);
     const user_name=user.name;
@@ -54,8 +55,12 @@ const getAllRepoComments = async(req, res)=>{
             throw Error('Give a repo id');
         }
         const comments = await commentQuery.queryByRepo(req.body.repo_id);
-        await getUser(comments, req.user);
-
+        for(i=0; i<comments.length; i++){
+            const user = await userQuery.queryUserByID(comments[i].id);
+            comments[i].username=user.name;
+            comments[i].email=user.email;
+        }
+        
         res.status(200).send(comments);
     }
     catch(error){
