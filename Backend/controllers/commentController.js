@@ -1,7 +1,8 @@
 const {validateCommentParams} =  require('../utils/commentUtils');
 const commentQuery=require('../database/commentQuery');
 const userQuery = require('../database/userQuery');
-const repoQuery = require('../database/repoQuery');
+
+
 const getUser = async (comment, user_id)=>{
     const user= await userQuery.queryUserByID(user_id);
     const user_name=user.name;
@@ -18,10 +19,8 @@ const getUser = async (comment, user_id)=>{
         comment.email=email;
     }
     
-        
-    
-    
 }
+
 const getAllComments = async(req, res)=>{
     try{
         const comments = await commentQuery.queryAllComments();
@@ -50,31 +49,27 @@ const getAllUserComments = async(req, res)=>{
 }
 
 const getAllRepoComments = async(req, res)=>{
+    
     try{
         if(!req.body.repo_id){
             throw Error('Give a repo id');
         }
         const comments = await commentQuery.queryByRepo(req.body.repo_id);
-        for(i=0; i<comments.length; i++){
-            const user = await userQuery.queryUserByID(comments[i].user_id);
-            
-            comments[i].username=user.name;
-            comments[i].email=user.email;
-        }
         
         res.status(200).send(comments);
     }
     catch(error){
         res.status(400).send({"Error": error.message});
     }
+
 }
 const createComment = async (req, res) => {
 
     try{
         const user_id = req.user;
         
-        const validated_params = validateCommentParams(user_id,req.body, 'c');
-        const comment=await commentQuery.comment(user_id,validated_params.repo_id, validated_params.content);
+        const validated_params = validateCommentParams(user_id, req.body, 'c');
+        const comment = await commentQuery.comment(user_id, validated_params.repo_id, validated_params.content);
         // const user= await userQuery.queryUserByID(user_id);
         // const user_name=user.name;
         // comment.name=user_name;
