@@ -56,7 +56,8 @@ const getAllRepoComments = async(req, res)=>{
         }
         const comments = await commentQuery.queryByRepo(req.body.repo_id);
         for(i=0; i<comments.length; i++){
-            const user = await userQuery.queryUserByID(comments[i].id);
+            const user = await userQuery.queryUserByID(comments[i].user_id);
+            
             comments[i].username=user.name;
             comments[i].email=user.email;
         }
