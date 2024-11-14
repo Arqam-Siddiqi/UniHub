@@ -12,6 +12,7 @@ const fileRoutes = require('./routes/fileRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const geminiRoutes = require('./routes/geminiRoutes');
+const mapRoutes = require('./routes/mapRoutes');
 
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
@@ -61,6 +62,7 @@ app.use('/nonAuth', (req, res) => {
 
 
 app.use('/auth', authRoutes);
+app.use('/map', mapRoutes);
 
 app.use(requireAuth);
 
