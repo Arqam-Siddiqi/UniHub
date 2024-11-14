@@ -2,15 +2,10 @@ const Pool = require("pg").Pool;
 
 let pool;
 
-if(process.env.HOSTING_SITE === 'https://unihub-86y9.onrender.com'){
+if(process.env.HOSTING_SITE){
   pool = new Pool({
     connectionString: process.env.SUPABASE_DB
   });
-}
-else if(process.env.HOSTING_SITE === 'https://unihub-backend.vercel.app'){
-  pool = new Pool({
-    connectionString: "postgres://default:7AZPRsYb9pkD@ep-bold-dust-a1jl4jiz.ap-southeast-1.aws.neon.tech:5432/verceldb?sslmode=require"
-  })
 }
 else{
   pool = new Pool({
@@ -141,7 +136,8 @@ const dbSetup = async function() {
 
       CREATE TABLE IF NOT EXISTS Likes (
         user_id UUID REFERENCES Users(id) ON DELETE CASCADE,
-        repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE
+        repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE,
+        PRIMARY KEY (user_id, repo_id)
       );
 
       `

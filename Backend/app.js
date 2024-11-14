@@ -9,7 +9,7 @@ const authRoutes = require('./routes/authRoutes');
 const repoRoutes = require('./routes/repoRoutes');
 const folderRoutes = require('./routes/folderRoutes');
 const fileRoutes = require('./routes/fileRoutes');
-const courseRoutes = require('./routes/coursesRoutes');
+const courseRoutes = require('./routes/courseRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 
 require('./config/googleStrategy');
