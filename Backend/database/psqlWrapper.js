@@ -4,7 +4,7 @@ let pool;
 
 if(process.env.HOSTING_SITE === 'https://unihub-86y9.onrender.com'){
   pool = new Pool({
-    connectionString: "postgresql://unihub_fqmd_user:hbPGBkzBRg3lfV8hxNdipALib9Sbi4eE@dpg-csambiaj1k6c73cr0ts0-a.singapore-postgres.render.com/unihub_fqmd" + "?sslmode=require"
+    connectionString: process.env.SUPABASE_DB
   });
 }
 else if(process.env.HOSTING_SITE === 'https://unihub-backend.vercel.app'){
@@ -108,21 +108,21 @@ const dbSetup = async function() {
       );
 
       CREATE TABLE IF NOT EXISTS Buildings (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        id INT PRIMARY KEY,
         name VARCHAR(64) NOT NULL UNIQUE  -- e.g., 'CS', 'EE', 'Multi-purpose'
       );
 
       CREATE TABLE IF NOT EXISTS Floors (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        building_id UUID NOT NULL REFERENCES Buildings(id) ON DELETE CASCADE,
+        id INT PRIMARY KEY,
+        building_id INT NOT NULL REFERENCES Buildings(id) ON DELETE CASCADE,
         name VARCHAR(16) NOT NULL,
-        level INTEGER NOT NULL,   -- Floor level, e.g., 1, 2, 3
+        level INT NOT NULL,   -- Floor level, e.g., 1, 2, 3
         UNIQUE(building_id, level)  -- Ensures no duplicate floors within a building
       );
 
       CREATE TABLE IF NOT EXISTS Segments (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        floor_id UUID NOT NULL REFERENCES Floors(id) ON DELETE CASCADE,
+        id INT PRIMARY KEY,
+        floor_id INT NOT NULL REFERENCES Floors(id) ON DELETE CASCADE,
         direction VARCHAR(3) NOT NULL,  -- e.g., 'UR' for Upper Right, or 'LR' for Lower Left, etc.
         UNIQUE(floor_id, direction)  -- Ensures no duplicate sections within a floor
       );
@@ -133,10 +133,15 @@ const dbSetup = async function() {
       );
 
       CREATE TABLE IF NOT EXISTS Rooms (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        segment_id UUID REFERENCES Segments(id) ON DELETE CASCADE,
+        id INT PRIMARY KEY,
+        segment_id INT REFERENCES Segments(id) ON DELETE CASCADE,
         name VARCHAR(32) NOT NULL,  -- e.g., 'C-19', 'B-9'
         type VARCHAR(3) NOT NULL REFERENCES Room_Types(code) ON DELETE RESTRICT
+      );
+
+      CREATE TABLE IF NOT EXISTS Likes (
+        user_id UUID REFERENCES Users(id) ON DELETE CASCADE,
+        repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE
       );
 
       `

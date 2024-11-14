@@ -28,7 +28,10 @@ dbSetup()
     await initializeStorage();
     app.listen(3000);
   })
-  .catch((err) => console.log('Error:', err));
+  .catch((err) => {
+      console.log('Error:', err);
+    }
+  );
 
 app.use
 app.use(express.json());

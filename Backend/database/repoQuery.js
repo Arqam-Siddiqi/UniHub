@@ -26,8 +26,16 @@ const queryAllReposOfUser = async (user_id) => {
 
     const repos = await query(`
         SELECT * FROM Repos
-        WHERE user_id = $1    
+        WHERE user_id = $1;
     `, [user_id]);
+
+    // const repos = await query(`
+    //     SELECT *, (
+    //         SELECT COUNT(*) FROM Likes l 
+    //         GROUP BY Repo_id 
+    //         HAVING l.repo_id = r.repo_id) FROM Repos r
+    //     WHERE r.user_id = $1;
+    // `, [user_id]);
 
     return repos.rows;
 }

@@ -5,7 +5,7 @@ const getAllRepos = async (req, res) => {
 
     try{
         const repos = await repoQuery.queryAllRepos();
-
+    
         res.status(200).send(repos);
     }
     catch(error){
@@ -28,6 +28,8 @@ const createRepo = async (req, res) => {
         }
 
         const repo = await repoQuery.createRepo(user_id,validated_params);
+
+        repo.likes = 0;
 
         res.status(200).send(repo);
     }
