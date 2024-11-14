@@ -12,6 +12,8 @@ router.patch('/update', repoController.updateRepo);
 
 router.delete('/delete', repoController.deleteRepo);
 
+router.post('/like', repoController.toggleLikeRepo);
+
 router.get('/:id', repoController.getRepoByID);
 
 module.exports = router;

@@ -3,7 +3,18 @@ const {query} = require('./psqlWrapper');
 const queryAllRepos = async () => {
 
     const repos = await query(`
-        SELECT * FROM Repos;   
+        SELECT *,
+        COALESCE ((
+            SELECT COUNT(*) FROM Likes l
+            GROUP BY l.repo_id 
+            HAVING l.repo_id = r.id
+        ), 0) AS "likes" ,
+        COALESCE ((
+            SELECT COUNT(*) FROM Comments c
+            GROUP BY c.repo_id
+            HAVING c.repo_id = r.id
+        ), 0) AS "num_of_comments"
+        FROM Repos r 
     `);
     
     return repos.rows;
@@ -25,29 +36,51 @@ const createRepo = async (user_id, {name,  description, visibility} ) => {
 const queryAllReposOfUser = async (user_id) => {
 
     const repos = await query(`
-        SELECT * FROM Repos
-        WHERE user_id = $1;
+        SELECT *,
+        COALESCE ((
+            SELECT COUNT(*) FROM Likes l
+            GROUP BY l.repo_id 
+            HAVING l.repo_id = r.id
+        ), 0) AS "likes" ,
+        COALESCE ((
+            SELECT COUNT(*) FROM Comments c
+            GROUP BY c.repo_id
+            HAVING c.repo_id = r.id
+        ), 0) AS "num_of_comments",
+        EXISTS (
+            SELECT * FROM Likes l
+            WHERE l.repo_id = r.id AND l.user_id = $1
+        ) AS "liked"
+        FROM Repos r
+        WHERE r.user_id = $1;
     `, [user_id]);
-
-    // const repos = await query(`
-    //     SELECT *, (
-    //         SELECT COUNT(*) FROM Likes l 
-    //         GROUP BY Repo_id 
-    //         HAVING l.repo_id = r.repo_id) FROM Repos r
-    //     WHERE r.user_id = $1;
-    // `, [user_id]);
 
     return repos.rows;
 }
 
-const queryReposByID = async (user_id, id) => {
+const queryReposByID = async (user_id, repo_id) => {
     
-    const repos = await query(`
-        SELECT * FROM Repos
-        WHERE (visibility='public' OR user_id = $1) AND id = $2;
-    `, [user_id, id]);
+    const repo = await query(`
+        SELECT *,
+        COALESCE ((
+            SELECT COUNT(*) FROM Likes l
+            GROUP BY l.repo_id 
+            HAVING l.repo_id = r.id
+        ), 0) AS "likes" ,
+        COALESCE ((
+            SELECT COUNT(*) FROM Comments c
+            GROUP BY c.repo_id
+            HAVING c.repo_id = r.id
+        ), 0) AS "num_of_comments",
+        EXISTS (
+            SELECT * FROM Likes l
+            WHERE l.repo_id = r.id AND l.user_id = $2
+        ) AS "liked"
+        FROM Repos r
+        WHERE (visibility='public' OR user_id = $2) AND r.id = $1;
+    `,[repo_id, user_id]);
 
-    return repos.rows[0];
+    return repo.rows[0];
 
 }
 
@@ -104,6 +137,30 @@ const doesUserOwnRepo = async (user_id, repo_id) => {
 
 }
 
+const toggleLike = async (user_id, repo_id) => {
+
+    await query(`
+        WITH toggle AS (
+            DELETE FROM Likes
+            WHERE user_id = $1 AND repo_id = $2
+            RETURNING *
+        )
+        INSERT INTO Likes (user_id, repo_id)
+        SELECT $1, $2
+        WHERE NOT EXISTS (SELECT * FROM toggle)
+        RETURNING TRUE AS liked;
+    `, [user_id, repo_id]);
+
+    const repo = await queryReposByID(user_id, repo_id);
+
+    if(!repo){
+        throw Error("This repository does not exist.");
+    }
+
+    return repo;
+
+}
+
 module.exports = {
     queryAllRepos,
     createRepo,
@@ -112,5 +169,6 @@ module.exports = {
     updateRepoOfUser,
     deleteRepoOfUser,
     doesUserOwnRepo,
-    queryReposByID
+    queryReposByID,
+    toggleLike
 }

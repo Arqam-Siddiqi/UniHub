@@ -30,6 +30,7 @@ const createRepo = async (req, res) => {
         const repo = await repoQuery.createRepo(user_id,validated_params);
 
         repo.likes = 0;
+        repo.num_of_comments = 0;
 
         res.status(200).send(repo);
     }
@@ -120,11 +121,32 @@ const getRepoByID = async (req, res) => {
 
 }
 
+const toggleLikeRepo = async (req, res) => {
+
+    try{
+        const user_id = req.user;
+
+        const {repo_id} = req.body;
+        if(!repo_id){
+            throw Error("Please send the repo_id.");
+        }
+
+        const repo = await repoQuery.toggleLike(user_id, repo_id);
+
+        res.status(200).send(repo);
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 module.exports = {
     getAllRepos,
     createRepo,
     getReposByJWT,
     updateRepo,
     deleteRepo,
-    getRepoByID
+    getRepoByID,
+    toggleLikeRepo
 }
