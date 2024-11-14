@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
+    "@google/generative-ai": "^0.21.0",
     "bcrypt": "^5.1.1",
     "buffer-crc32": "^1.0.0",
     "cookie-session": "^2.1.0",
@@ -29,6 +30,7 @@
     "passport-google-oauth20": "^2.0.0",
     "pdf-parse": "^1.1.1",
     "pg": "^8.12.0",
+    "tmp": "^0.2.3",
     "uuid": "^10.0.0",
     "validator": "^13.12.0"
   }
