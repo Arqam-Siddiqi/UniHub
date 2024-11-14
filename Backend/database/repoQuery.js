@@ -120,6 +120,7 @@ const deleteRepoOfUser = async ( {id} )=>{
     return repos.rows[0];
 }
 
+// Can be improved??
 const doesUserOwnRepo = async (user_id, repo_id) => {
 
     const repos = await query(`
@@ -152,10 +153,6 @@ const toggleLike = async (user_id, repo_id) => {
     `, [user_id, repo_id]);
 
     const repo = await queryReposByID(user_id, repo_id);
-
-    if(!repo){
-        throw Error("This repository does not exist.");
-    }
 
     return repo;
 

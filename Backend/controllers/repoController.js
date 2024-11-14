@@ -126,7 +126,7 @@ const toggleLikeRepo = async (req, res) => {
     try{
         const user_id = req.user;
 
-        const {repo_id} = req.body;
+        const repo_id = req.body.id;
         if(!repo_id){
             throw Error("Please send the repo_id.");
         }

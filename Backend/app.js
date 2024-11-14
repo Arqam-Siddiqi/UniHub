@@ -11,6 +11,7 @@ const folderRoutes = require('./routes/folderRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const commentRoutes = require('./routes/commentRoutes');
+const geminiRoutes = require('./routes/geminiRoutes');
 
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
@@ -24,7 +25,7 @@ app.use(cors({
 
 dbSetup()
   .then(async () => {
-    console.log('Connected to PostgreSQL...');
+    console.log(`Connected to PostgreSQL on ${process.env.HOSTING_SITE ? "Supabase" : "PGAdmin"}...`);
     await initializeStorage();
     app.listen(3000);
   })
@@ -70,6 +71,7 @@ app.use('/folder', folderRoutes);
 app.use('/file', fileRoutes);
 app.use('/course', courseRoutes);
 app.use('/comment', commentRoutes);
+app.use('/gemini', geminiRoutes);
 
 
 app.get('/', async (req, res) => {
