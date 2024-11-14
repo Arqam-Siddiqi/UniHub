@@ -5,17 +5,17 @@ const userQuery = require('../database/userQuery');
 
 const getUser = async (comment, user_id)=>{
     const user= await userQuery.queryUserByID(user_id);
-    const user_name=user.name;
+    const username=user.name;
     
     const email=user.email;
     if(Array.isArray(comment))
     for(i=0; i<comment.length; i++){
-        comment[i].name=user_name;
+        comment[i].name=username;
         comment[i].email=email;
     }
     else
     {
-        comment.name=user_name;
+        comment.name=username;
         comment.email=email;
     }
     
