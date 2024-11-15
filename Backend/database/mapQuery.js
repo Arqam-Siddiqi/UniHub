@@ -22,7 +22,7 @@ const queryMap = async () => {
         JOIN Room_Types rt ON r.type = rt.code;
     `);
 
-    return map;
+    return map.rows;
 }
 
 module.exports = {
