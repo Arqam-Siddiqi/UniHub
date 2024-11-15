@@ -50,6 +50,10 @@ const validateUserParamsForPatch = ({name, password, existing_password}) => {
         throw Error("Password should have atleast 8 characters, 1 lower-case character, 1 upper-case character, 1 symbol, and 1 number.");
     }
 
+    if(typeof name === 'string' && !name){
+        throw Error("Please input a valid name.");
+    }
+
     return {
         name,
         password,
