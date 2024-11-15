@@ -1,12 +1,5 @@
 const multer = require('multer');
 
-// This is the problem for Vercel.
-// const storage = multer.diskStorage({
-//   destination: './downloads/',
-//   filename: (req, file, cb) => {
-//     cb(null, `${`${Date.now()}${path.extname(file.originalname)}`}`);
-//   }
-// });
 const storage = multer.memoryStorage();
 
 const upload = multer({
@@ -28,6 +21,8 @@ const checkFileType = (file, cb) => {
       'application/msword',             // DOC
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // DOCX
     ];
+
+    console.log(file.mimetype);
   
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true); // Accept file
@@ -37,3 +32,11 @@ const checkFileType = (file, cb) => {
   };
 
 module.exports = upload;
+
+// This is the problem for Vercel.
+// const storage = multer.diskStorage({
+//   destination: './downloads/',
+//   filename: (req, file, cb) => {
+//     cb(null, `${`${Date.now()}${path.extname(file.originalname)}`}`);
+//   }
+// });
