@@ -2,7 +2,7 @@ const {query} = require('./psqlWrapper');
 
 const queryMap = async () => {
 
-    const map = query(`
+    const map = await query(`
         SELECT 
             b.id AS "building_id",
             b.name AS "building_name",
@@ -21,7 +21,7 @@ const queryMap = async () => {
         JOIN Rooms r ON s.id = r.segment_id
         JOIN Room_Types rt ON r.type = rt.code;
     `);
-
+    
     return map.rows;
 }
 
