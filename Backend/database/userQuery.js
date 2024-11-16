@@ -3,7 +3,9 @@ const {query} = require('./psqlWrapper');
 
 const queryAllUsers = async () => {
 
-    const users = await query('SELECT * FROM Users;');
+    const users = await query(`
+        SELECT id, name, email, created_at FROM Users;
+    `);
 
     return users.rows;
 
@@ -11,8 +13,8 @@ const queryAllUsers = async () => {
 
 const queryUserByID = async (id) => {
 
-    const user = await query(
-        `SELECT * FROM Users
+    const user = await query(`
+        SELECT id, name, email, created_at FROM Users
         WHERE id = $1;`
     , [id]);
 

@@ -64,11 +64,12 @@ app.use('/nonAuth', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/map', mapRoutes);
 
+app.use('/repo', repoRoutes);
+app.use('/user', userRoutes);
+
 app.use(requireAuth);
 
 // Protected Endpoints
-app.use('/user', userRoutes);
-app.use('/repo', repoRoutes);
 app.use('/folder', folderRoutes);
 app.use('/file', fileRoutes);
 app.use('/course', courseRoutes);

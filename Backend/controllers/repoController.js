@@ -136,7 +136,26 @@ const toggleLikeRepo = async (req, res) => {
         res.status(200).send(repo);
     }
     catch(error){
-        res.status(400).send({"Error": error.message});
+        res.status(400).send(error);
+    }
+
+}
+
+const searchMatch = async (req, res) => {
+
+    try{
+        const {search} = req.body;
+
+        if(!search){
+            throw Error("Please send the search property.");
+        }
+
+        const repos = repoQuery.searchTitleAndTags(search);
+
+        res.status(200).send(repos);
+    }
+    catch(error){
+        res.status(400).send(error);
     }
 
 }
@@ -148,5 +167,6 @@ module.exports = {
     updateRepo,
     deleteRepo,
     getRepoByID,
-    toggleLikeRepo
+    toggleLikeRepo,
+    searchMatch
 }
