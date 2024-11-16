@@ -1,4 +1,5 @@
 const repoQuery = require('../database/repoQuery');
+const uuid = require('uuid');
 const {validateRepoParams} = require('../utils/repoUtils');
 
 const getAllRepos = async (req, res) => {
@@ -111,6 +112,10 @@ const getRepoByID = async (req, res) => {
         if(!params.id){
             throw Error("Repository does not exist or is not owned by this user.");
         }
+        else if(!uuid.validate(params.id)){
+            throw Error("This is not a valid UUID.");
+        }
+
         const repos = await repoQuery.queryReposByID(user_id, params.id);
         
         res.status(200).send(repos);
@@ -150,12 +155,12 @@ const searchMatch = async (req, res) => {
             throw Error("Please send the search property.");
         }
 
-        const repos = repoQuery.searchTitleAndTags(search);
+        const repos = await repoQuery.searchTitleAndTags(search);
 
         res.status(200).send(repos);
     }
     catch(error){
-        res.status(400).send(error);
+        res.status(400).send({"Error": error.message});
     }
 
 }

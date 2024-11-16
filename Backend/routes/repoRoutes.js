@@ -15,7 +15,7 @@ router.delete('/delete', requireAuth, repoController.deleteRepo);
 
 router.post('/like', requireAuth, repoController.toggleLikeRepo);
 
-router.post('/search', requireAuth, repoController.searchMatch);
+router.post('/search', repoController.searchMatch);
 
 router.get('/:id', repoController.getRepoByID);
 
