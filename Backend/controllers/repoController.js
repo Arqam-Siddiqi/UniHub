@@ -27,7 +27,7 @@ const createRepo = async (req, res) => {
             throw Error(`This User alreay has a repository named \"${validated_params.name}\".`);
         }
 
-        const repo = await repoQuery.createRepo(user_id,validated_params);
+        const repo = await repoQuery.createRepo(user_id, validated_params);
 
         repo.likes = 0;
         repo.num_of_comments = 0;
