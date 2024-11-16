@@ -219,6 +219,26 @@ const toggleLike = async (user_id, repo_id) => {
 
 }
 
+const searchTitleAndTags = async (search) => {
+
+    const repos = await query(`
+        SELECT r.repo_id, r.name, r.description,
+            CASE 
+                WHEN r.name ILIKE '%$1%' THEN 2
+                WHEN t.name ILIKE '%$1%' THEN 1
+                ELSE 0
+            END AS relevance
+        FROM Repos r
+        LEFT JOIN Repo_Tags rt ON r.repo_id = rt.repo_id
+        LEFT JOIN Tags t ON rt.tag_id = t.tag_id
+        WHERE r.name ILIKE '%$1%'OR t.name ILIKE '%$1%'
+        ORDER BY relevance DESC, r.name;
+    `, [search]);
+
+    return repos.rows;
+
+}
+
 module.exports = {
     queryAllRepos,
     createRepo,
@@ -228,5 +248,6 @@ module.exports = {
     deleteRepoOfUser,
     doesUserOwnRepo,
     queryReposByID,
-    toggleLike
+    toggleLike,
+    searchTitleAndTags
 }

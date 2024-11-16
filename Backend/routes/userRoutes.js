@@ -1,15 +1,17 @@
 const express = require('express');
+const requireAuth = require('../middleware/requireAuth');
+
 const userController = require('../controllers/userController');
 
 const router = express.Router();
 
 router.get('/', userController.getAllUsers);
 
-router.get('/self', userController.getUserByJWT);
+router.get('/self', requireAuth, userController.getUserByJWT);
 
-router.patch('/self', userController.updateUserByJWT);
+router.patch('/self', requireAuth, userController.updateUserByJWT);
 
-router.delete('/self', userController.deleteUserByJWT);
+router.delete('/self', requireAuth, userController.deleteUserByJWT);
 
 router.get('/:id', userController.getUserByID);
 
