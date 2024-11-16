@@ -141,7 +141,7 @@ const toggleLikeRepo = async (req, res) => {
         res.status(200).send(repo);
     }
     catch(error){
-        res.status(400).send(error);
+        res.status(400).send(error.message);
     }
 
 }
@@ -151,11 +151,17 @@ const searchMatch = async (req, res) => {
     try{
         const {search} = req.body;
 
-        if(!search){
+        if(typeof search === 'undefined'){
             throw Error("Please send the search property.");
         }
 
-        const repos = await repoQuery.searchTitleAndTags(search);
+        let repos;
+        if(!search){
+            repos = await repoQuery.queryAllRepos('likes');
+        }
+        else {  
+            repos = await repoQuery.searchTitleAndTags(search);
+        }   
 
         res.status(200).send(repos);
     }
