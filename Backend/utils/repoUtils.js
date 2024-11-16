@@ -1,3 +1,4 @@
+const max_tags = 10;
 
 const validateRepoParams = (user_id, parameters, type) => {
     
@@ -17,7 +18,7 @@ const validateRepoParams = (user_id, parameters, type) => {
     }
     else if(type==='u'){
         
-        if(!parameters.id || (!parameters.name && !parameters.description && !parameters.visibility)){
+        if(!parameters.id || (!parameters.name && !parameters.description && !parameters.visibility && !parameters.tags)){
             throw Error("Please fill the required fields.");
         }
 
@@ -29,13 +30,16 @@ const validateRepoParams = (user_id, parameters, type) => {
         }
 
     }
+
+    if(typeof parameters.tags !== "undefined"){
+
+        if(parameters.tags.length > max_tags){
+            throw Error(`The maximum number of allowed tags is ${max_tags}.`);
+        }
+
+        parameters.tags = parameters.tags.map(element => element.trim());
+    }
     
-    // return {
-    //     user_id,
-    //     name,
-    //     visibility,
-    //     description
-    // };
     return parameters;
 }
 
