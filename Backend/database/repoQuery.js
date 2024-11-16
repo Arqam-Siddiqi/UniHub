@@ -222,16 +222,19 @@ const toggleLike = async (user_id, repo_id) => {
 const searchTitleAndTags = async (search) => {
 
     const repos = await query(`
-        SELECT r.repo_id, r.name, r.description,
-            CASE 
-                WHEN r.name ILIKE '%$1%' THEN 2
-                WHEN t.name ILIKE '%$1%' THEN 1
+        SELECT r.id, r.name, r.description,
+            ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS "tags", 
+            MAX(CASE 
+                WHEN r.name ILIKE '%' || $1 || '%' AND t.name ILIKE '%' || $1 || '%' THEN 3
+                WHEN r.name ILIKE '%' || $1 || '%' THEN 2
+                WHEN t.name ILIKE '%' || $1 || '%' THEN 1
                 ELSE 0
-            END AS relevance
+            END) AS relevance
         FROM Repos r
-        LEFT JOIN Repo_Tags rt ON r.repo_id = rt.repo_id
-        LEFT JOIN Tags t ON rt.tag_id = t.tag_id
-        WHERE r.name ILIKE '%$1%'OR t.name ILIKE '%$1%'
+        LEFT JOIN Repo_Tags rt ON r.id = rt.repo_id
+        LEFT JOIN Tags t ON rt.tag_id = t.id
+        WHERE r.name ILIKE '%' || $1 || '%' OR t.name ILIKE '%' || $1 || '%'
+        GROUP BY r.id
         ORDER BY relevance DESC, r.name;
     `, [search]);
 
