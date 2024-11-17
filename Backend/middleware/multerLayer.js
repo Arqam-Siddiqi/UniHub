@@ -2,6 +2,18 @@ const multer = require('multer');
 
 const storage = multer.memoryStorage();
 
+const multerLayer = (req, res, next) => {
+
+  upload(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({Error: err.message});
+    }
+
+    next();
+  });
+
+}
+
 const upload = multer({
   storage: storage,
   limits: {fileSize: parseInt(process.env.MAX_FILE_SIZE, 10)},   // 30 MB
@@ -31,7 +43,7 @@ const checkFileType = (file, cb) => {
     }
   };
 
-module.exports = upload;
+module.exports = multerLayer
 
 // This is the problem for Vercel.
 // const storage = multer.diskStorage({

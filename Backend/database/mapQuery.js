@@ -39,3 +39,11 @@ const queryMap = async () => {
 module.exports = {
     queryMap
 }
+
+// SELECT 
+// COUNT(*)
+// FROM Buildings b 
+// JOIN Floors f ON b.id = f.building_id
+// JOIN Segments s ON f.id = s.floor_id
+// JOIN Rooms r ON s.id = r.segment_id
+// JOIN Room_Types rt ON r.type = rt.code;
