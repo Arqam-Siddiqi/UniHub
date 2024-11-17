@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const fileController = require('../controllers/fileController');
 
-const upload = require('../middleware/multerLayer');
+const multerLayer = require('../middleware/multerLayer');
 const documentController = require('../controllers/documentController');
 
 router.post('/', fileController.getAllFilesFromRepo);
 
-router.post('/create', upload, fileController.createFile, documentController.uploadFile);
+router.post('/create', multerLayer, fileController.createFile, documentController.uploadFile);
 
 router.post('/view', fileController.getFileDetails, documentController.downloadFile);
 

@@ -32,6 +32,7 @@ const createRepo = async (req, res) => {
 
         repo.likes = 0;
         repo.num_of_comments = 0;
+        repo.liked = false;
 
         res.status(200).send(repo);
     }
