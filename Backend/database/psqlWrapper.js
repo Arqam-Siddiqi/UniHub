@@ -183,6 +183,7 @@ const mapSetup = async () => {
           INSERT INTO buildings (id,name) VALUES (2,'Electrical Engineering');
           INSERT INTO buildings (id,name) VALUES (3,'Multi-purpose');
 
+
           INSERT INTO Floors (id,building_id,name,level) VALUES (1,1, 'Basement' , 0);
           INSERT INTO Floors (id,building_id,name,level) VALUES (2,1, 'Ground' , 1);
           INSERT INTO Floors (id,building_id,name,level) VALUES (3,1, 'First' , 2);
@@ -193,9 +194,11 @@ const mapSetup = async () => {
           INSERT INTO Floors (id,building_id,name,level) VALUES (7,2, 'D' , 4);
           INSERT INTO Floors (id,building_id,name,level) VALUES (8,2, 'E' , 5);
 
+
           INSERT INTO Floors (id,building_id,name,level) VALUES (9,3, 'Basement' , 0);
           INSERT INTO Floors (id,building_id,name,level) VALUES (10,3, 'Ground' , 1);
           INSERT INTO Floors (id,building_id,name,level) VALUES (11,3, 'First' , 2); 
+
 
           INSERT INTO segments (id,floor_id, direction) VALUES (1,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UR');
           INSERT INTO segments (id,floor_id, direction) VALUES (2,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UL');
@@ -211,7 +214,6 @@ const mapSetup = async () => {
           INSERT INTO segments (id,floor_id, direction) VALUES (10,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UL');
           INSERT INTO segments (id,floor_id, direction) VALUES (11,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LR');
           INSERT INTO segments (id,floor_id, direction) VALUES (12,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LL');
-
 
 
           INSERT INTO segments (id,floor_id, direction) VALUES (13,(SELECT id FROM Floors WHERE name='A' and building_id=(SELECT id FROM buildings WHERE name='Electrical Engineering')), 'UR');
@@ -263,6 +265,9 @@ const mapSetup = async () => {
           INSERT INTO segments (id,floor_id, direction) VALUES (48,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Multi-purpose')), 'M');
           INSERT INTO segments (id,floor_id, direction) VALUES (49,(SELECT id FROM Floors WHERE level=1 and building_id=(SELECT id FROM buildings WHERE name='Multi-purpose')), 'M');
           INSERT INTO segments (id,floor_id, direction) VALUES (50,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Multi-purpose')), 'M');
+          INSERT INTO segments (id,floor_id, direction) VALUES (51,(SELECT id FROM Floors WHERE level=3 and building_id=(SELECT id FROM buildings WHERE name='Electrical Engineering')), 'M');
+
+
 
           INSERT INTO room_types (code, name) VALUES ('FR','Faculty Room');
           INSERT INTO room_types (code, name) VALUES ('BCR','Boys Common Room');
@@ -397,7 +402,6 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (79,(SELECT id FROM segments WHERE floor_id=8 and direction='LL'), 'E31', 'SR');
 
 
-
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (80,(SELECT id FROM segments WHERE floor_id=8 and direction='LR'), 'E30', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (81,(SELECT id FROM segments WHERE floor_id=8 and direction='LR'), 'E29', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (82,(SELECT id FROM segments WHERE floor_id=8 and direction='LR'), 'BCR', 'BCR');
@@ -435,8 +439,6 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (107,(SELECT id FROM segments WHERE floor_id=1 and direction='UR'), 'Accounts Department', 'DEP');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (108,(SELECT id FROM segments WHERE floor_id=1 and direction='UR'), 'Mr Abdul Saeed', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (109,(SELECT id FROM segments WHERE floor_id=1 and direction='UR'), 'Assistant manager admin office', 'Adm');
-
-
 
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (110,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Male wash room', 'WR');
@@ -488,7 +490,6 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (146,(SELECT id FROM segments WHERE floor_id=3 and direction='LR'), 'Lab 1', 'LR');
 
 
-
           --Multi-Purpose
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (147,(SELECT id FROM segments WHERE floor_id=9 and direction='M'), 'Library', 'LH');
@@ -506,6 +507,10 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (154,(SELECT id FROM segments WHERE floor_id=11 and direction='LL'), 'Male wash room', 'WR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (155,(SELECT id FROM segments WHERE floor_id=11 and direction='LL'), 'Female wash room', 'WR');
 
+
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (156,(SELECT id FROM segments WHERE floor_id=6 and direction='M'), 'Faculty office', 'FR');
+
+          
         END IF;
     END $$;
 
