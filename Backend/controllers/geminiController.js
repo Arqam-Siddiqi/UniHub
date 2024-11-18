@@ -14,7 +14,17 @@ const createQuiz = async (req, res) => {
 
         const {model, fileManager} = initializeGemini(200 * validated_params.num_of_questions);
 
-        
+        const fileBuffer = await download(req.file);
+
+        const tempFile = tmp.fileSync({ postfix: '.pdf' });
+        fs.writeFileSync(tempFile.name, fileBuffer);
+
+        const uploadResponse = await fileManager.uploadFile(tempFile.name, {
+            mimeType: "application/pdf",
+            displayName: "Gemini 1.5 PDF",
+        });
+
+        tempFile.removeCallback();
 
         const result = await model.generateContent([
         {
@@ -46,7 +56,7 @@ const createNotes = async (req, res) => {
     try{
         const {model, fileManager} = initializeGemini();
 
-
+        
 
         res.status(200).send(model);
     }
