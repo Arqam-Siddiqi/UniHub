@@ -93,7 +93,6 @@ const validateFileParamsForPatch = async (user_id, {id, name, extension, repo_id
 
 }
 
-
 module.exports = {
     validateFileParams,
     validateFileParamsForPatch

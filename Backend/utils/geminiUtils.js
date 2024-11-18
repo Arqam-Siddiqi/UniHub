@@ -1,3 +1,9 @@
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleAIFileManager } = require("@google/generative-ai/server");
+
+const fs = require('fs');
+const tmp = require('tmp');
+
 const initializeGemini = (maxOutputTokens) => {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
@@ -16,6 +22,60 @@ const initializeGemini = (maxOutputTokens) => {
         model,
         fileManager
     };
+
+}
+
+const uploadFileBuffer = async (fileBuffer, fileManager) => {
+    
+    const tempFile = tmp.fileSync({ postfix: '.pdf' });
+    fs.writeFileSync(tempFile.name, fileBuffer);
+
+    const uploadResponse = await fileManager.uploadFile(tempFile.name, {
+        mimeType: "application/pdf",
+        displayName: "Gemini 1.5 PDF",
+    });
+
+    tempFile.removeCallback();
+
+    return uploadResponse;
+}
+
+const generateContent = async (model, uploadResponse, type, validated_params) => {
+    
+    const result = await model.generateContent([
+        {
+            fileData: {
+                mimeType: uploadResponse.file.mimeType,
+                fileUri: uploadResponse.file.uri,
+            }
+        },
+        { 
+            text: type.toLowerCase() === 'quiz' ? quizTextPrompt(validated_params) : ''
+        },
+    ]);
+
+    try {
+        return JSON.parse(result.response.text());
+    }
+    catch (error) {
+        return null;
+    }
+
+}
+
+const parseQuiz = (text) => {
+
+    const questions = [];
+    const answers = [];
+
+    for(let i = 0; i<text.length; i++){
+        answers.push(text[i].answer);
+        delete text[i].answer;
+        
+        questions.push(text[i]);
+    }
+
+    return {questions, answers};
 
 }
 
@@ -52,37 +112,37 @@ const quizTextPrompt = ({num_of_questions, type_of_questions}) => {
             This is an example of a good arrangement of answers: B, C, A, C, D, B, A, D, B.
 
             Questions should be generated using the following JSON-style format:
-            {
-                "1": {
+            [
+                {
                     "question": "<Enter Question 1 here>",
-                    "A": "2",
-                    "B": "3",
-                    "C": "4",
-                    "D": "5",
+                    "A": "<Enter a possible answer for Question 1 here>",
+                    "B": "<Enter a possible answer for Question 1 here>",
+                    "C": "<Enter a possible answer for Question 1 here>",
+                    "D": "<Enter a possible answer for Question 1 here>",
                     "answer": "<Enter the correct answer of Question 1 here as A, B, C or D>"
                 },
-                "2": {
+                {
                     "question": "<Enter Question 2 here>",
-                    "A": "2",
-                    "B": "3",
-                    "C": "4",
-                    "D": "5",
+                    "A": "<Enter a possible answer for Question 2 here>",
+                    "B": "<Enter a possible answer for Question 2 here>",
+                    "C": "<Enter a possible answer for Question 2 here>",
+                    "D": "<Enter a possible answer for Question 2 here>",
                     "answer": "<Enter the correct answer of Question 2 here as A, B, C or D>"
                 }
             }`
         ,
         "subjective": `
             Questions should be generated using the following JSON-style format:
-            {
-                "1": {
-                "question": "<Enter Question 1 here>",
-                "answer": "<Enter the correct answer of Question 1 here>"
+            [
+                {
+                    "question": "<Enter Question 1 here>",
+                    "answer": "<Enter the correct answer for Question 1 here>"
                 },
-                "2": {
-                "question": "<Enter Question 2 here>",
-                "answer": "<Enter the correct answer of Question 2 here>"
+                {
+                    "question": "<Enter Question 2 here>",
+                    "answer": "<Enter the correct answer for Question 2 here>"
                 }
-            }
+            ]
         `
     }
 
@@ -110,8 +170,17 @@ const quizTextPrompt = ({num_of_questions, type_of_questions}) => {
     return prompt
 }
 
+const notesTextPrompt = () => {
+    
+    
+
+}
+
 module.exports = {
     validateQuizParams,
     quizTextPrompt,
-    initializeGemini
+    initializeGemini,
+    uploadFileBuffer,
+    generateContent,
+    parseQuiz
 }
