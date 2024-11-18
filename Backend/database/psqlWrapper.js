@@ -111,8 +111,7 @@ const dbSetup = async function() {
         id INT PRIMARY KEY,
         building_id INT NOT NULL REFERENCES Buildings(id) ON DELETE CASCADE,
         name VARCHAR(16) NOT NULL,
-        level INT NOT NULL,   -- Floor level, e.g., 1, 2, 3
-        UNIQUE(building_id, level)  -- Ensures no duplicate floors within a building
+        level INT NOT NULL   -- Floor level, e.g., 1, 2, 3
       );
 
       CREATE TABLE IF NOT EXISTS Segments (
