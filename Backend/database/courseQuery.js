@@ -1,7 +1,6 @@
 const {query} = require('./psqlWrapper');
 
 
-
 const createCourse = async (user_id, {name, descriptionHeading, alternateLink, creationTime}) => {
 
     const course = await query(`

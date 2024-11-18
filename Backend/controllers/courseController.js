@@ -36,6 +36,8 @@ const refreshUserCourses = async (req, res, next) => {
         await courseQuery.deleteUserCourses(user_id);
 
         const classroom = google.classroom({version: 'v1', auth: oauth2Client});
+
+        console.log(classroom);
         
         const courses_res = await classroom.courses.list({
             courseStates: 'ACTIVE'
@@ -44,6 +46,8 @@ const refreshUserCourses = async (req, res, next) => {
         
         const today = new Date();
         result = [];
+
+        console.log(courses);
         
         for(const course of courses){
             const courseId = course.id;
@@ -59,15 +63,29 @@ const refreshUserCourses = async (req, res, next) => {
                 orderBy: 'dueDate desc'
             });
 
+            
             // the scope for coursework only has .me in it???
             const assignments = assignments_res.data.courseWork || [];
-
+            console.log(assignments);
             for(const assignment of assignments){
+
                 if(assignment.dueDate){
                     const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours, assignment.dueTime.minutes);
                     if(formatted_dueDate >= today){
                         assignment.dueDate = formatted_dueDate;
-                        await courseQuery.createAssignment(course_insert.id, assignment);      
+                        
+                        const submissions_res = await classroom.courses.courseWork.studentSubmissions.list({
+                            courseId,
+                            courseWorkId: assignment.id,
+                        });
+
+                        const submissions = submissions_res.data.studentSubmissions || [];
+
+                        const hasSubmitted = submissions.some(submission => submission.state === 'TURNED_IN' || submission.state === 'RETURNED');
+                        
+                        if(!hasSubmitted){  
+                            await courseQuery.createAssignment(course_insert.id, assignment);      
+                        }
                     }
                     else{
                         break;
