@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 
 
 app.use('/nonAuth', (req, res) => {
-  res.status(200).send("non Auth API works.");
+  res.status(200).send({"Message": "non Auth API works."});
 });
 
 
@@ -82,7 +82,7 @@ app.get('/', async (req, res) => {
 
   const user = await userQuery.queryUserByID(req.user);
 
-  res.status(200).send("Home Page for " + user.name + '.');
+  res.status(200).send({"Message": `Home Page for ${user.name}.`});
 })
 
 
