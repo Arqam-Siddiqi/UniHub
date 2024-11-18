@@ -4,6 +4,41 @@ const { GoogleAIFileManager } = require("@google/generative-ai/server");
 const fs = require('fs');
 const tmp = require('tmp');
 
+const mammoth = require("mammoth");
+const puppeteer = require("puppeteer");
+
+async function convertDocxBufferToPdf(docxBuffer, fileManager) {
+    try {
+        // Step 1: Convert .docx to HTML
+        const { value: html } = await mammoth.convertToHtml({ buffer: docxBuffer });
+        
+        // Step 2: Use Puppeteer to render HTML to PDF
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html);
+
+        const tempFile = tmp.fileSync({ postfix: '.pdf' });
+        // fs.writeFileSync(tempFile.name, fileBuffer);
+        
+        
+        await page.pdf({ path: tempFile.name, format: "A4" });
+
+        const uploadResponse = await fileManager.uploadFile(tempFile.name, {
+            mimeType: "application/pdf",
+            displayName: "Gemini 1.5 PDF",
+        });
+        
+        await browser.close();
+        console.log("PDF created.");
+        
+        tempFile.removeCallback();
+
+        return uploadResponse;
+    } catch (err) {
+        console.error("Error during conversion:", err);
+    }
+}
+
 const initializeGemini = (maxOutputTokens) => {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
@@ -40,19 +75,27 @@ const uploadFileBuffer = async (fileBuffer, fileManager) => {
     return uploadResponse;
 }
 
+
 const generateContent = async (model, uploadResponse, type, validated_params) => {
     
-    const result = await model.generateContent([
-        {
-            fileData: {
-                mimeType: uploadResponse.file.mimeType,
-                fileUri: uploadResponse.file.uri,
-            }
-        },
-        { 
-            text: type.toLowerCase() === 'quiz' ? quizTextPrompt(validated_params) : ''
-        },
-    ]);
+    let result
+    try{
+        result = await model.generateContent([
+            {
+                fileData: {
+                    mimeType: uploadResponse.file.mimeType,
+                    fileUri: uploadResponse.file.uri,
+                }
+            },
+            { 
+                text: type.toLowerCase() === 'quiz' ? quizTextPrompt(validated_params) : ''
+            },
+        ]);
+    }
+    catch(error){
+        throw Error("Gemini is currently unavailable for use.");
+    }
+    
 
     try {
         return JSON.parse(result.response.text());
@@ -178,9 +221,9 @@ const notesTextPrompt = () => {
 
 module.exports = {
     validateQuizParams,
-    quizTextPrompt,
     initializeGemini,
     uploadFileBuffer,
     generateContent,
-    parseQuiz
+    parseQuiz,
+    convertDocxBufferToPdf
 }

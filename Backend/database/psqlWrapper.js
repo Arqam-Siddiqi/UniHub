@@ -182,8 +182,11 @@ const mapSetup = async () => {
           INSERT INTO buildings (id,name) VALUES (2,'Electrical Engineering');
           INSERT INTO buildings (id,name) VALUES (3,'Multi-purpose');
 
+          --select * from buildings;
 
-          INSERT INTO Floors (id,building_id,name,level) VALUES (1,1, 'Basement' , 0);
+          INSERT INTO Floors (id,building_id,name,level) VALUES (0,1, 'Basement 1' , 0);
+
+          INSERT INTO Floors (id,building_id,name,level) VALUES (1,1, 'Basement 2' , 0);
           INSERT INTO Floors (id,building_id,name,level) VALUES (2,1, 'Ground' , 1);
           INSERT INTO Floors (id,building_id,name,level) VALUES (3,1, 'First' , 2);
 
@@ -198,11 +201,11 @@ const mapSetup = async () => {
           INSERT INTO Floors (id,building_id,name,level) VALUES (10,3, 'Ground' , 1);
           INSERT INTO Floors (id,building_id,name,level) VALUES (11,3, 'First' , 2); 
 
-
-          INSERT INTO segments (id,floor_id, direction) VALUES (1,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UR');
-          INSERT INTO segments (id,floor_id, direction) VALUES (2,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UL');
-          INSERT INTO segments (id,floor_id, direction) VALUES (3,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LR');
-          INSERT INTO segments (id,floor_id, direction) VALUES (4,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LL');
+          --select * from floors;
+          INSERT INTO segments (id,floor_id, direction) VALUES (1,(SELECT id FROM Floors WHERE name='Basement 1' and level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UR');
+          INSERT INTO segments (id,floor_id, direction) VALUES (2,(SELECT id FROM Floors WHERE name='Basement 2' and level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UL');
+          INSERT INTO segments (id,floor_id, direction) VALUES (3,(SELECT id FROM Floors WHERE name='Basement 1' and level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LR');
+          INSERT INTO segments (id,floor_id, direction) VALUES (4,(SELECT id FROM Floors WHERE name='Basement 2' and level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LL');
 
           INSERT INTO segments (id,floor_id, direction) VALUES (5,(SELECT id FROM Floors WHERE level=1 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UR');
           INSERT INTO segments (id,floor_id, direction) VALUES (6,(SELECT id FROM Floors WHERE level=1 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UL');
@@ -213,6 +216,7 @@ const mapSetup = async () => {
           INSERT INTO segments (id,floor_id, direction) VALUES (10,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'UL');
           INSERT INTO segments (id,floor_id, direction) VALUES (11,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LR');
           INSERT INTO segments (id,floor_id, direction) VALUES (12,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LL');
+
 
 
           INSERT INTO segments (id,floor_id, direction) VALUES (13,(SELECT id FROM Floors WHERE name='A' and building_id=(SELECT id FROM buildings WHERE name='Electrical Engineering')), 'UR');
@@ -258,15 +262,15 @@ const mapSetup = async () => {
 
           INSERT INTO segments (id,floor_id, direction) VALUES (45,(SELECT id FROM Floors WHERE level=1 and building_id=(SELECT id FROM buildings WHERE name='Electrical Engineering')), 'M');
 
-          INSERT INTO segments (id,floor_id, direction) VALUES (46,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LM');
-          INSERT INTO segments (id,floor_id, direction) VALUES (47,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'RM');
+          INSERT INTO segments (id,floor_id, direction) VALUES (46,(SELECT id FROM Floors WHERE name='Basement 2' and level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'LM');
+          INSERT INTO segments (id,floor_id, direction) VALUES (47,(SELECT id FROM Floors WHERE name='Basement 1' and level=0 and building_id=(SELECT id FROM buildings WHERE name='Computer Science')), 'RM');
 
           INSERT INTO segments (id,floor_id, direction) VALUES (48,(SELECT id FROM Floors WHERE level=0 and building_id=(SELECT id FROM buildings WHERE name='Multi-purpose')), 'M');
           INSERT INTO segments (id,floor_id, direction) VALUES (49,(SELECT id FROM Floors WHERE level=1 and building_id=(SELECT id FROM buildings WHERE name='Multi-purpose')), 'M');
           INSERT INTO segments (id,floor_id, direction) VALUES (50,(SELECT id FROM Floors WHERE level=2 and building_id=(SELECT id FROM buildings WHERE name='Multi-purpose')), 'M');
           INSERT INTO segments (id,floor_id, direction) VALUES (51,(SELECT id FROM Floors WHERE level=3 and building_id=(SELECT id FROM buildings WHERE name='Electrical Engineering')), 'M');
 
-
+          --select * from segments;
 
           INSERT INTO room_types (code, name) VALUES ('FR','Faculty Room');
           INSERT INTO room_types (code, name) VALUES ('BCR','Boys Common Room');
@@ -282,16 +286,18 @@ const mapSetup = async () => {
           INSERT INTO room_types (code, name) VALUES ('Adm','Administration');
 
           INSERT INTO room_types (code, name) VALUES ('WS','Workshop');
-          INSERT INTO room_types (code, name) VALUES ('HO','HOD office');
           INSERT INTO room_types (code, name) VALUES ('GR','Guest Room');
           INSERT INTO room_types (code, name) VALUES ('ER','Empty Room');
           INSERT INTO room_types (code, name) VALUES ('LH','Library Hall');
           INSERT INTO room_types (code, name) VALUES ('OC','Operation center');
           INSERT INTO room_types (code, name) VALUES ('DEP','Department');
-          INSERT INTO room_types (code, name) VALUES ('DIR','Director');
+          INSERT INTO room_types (code, name) VALUES ('HEAD','Heads');
 
+
+          --select * from room_types;
 
           --EE rooms
+
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (1,(SELECT id FROM segments WHERE floor_id=4 and direction='UL'), 'Female wash room', 'WR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (2,(SELECT id FROM segments WHERE floor_id=4 and direction='UL'), 'Microprocessing lab', 'LR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (3,(SELECT id FROM segments WHERE floor_id=4 and direction='UL'), 'Control Lab', 'LR');
@@ -319,7 +325,7 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (19,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Male faculty wash room', 'WR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (20,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Female prayer area', 'PR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (21,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Faculty office(S & H)', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (22,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'HOD office', 'HO');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (22,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'HOD office', 'HEAD');
 
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (23,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Faculty office(AI & DS)', 'FR');
@@ -338,6 +344,8 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (32,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'B10', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (33,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'B11', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (34,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'Faculty office(SOM 1)', 'FR');
+
+
 
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (35,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'Male wash room', 'WR');
@@ -401,20 +409,18 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (79,(SELECT id FROM segments WHERE floor_id=8 and direction='LL'), 'E31', 'SR');
 
 
+
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (80,(SELECT id FROM segments WHERE floor_id=8 and direction='LR'), 'E30', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (81,(SELECT id FROM segments WHERE floor_id=8 and direction='LR'), 'E29', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (82,(SELECT id FROM segments WHERE floor_id=8 and direction='LR'), 'BCR', 'BCR');
 
 
           --CS rooms
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (83,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Ms Atiya Jokhio', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (84,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Mr Muh Minhal Raza', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (85,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Mr Basit Ali', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (86,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Mr Syed Zain Ul Hasan', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (87,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Ms Iqra Fahad', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (88,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Ms Bakhtawar Abbasi', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (89,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Ms Nida Munawar', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (90,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Ms Sobia Iftikhar', 'FR');
+
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (83,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Faculty Room 1', 'FR');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (84,(SELECT id FROM segments WHERE floor_id=1 and direction='LL'), 'Faculty Room 2', 'FR');
+
+
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (91,(SELECT id FROM segments WHERE floor_id=1 and direction='UL'), 'Room 11', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (92,(SELECT id FROM segments WHERE floor_id=1 and direction='UL'), 'Room 10', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (93,(SELECT id FROM segments WHERE floor_id=1 and direction='UL'), 'Room 7', 'FR');
@@ -431,34 +437,33 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (103,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Room 22', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (104,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Room 23', 'FR');
 
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (105,(SELECT id FROM segments WHERE floor_id=0 and direction='RM'), 'HR/Admin Department', 'DEP');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (106,(SELECT id FROM segments WHERE floor_id=0 and direction='RM'), 'Faculty Room', 'FR');
 
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (105,(SELECT id FROM segments WHERE floor_id=1 and direction='RM'), 'Faculty Room', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (106,(SELECT id FROM segments WHERE floor_id=1 and direction='RM'), 'Procurement Department', 'DEP');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (107,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Accounts Department', 'DEP');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (108,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Mr Abdul Saeed', 'FR');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (109,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Assistant manager admin office', 'Adm');
 
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (107,(SELECT id FROM segments WHERE floor_id=1 and direction='UR'), 'Accounts Department', 'DEP');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (108,(SELECT id FROM segments WHERE floor_id=1 and direction='UR'), 'Mr Abdul Saeed', 'FR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (109,(SELECT id FROM segments WHERE floor_id=1 and direction='UR'), 'Assistant manager admin office', 'Adm');
+
 
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (110,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Male wash room', 'WR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (111,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'S2', 'SR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (112,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 17 (HOD office)', 'HO');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (112,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 17 (HOD office)', 'HEAD');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (113,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 15(Secretariat)', 'Adm');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (114,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 14', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (115,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'R11', 'SR');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (116,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'S2', 'SR');
-
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (117,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'HR & QEC Department', 'DEP');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (118,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 8(Manager Administration)', 'Adm');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (119,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 6B', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (120,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 6A', 'FR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (121,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 3(Director Secretariat)', 'Adm');
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (122,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 2(Director)', 'DIR');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (122,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 2(Director)', 'HEAD');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (123,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'OneStop', 'Adm');
 
 
-          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (124,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'Faculty Room', 'FR');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (124,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'Room 16', 'FR');
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (125,(SELECT id FROM segments WHERE floor_id=2 and direction='LR'), 'LLC', 'SR');
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (126,(SELECT id FROM segments WHERE floor_id=2 and direction='LR'), 'Room 5(Conference Room)', 'CR');
@@ -489,6 +494,9 @@ const mapSetup = async () => {
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (146,(SELECT id FROM segments WHERE floor_id=3 and direction='LR'), 'Lab 1', 'LR');
 
 
+
+
+
           --Multi-Purpose
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (147,(SELECT id FROM segments WHERE floor_id=9 and direction='M'), 'Library', 'LH');
@@ -508,6 +516,255 @@ const mapSetup = async () => {
 
 
           INSERT INTO Rooms  (id,segment_id, name, type) VALUES (156,(SELECT id FROM segments WHERE floor_id=6 and direction='M'), 'Faculty office', 'FR');
+
+          INSERT INTO Rooms (id, segment_id, name, type) VALUES (157, (SELECT id FROM segments WHERE floor_id=0 and direction='RM'),'Procurement Department','DEP');
+
+
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (158,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'Room 13(Professor & Dean of Computing)', 'HEAD');
+          INSERT INTO Rooms  (id,segment_id, name, type) VALUES (159,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'R12', 'SR');
+
+
+
+
+
+
+
+
+          --faculty
+          --A faculty
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Huma Hafeez', 6);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Urooj', 6);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Shahmeen Ismail', 6);
+
+
+          --B faculty 
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Huma Dawood', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Ahsan Ali Abbasi', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Jahangir Tanveer', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Zehra Mukhtiar', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Michael Simon', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Ahsan', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Asiya Zaheer', 34);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Yousuf', 34);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Adeel', 24);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Sarfaraz Bhutto', 24);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Nazia Nazeer', 24);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Ayesha Khan', 24);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Mushtaq Ahmed', 24);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Saad', 24);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Syed Bilal Ahsan', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Omer Qureshi', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Farooq Zaidi', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Kamran Ali', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rafia Sheikh', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Farrukh Shahid', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Alishba Subhani', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Sania Urooj', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Rafi', 23);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Maria Siddiqua', 23);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Alishba Tariq', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Amna Ali', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Nazish Kanwal', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Farhan Ali Memon', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Rahim', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Shahnawaz Khan', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Shahzad Shaikh', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Aqsa Fayyaz', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Moheez Ur Rahim', 21);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Mairaj', 21);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr M.Jamil Usmani', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Qurat ul Ain Sohail', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr M.Junnaid Rabbani', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Syed M.Atif Saleem', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Haris Mohsin', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Zakir Hussain', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Syed Areeb Ahmed', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Aamir Ali', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Rukhsar Ali', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Kashif Ahmed', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr M.Misbah Haider Malik', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Usama Bin Umr', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Muhammad Adnan', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr M.Ahsan Khan', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Haider Mehdi', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Aqib Noor', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Sadaf Ayesha', 28);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Maham Ghauri', 28);
+
+
+
+          --C faulty
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Kausar Malik', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Wajiha Durrani', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Javeriya Hussain', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Amjad', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Khusro Mian', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Faiza Mumtaz', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Fareeha Sultan', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Nazia Imam', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rabia Tabassum', 50);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Asma Masood', 50);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Hasham', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Ihstiaq Ahmed', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Mariam Aftab', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Uzma Saleh', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Usama Antuley', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Hassan Saeed', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr M.Abdul Basit Khan', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Shahid Ashraf', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Nadeem Khan', 156);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rabia Ijaz', 156);
+
+
+
+
+          --CS faculty
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Atiya Jokhio',83);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muh Minhal Raza',83);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Basit Ali',83);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Syed Zain Ul Hasan',83);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Iqra Fahad',84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Bakhtawar Abbasi',84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Nida Munawar',84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Sobia Iftikhar',84);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr faisal ali syed', 92);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr nauraiz subhan', 92);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr abdul aziz(HOD SE)', 93);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr nadeem kafi', 93);
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr imran ali bhatti', 94);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms hira tunio', 95);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms zain noreen', 95);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms alina arshad', 96);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms syeda ravia ejaz', 96);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms filza akhkaq', 96);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad nouman durrani', 97);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Anam qureshi', 98);
+
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Farrukh Hasan Syed', 99);
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Shaheer Ahmed', 101);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Norman Hanif', 101);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Sameer Faisal', 102);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Sohail Ahmed', 102);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Nadeem Ghouri', 103);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Monis', 103);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Ubaidullah', 104);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Yasir Arfat', 104);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Shafique Ur Rehman', 104);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Adil Sheraz', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Kashif', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Shoaib Raza', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Eng Abdul Rahman', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Fahad Hussain', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Muhammad Usman', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Fizza Aqeel', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Ayesha Ali', 106);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Aqsa Aslam', 114);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Shaharbano', 114);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Zainab Asif Javed', 114);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Bushra Sattar', 114);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rubab Manzar', 119);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Javeria Farooq', 119);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Ghufran Ahmed', 120);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Madiha Rehman',120);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Ramsha Iqbal', 120);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rabia Ahmed',120);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Abeer Gauher', 120);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Abeeha Sattar',124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Aashir Mehboob', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Kashan Naqvi', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Sumaiyah Zahid', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muazzam Ali Shah', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Shoaib Rauf', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Safia', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Fahad Sherwani', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Mubashra Fayyaz', 124);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Yusra Kaleem', 124);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Atifa Batool', 127);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Javeria Ali Wadho', 127);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Khadija Shereen', 127);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Anaum Hamid', 127);
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Talha Shahid', 134);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Khalid', 134);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Aashir', 134);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Waseem Rauf', 134);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Mubashir', 134);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Ghulam Qadir Bhurgari', 134);
+
+
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Mehak Mazhar', 135);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Mahnoor Javed', 135);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Fatima Gado', 135);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Khadija Tul Kubra', 135);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Yumna Asif', 135);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Syeda Tehreem Gilani', 135);
+
+
+          --CS CYS
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Shahbaz Siddiqui', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Abuzar Zafar', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr M.Kariz Kamal', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Ali Naseer', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Sufian Hameed', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Nauman', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Sandesh Kumar', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Fahad Samad', 29);
 
           
         END IF;
