@@ -36,8 +36,21 @@ const queryMap = async () => {
     return map.rows;
 }
 
+const queryFaculty = async (room_id) => {
+
+    const faculty = await query(`
+        SELECT ARRAY_AGG(f.name) AS names 
+        FROM Faculty f
+        WHERE f.room_id = $1;
+    `, [room_id]);
+
+    return faculty.rows[0]?.names || [];
+    
+}
+
 module.exports = {
-    queryMap
+    queryMap,
+    queryFaculty
 }
 
 // SELECT 
