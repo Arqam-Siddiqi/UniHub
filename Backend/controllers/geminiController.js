@@ -5,36 +5,16 @@ const {download} = require('../cloud_storage/cloud');
 
 const fs = require('fs');
 const tmp = require('tmp');
-const { validateQuizParams, quizTextPrompt } = require("../utils/geminiUtils");
+const { validateQuizParams, quizTextPrompt, initializeGemini } = require("../utils/geminiUtils");
 
 const createQuiz = async (req, res) => {
 
     try{
         const validated_params = validateQuizParams(req.body);
 
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-        const fileManager = new GoogleAIFileManager(process.env.GEMINI_KEY);
+        const {model, fileManager} = initializeGemini(200 * validated_params.num_of_questions);
 
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-            generationConfig: {
-                temperature: 0.2,
-                responseMimeType: 'application/json',
-                maxOutputTokens: 200 * validated_params.num_of_questions
-            }
-        });
-
-        const fileBuffer = await download(req.file);
-
-        const tempFile = tmp.fileSync({ postfix: '.pdf' });
-        fs.writeFileSync(tempFile.name, fileBuffer);
-
-        const uploadResponse = await fileManager.uploadFile(tempFile.name, {
-            mimeType: "application/pdf",
-            displayName: "Gemini 1.5 PDF",
-        });
-
-        tempFile.removeCallback();
+        
 
         const result = await model.generateContent([
         {
@@ -56,6 +36,22 @@ const createQuiz = async (req, res) => {
     }
     catch(error){
         res.status(400).send({"Error": error.message});
+    }
+
+}
+
+
+const createNotes = async (req, res) => {
+
+    try{
+        const {model, fileManager} = initializeGemini();
+
+
+
+        res.status(200).send(model);
+    }
+    catch(error){
+        res.status(400).send({Error: error.message});
     }
 
 }
