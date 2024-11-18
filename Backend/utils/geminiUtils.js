@@ -1,3 +1,24 @@
+const initializeGemini = (maxOutputTokens) => {
+
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+    const fileManager = new GoogleAIFileManager(process.env.GEMINI_KEY);
+
+    const model = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        generationConfig: {
+            temperature: 0.2,
+            responseMimeType: 'application/json',
+            maxOutputTokens: maxOutputTokens
+        }
+    });
+
+    return {
+        model,
+        fileManager
+    };
+
+}
+
 const validateQuizParams = ({num_of_questions, type_of_questions}) => {
 
     const allowed_types = ['subjective', 'objective'];
@@ -91,5 +112,6 @@ const quizTextPrompt = ({num_of_questions, type_of_questions}) => {
 
 module.exports = {
     validateQuizParams,
-    quizTextPrompt
+    quizTextPrompt,
+    initializeGemini
 }
