@@ -1,6 +1,6 @@
-const {download} = require('../cloud_storage/cloud');
-
-const { validateQuizParams, initializeGemini, uploadFileBuffer, generateContent, parseQuiz } = require("../utils/geminiUtils");
+const { load } = require('@pspdfkit/nodejs');
+const { download } = require('../cloud_storage/cloud');
+const { validateQuizParams, initializeGemini, uploadFileBuffer, generateContent, parseQuiz, convertDocxBufferToPdf } = require("../utils/geminiUtils");
 
 const createQuiz = async (req, res) => {
 
@@ -11,9 +11,13 @@ const createQuiz = async (req, res) => {
         let text;
         let count = 1;
         
+        console.log(req.file);
         const fileBuffer = await download(req.file);
-        const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
+        // const uploadResponse = await convertDocxBufferToPdf(fileBuffer, fileManager);
+        console.log("here");
         
+        const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
+
         do {
             text = await generateContent(model, uploadResponse, 'quiz', validated_params);
             
