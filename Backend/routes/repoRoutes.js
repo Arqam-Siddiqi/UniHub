@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const requireAuth = require('../middleware/requireAuth');
+const optionalAuth = require('../middleware/optionalAuth');
 
 const repoController = require('../controllers/repoController');
 
@@ -17,6 +18,6 @@ router.post('/like', requireAuth, repoController.toggleLikeRepo);
 
 router.post('/search', repoController.searchMatch);
 
-router.post('/:id', repoController.getRepoByID);
+router.get('/:id', optionalAuth, repoController.getRepoByID);
 
 module.exports = router;
