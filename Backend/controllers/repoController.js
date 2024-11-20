@@ -119,8 +119,6 @@ const getRepoByID = async (req, res) => {
         }
 
         const repos = await repoQuery.queryReposByID(user_id, id);
-
-        console.log(repos);
         
         res.status(200).send(repos);
     }
