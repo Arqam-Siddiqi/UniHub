@@ -20,17 +20,23 @@ const queryMap = async () => {
         JOIN Segments s ON f.id = s.floor_id
         JOIN Rooms r ON s.id = r.segment_id
         JOIN Room_Types rt ON r.type = rt.code
-        ORDER BY b.id, f.level,
-				CASE s.direction
-			        WHEN 'UL' THEN 1
-					WHEN 'LM' THEN 2
-					WHEN 'M' THEN 3
-					WHEN 'RM' THEN 4
-			        WHEN 'UR' THEN 5
-			        WHEN 'LL' THEN 6
-			        WHEN 'LR' THEN 7
-			    END,
-				r.id;
+        ORDER BY
+            CASE b.id
+                WHEN 3 THEN 1
+                WHEN 1 THEN 2
+                WHEN 2 THEN 3
+            END, 
+            f.level,
+            CASE s.direction
+                WHEN 'UL' THEN 1
+                WHEN 'LM' THEN 2
+                WHEN 'M' THEN 3
+                WHEN 'RM' THEN 4
+                WHEN 'UR' THEN 5
+                WHEN 'LL' THEN 6
+                WHEN 'LR' THEN 7
+            END,
+            r.id;
     `);
     
     return map.rows;
