@@ -1,6 +1,7 @@
 const repoQuery = require('../database/repoQuery');
 const uuid = require('uuid');
 const {validateRepoParams} = require('../utils/repoUtils');
+const requireAuth = require('../middleware/requireAuth');
 
 const getAllRepos = async (req, res) => {
 
@@ -108,16 +109,18 @@ const getRepoByID = async (req, res) => {
 
     try{
         const id = req.params?.id;
-        const user_id = req.body.user_id;
-        
+        const user_id = req.user;
+
         if(!id){
             throw Error("Please send the Repo ID.");
         }
-        else if(!uuid.validate(id) || (user_id && !uuid.validate(user_id))){
+        else if(!uuid.validate(id)){
             throw Error("This is not a valid UUID.");
         }
 
         const repos = await repoQuery.queryReposByID(user_id, id);
+
+        console.log(repos);
         
         res.status(200).send(repos);
     }
