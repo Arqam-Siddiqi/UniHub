@@ -107,17 +107,17 @@ const deleteRepo = async (req, res)=>{
 const getRepoByID = async (req, res) => {
 
     try{
-        const user_id = req.user;
-        const params = req.params;
+        const id = req.params?.id;
+        const user_id = req.body.user_id;
         
-        if(!params.id){
-            throw Error("Repository does not exist or is not owned by this user.");
+        if(!id){
+            throw Error("Please send the Repo ID.");
         }
-        else if(!uuid.validate(params.id)){
+        else if(!uuid.validate(id) || (user_id && !uuid.validate(user_id))){
             throw Error("This is not a valid UUID.");
         }
 
-        const repos = await repoQuery.queryReposByID(user_id, params.id);
+        const repos = await repoQuery.queryReposByID(user_id, id);
         
         res.status(200).send(repos);
     }

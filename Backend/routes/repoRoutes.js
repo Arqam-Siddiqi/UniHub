@@ -17,6 +17,6 @@ router.post('/like', requireAuth, repoController.toggleLikeRepo);
 
 router.post('/search', repoController.searchMatch);
 
-router.get('/:id', repoController.getRepoByID);
+router.post('/:id', repoController.getRepoByID);
 
 module.exports = router;
