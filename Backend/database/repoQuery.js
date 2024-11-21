@@ -223,29 +223,33 @@ const toggleLike = async (user_id, repo_id) => {
 const searchTitleAndTags = async (search) => {
 
     const repos = await query(`
-        SELECT r.*,
-            ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS "tags", 
-            COALESCE ((
-                SELECT COUNT(*) FROM Likes l
-                GROUP BY l.repo_id 
-                HAVING l.repo_id = r.id
-            ), 0) AS "likes" ,
-            COALESCE ((
-                SELECT COUNT(*) FROM Comments c
-                GROUP BY c.repo_id
-                HAVING c.repo_id = r.id
-            ), 0) AS "num_of_comments",
-            MAX(CASE 
-                WHEN r.name ILIKE '%' || $1 || '%' AND t.name ILIKE '%' || $1 || '%' THEN 3
-                WHEN r.name ILIKE '%' || $1 || '%' THEN 2
-                WHEN t.name ILIKE '%' || $1 || '%' THEN 1
-                ELSE 0
-            END) AS relevance
-        FROM Repos r
-        LEFT JOIN Repo_Tags rt ON r.id = rt.repo_id
-        LEFT JOIN Tags t ON rt.tag_id = t.id
-        WHERE r.visibility='public'
-        GROUP BY r.id
+        WITH Ranks AS (
+            SELECT r.*,
+                ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS "tags", 
+                COALESCE ((
+                    SELECT COUNT(*) FROM Likes l
+                    GROUP BY l.repo_id 
+                    HAVING l.repo_id = r.id
+                ), 0) AS "likes" ,
+                COALESCE ((
+                    SELECT COUNT(*) FROM Comments c
+                    GROUP BY c.repo_id
+                    HAVING c.repo_id = r.id
+                ), 0) AS "num_of_comments",
+                MAX(CASE 
+                    WHEN r.name ILIKE '%' || $1 || '%' AND t.name ILIKE '%' || $1 || '%' THEN 3
+                    WHEN r.name ILIKE '%' || $1 || '%' THEN 2
+                    WHEN t.name ILIKE '%' || $1 || '%' THEN 1
+                    ELSE 0
+                END) AS relevance
+            FROM Repos r
+            LEFT JOIN Repo_Tags rt ON r.id = rt.repo_id
+            LEFT JOIN Tags t ON rt.tag_id = t.id
+            WHERE r.visibility='public'
+            GROUP BY r.id
+        )
+        SELECT * FROM Ranks
+        WHERE relevance > 0
         ORDER BY relevance DESC, likes DESC, created_at;
     `, [search]);
 

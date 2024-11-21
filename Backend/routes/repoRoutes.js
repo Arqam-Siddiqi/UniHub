@@ -4,7 +4,7 @@ const optionalAuth = require('../middleware/optionalAuth');
 
 const repoController = require('../controllers/repoController');
 
-router.get('/', repoController.getAllRepos);
+router.get('/', repoController.getAllPublicRepos);
 
 router.get('/self', requireAuth, repoController.getReposByJWT);
 
