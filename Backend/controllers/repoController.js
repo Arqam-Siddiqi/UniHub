@@ -1,9 +1,8 @@
 const repoQuery = require('../database/repoQuery');
 const uuid = require('uuid');
 const {validateRepoParams} = require('../utils/repoUtils');
-const requireAuth = require('../middleware/requireAuth');
 
-const getAllRepos = async (req, res) => {
+const getAllPublicRepos = async (req, res) => {
 
     try{
         const repos = await repoQuery.queryAllRepos();
@@ -174,7 +173,7 @@ const searchMatch = async (req, res) => {
 }
 
 module.exports = {
-    getAllRepos,
+    getAllPublicRepos,
     createRepo,
     getReposByJWT,
     updateRepo,
