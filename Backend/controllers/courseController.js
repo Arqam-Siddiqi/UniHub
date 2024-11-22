@@ -36,8 +36,6 @@ const refreshUserCourses = async (req, res, next) => {
         await courseQuery.deleteUserCourses(user_id);
 
         const classroom = google.classroom({version: 'v1', auth: oauth2Client});
-
-        console.log(classroom);
         
         const courses_res = await classroom.courses.list({
             courseStates: 'ACTIVE'
@@ -47,7 +45,6 @@ const refreshUserCourses = async (req, res, next) => {
         const today = new Date();
         result = [];
 
-        console.log(courses);
         
         for(const course of courses){
             const courseId = course.id;
@@ -66,7 +63,7 @@ const refreshUserCourses = async (req, res, next) => {
             
             // the scope for coursework only has .me in it???
             const assignments = assignments_res.data.courseWork || [];
-            console.log(assignments);
+            
             for(const assignment of assignments){
 
                 if(assignment.dueDate){
