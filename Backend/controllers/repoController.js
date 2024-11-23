@@ -38,7 +38,8 @@ const createRepo = async (req, res, next) => {
         repo.liked = false;
 
         try {
-            await algolia.insertIntoAlgolia(repo);
+            if(process.env.HOSTING_SITE)
+                await algolia.insertIntoAlgolia(repo);
         }
         catch(error) {
             await repoQuery.deleteRepoOfUser(repo);
@@ -116,6 +117,7 @@ const deleteRepo = async (req, res, next)=>{
         catch(error){
             repo = await repoQuery.queryReposByID(validated_params.id);
             await algolia.insertIntoAlgolia(repo);
+            
             throw Error(error.message);
         }
 
