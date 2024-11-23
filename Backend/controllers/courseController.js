@@ -10,6 +10,10 @@ const refreshUserCourses = async (req, res, next) => {
         const user_id = req.user;
         const google_token = await userQuery.queryUserGoogleTokens(user_id);
 
+        if(!google_token){
+            throw Error("This user does not have a google token or may not have signed in with Google.");
+        }
+
         let {access_token, refresh_token} = google_token;
 
         const oauth2Client = new google.auth.OAuth2();
