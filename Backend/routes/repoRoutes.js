@@ -18,6 +18,8 @@ router.post('/like', requireAuth, repoController.toggleLikeRepo);
 
 router.post('/search', repoController.searchMatch);
 
+router.get('/algolia', repoController.getAllAlgoliaRepos);
+
 router.get('/:id', optionalAuth, repoController.getRepoByID);
 
 module.exports = router;
