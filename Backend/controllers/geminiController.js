@@ -14,7 +14,6 @@ const createQuiz = async (req, res) => {
         console.log(req.file);
         const fileBuffer = await download(req.file);
         // const uploadResponse = await convertDocxBufferToPdf(fileBuffer, fileManager);
-        console.log("here");
         
         const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
 

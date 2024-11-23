@@ -1,11 +1,14 @@
 const repoQuery = require('../database/repoQuery');
 const uuid = require('uuid');
 const {validateRepoParams} = require('../utils/repoUtils');
+const algolia = require('../indexing/algolia');
 
 const getAllPublicRepos = async (req, res) => {
 
     try{
         const repos = await repoQuery.queryAllRepos();
+        // const repos = await algolia.getAllReposFromAlgolia();
+        console.log(repos.length);
     
         res.status(200).send(repos);
     }
@@ -15,7 +18,7 @@ const getAllPublicRepos = async (req, res) => {
 
 }
 
-const createRepo = async (req, res) => {
+const createRepo = async (req, res, next) => {
 
     try{
         const user_id = req.user;
@@ -33,6 +36,14 @@ const createRepo = async (req, res) => {
         repo.likes = 0;
         repo.num_of_comments = 0;
         repo.liked = false;
+
+        try {
+            await algolia.insertIntoAlgolia(repo);
+        }
+        catch(error) {
+            await repoQuery.deleteRepoOfUser(repo);
+            throw Error("Unable to add repository to Algolia.");
+        }
 
         res.status(200).send(repo);
     }
@@ -83,9 +94,8 @@ const updateRepo =async (req, res)=>{
     }
 }
 
-const deleteRepo = async (req, res)=>{
+const deleteRepo = async (req, res, next)=>{
     try {
-        
         const user_id=req.user;
         
         const repos = await repoQuery.queryAllReposOfUser(user_id);
@@ -97,7 +107,18 @@ const deleteRepo = async (req, res)=>{
             throw Error(`This user does not have a Repository with id "${req.body.id}".`);
         }
         
-        const repo = await repoQuery.deleteRepoOfUser(validated_params);
+        await algolia.deleteFromAlgolia(validated_params.id);
+
+        let repo;
+        try{   
+            repo = await repoQuery.deleteRepoOfUser(validated_params);
+        }
+        catch(error){
+            repo = await repoQuery.queryReposByID(validated_params.id);
+            await algolia.insertIntoAlgolia(repo);
+            throw Error(error.message);
+        }
+
         res.status(200).send(repo);
     } catch (error) {
         res.status(400).send({"Error": error.message});
@@ -172,6 +193,20 @@ const searchMatch = async (req, res) => {
 
 }
 
+const getAllAlgoliaRepos = async (req, res) => {
+
+    try{
+        const {search} = req.body;
+        const repos = await algolia.getAllReposFromAlgolia(search);
+    
+        res.status(200).send(repos);
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 module.exports = {
     getAllPublicRepos,
     createRepo,
@@ -180,5 +215,6 @@ module.exports = {
     deleteRepo,
     getRepoByID,
     toggleLikeRepo,
-    searchMatch
+    searchMatch,
+    getAllAlgoliaRepos
 }
