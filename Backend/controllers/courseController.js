@@ -67,25 +67,28 @@ const refreshUserCourses = async (req, res, next) => {
             for(const assignment of assignments){
 
                 if(!assignment.dueDate){
+                    continue;
+                }
+
+                const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours, assignment.dueTime.minutes);
+                
+                if(formatted_dueDate < today){
                     break;
                 }
                 
-                const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours, assignment.dueTime.minutes);
-                if(formatted_dueDate >= today){
-                    assignment.dueDate = formatted_dueDate;
+                assignment.dueDate = formatted_dueDate;
                     
-                    const submissions_res = await classroom.courses.courseWork.studentSubmissions.list({
-                        courseId,
-                        courseWorkId: assignment.id,
-                    });
+                const submissions_res = await classroom.courses.courseWork.studentSubmissions.list({
+                    courseId,
+                    courseWorkId: assignment.id,
+                });
 
-                    const submissions = submissions_res.data.studentSubmissions || [];
+                const submissions = submissions_res.data.studentSubmissions || [];
 
-                    const hasSubmitted = submissions.some(submission => submission.state === 'TURNED_IN' || submission.state === 'RETURNED');
-                    
-                    if(!hasSubmitted){  
-                        await courseQuery.createAssignment(course_insert.id, assignment);      
-                    }
+                const hasSubmitted = submissions.some(submission => submission.state === 'TURNED_IN' || submission.state === 'RETURNED');
+                
+                if(!hasSubmitted){  
+                    await courseQuery.createAssignment(course_insert.id, assignment);      
                 }
                 
             }
