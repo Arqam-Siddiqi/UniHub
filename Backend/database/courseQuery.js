@@ -29,9 +29,19 @@ const createAssignment = async (course_id, {title, alternateLink, description, m
 const queryUserCourses = async (user_id) => {
 
     const courses = await query(`
-        SELECT c.name, c.link AS "course_link", c.description AS "course_description", a.title, a.link AS "assignment_link", a.description AS "assignment_description", a.max_points, a.due_date, a.created_at FROM Assignments a
+        SELECT 
+            c.name, 
+            c.link AS "course_link", 
+            c.description AS "course_description", 
+            a.title, 
+            a.link AS "assignment_link", 
+            a.description AS "assignment_description", 
+            a.max_points, 
+            a.due_date, 
+            a.created_at FROM Assignments a
         RIGHT JOIN Courses c ON a.Course_ID = c.ID
-        WHERE c.user_id = $1;
+        WHERE c.user_id = $1
+        ORDER BY a.due_date;
     `, [user_id])
 
     return courses.rows;
