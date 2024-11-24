@@ -5,6 +5,6 @@ const fileController = require('../controllers/fileController');
 
 router.post('/quiz', fileController.getFileDetails, geminiController.createQuiz);
 
-router.get('/notes', fileController.getFileDetails, geminiController.createNotes);
+router.post('/notes', fileController.getFileDetails, geminiController.createNotes);
 
 module.exports = router;

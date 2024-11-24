@@ -78,7 +78,7 @@ const uploadFileBuffer = async (fileBuffer, fileManager) => {
 
 const generateContent = async (model, uploadResponse, type, validated_params) => {
     
-    let result
+    let result;
     try{
         result = await model.generateContent([
             {
@@ -88,7 +88,7 @@ const generateContent = async (model, uploadResponse, type, validated_params) =>
                 }
             },
             { 
-                text: type.toLowerCase() === 'quiz' ? quizTextPrompt(validated_params) : ''
+                text: type.toLowerCase() === 'quiz' ? quizTextPrompt(validated_params) : notesTextPrompt()
             },
         ]);
     }
@@ -215,7 +215,43 @@ const quizTextPrompt = ({num_of_questions, type_of_questions}) => {
 
 const notesTextPrompt = () => {
     
-    
+    return `
+        Create concise and comprehensive notes from the following document. 
+        The content can include both general educational and code-related material. 
+        Ensure the notes summarize key concepts and highlight important code snippets. 
+        Scan the document for code. If there is code present, then annotate it.
+        Make sure all KEYWORDS, such as important terms, functions, or technical jargon, are mentioned in the notes you create. 
+        Focus on the most relevant points for university students, including: code structure, functions, and algorithms, while avoiding unnecessary details.
+        Your notes should be as detailed as possible.
+
+        Here is an example of how to anotate code:
+        Document Contents:
+        def insertion_sort(arr):
+            for i in range(1, len(arr)):
+                key = arr[i]
+                j = i - 1
+                while j >= 0 and key < arr[j]:
+                    arr[j + 1] = arr[j]
+                    j -= 1
+                arr[j + 1] = key
+        
+        Your/Gemini annotation:
+        def insertion_sort(arr):
+        # Iterate through each element in the list starting from index 1
+        for i in range(1, len(arr)):
+            key = arr[i]  # The current element to be inserted into the sorted portion of the list
+            j = i - 1  # Index of the last element of the sorted portion of the list
+            
+            # Move elements of arr[0..i-1] that are greater than key to one position ahead of their current position
+            while j >= 0 and key < arr[j]:
+                arr[j + 1] = arr[j]  # Shift element to the right
+                j -= 1  # Move to the next element to the left
+            
+            # Place the key in its correct position in the sorted portion
+            arr[j + 1] = key
+
+        Finally make sure your only output a JSON object with a key \"notes\" and a string value which contains all the notes.
+    `;
 
 }
 
