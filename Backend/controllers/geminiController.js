@@ -46,7 +46,7 @@ const createQuiz = async (req, res) => {
 const createNotes = async (req, res) => {
 
     try{
-        const {model, fileManager} = initializeGemini();
+        const {model, fileManager} = initializeGemini(5000);
         let text;
         let count = 1;
         
@@ -58,7 +58,7 @@ const createNotes = async (req, res) => {
 
             count += 1;
 
-            if(count > 2){  // try twice
+            if(count > 2 && !text){  // try twice
                 await fileManager.deleteFile(uploadResponse.file.name);
                 throw Error("Gemini was unable to parse the content into JSON.");
             }
@@ -67,7 +67,11 @@ const createNotes = async (req, res) => {
         
         await fileManager.deleteFile(uploadResponse.file.name);
 
-        res.status(200).send(text);
+        const formatted_text = {};
+        formatted_text.notes = text.notes.replace(/(?<!")\\n(?!")/g, '\n');
+        console.log(formatted_text.notes);
+
+        res.status(200).send(formatted_text);
     }
     catch(error){
         res.status(400).send({Error: error.message});

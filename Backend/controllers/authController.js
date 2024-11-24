@@ -33,7 +33,11 @@ const signup = async (req, res) => {
 
         const token = createJWT(user.id);
 
-        res.status(200).send({name: user.name, jwt: token, googleVerified: false});
+        res.status(200).send({
+            name: user.name, 
+            jwt: token, 
+            googleVerified: false
+        });
     }
     catch(error){
         res.status(400).send({"Error": error.message});
@@ -60,7 +64,11 @@ const login = async (req, res) => {
 
         const token = createJWT(user.id);
 
-        res.status(200).send({name: user.name, jwt: token, googleVerified: false});
+        res.status(200).send({
+            name: user.name, 
+            jwt: token, 
+            googleVerified: false
+        });
     }
     catch(error){
         res.status(400).send({"Error": error.message});
