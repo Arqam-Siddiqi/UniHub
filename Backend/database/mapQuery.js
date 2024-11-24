@@ -42,7 +42,7 @@ const queryMap = async () => {
     return map.rows;
 }
 
-const queryFaculty = async (room_id) => {
+const queryFacultyByRoom = async (room_id) => {
 
     const faculty = await query(`
         SELECT ARRAY_AGG(f.name) AS names 
@@ -54,9 +54,50 @@ const queryFaculty = async (room_id) => {
     
 }
 
+const queryAllFaculty = async () => {
+
+    const faculty = await query(`
+        SELECT
+            fc.name, 
+            r.name AS "room_name", 
+            f.name AS "floor_name", 
+            b.name AS "building_name"
+        FROM Faculty fc
+        JOIN Rooms r ON fc.room_id = r.id
+        JOIN Segments s ON r.segment_id = s.id
+        JOIN Floors f ON s.floor_id = f.id
+        JOIN Buildings b ON f.building_id = b.id
+        ORDER BY b.id;
+    `, []);
+    
+    return faculty.rows;
+}
+
+const queryAllRooms = async () => {
+
+    const rooms = await query(`
+        SELECT 
+            b.name AS "building_name",
+            f.name AS "floor_name",
+            r.name AS "room_name",
+            rt.name AS "room_type_name"
+        FROM Buildings b 
+        JOIN Floors f ON b.id = f.building_id
+        JOIN Segments s ON f.id = s.floor_id
+        JOIN Rooms r ON s.id = r.segment_id
+        JOIN Room_Types rt ON r.type = rt.code
+		ORDER BY b.id;    
+    `, []);
+
+    return rooms.rows;
+
+}
+
 module.exports = {
     queryMap,
-    queryFaculty
+    queryFacultyByRoom,
+    queryAllFaculty,
+    queryAllRooms
 }
 
 // SELECT 

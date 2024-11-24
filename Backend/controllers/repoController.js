@@ -7,8 +7,6 @@ const getAllPublicRepos = async (req, res) => {
 
     try{
         const repos = await repoQuery.queryAllRepos();
-        // const repos = await algolia.getAllReposFromAlgolia();
-        console.log(repos.length);
     
         res.status(200).send(repos);
     }
@@ -39,7 +37,7 @@ const createRepo = async (req, res, next) => {
 
         try {
             if(process.env.HOSTING_SITE)
-                await algolia.insertIntoAlgolia(repo);
+                await algolia.createRepo(repo);
         }
         catch(error) {
             await repoQuery.deleteRepoOfUser(repo);
@@ -108,7 +106,7 @@ const deleteRepo = async (req, res, next)=>{
             throw Error(`This user does not have a Repository with id "${req.body.id}".`);
         }
         
-        await algolia.deleteFromAlgolia(validated_params.id);
+        await algolia.deleteRepo(validated_params.id);
 
         let repo;
         try{   
@@ -116,7 +114,7 @@ const deleteRepo = async (req, res, next)=>{
         }
         catch(error){
             repo = await repoQuery.queryReposByID(validated_params.id);
-            await algolia.insertIntoAlgolia(repo);
+            await algolia.createRepo(repo);
             
             throw Error(error.message);
         }
@@ -199,7 +197,7 @@ const getAllAlgoliaRepos = async (req, res) => {
 
     try{
         const {search} = req.body;
-        const repos = await algolia.getAllReposFromAlgolia(search);
+        const repos = await algolia.getAllPublicRepos(search);
     
         res.status(200).send(repos);
     }

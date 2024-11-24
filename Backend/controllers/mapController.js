@@ -1,4 +1,5 @@
 const mapQuery = require('../database/mapQuery');
+const algolia = require('../indexing/algolia');
 
 const getFullMap = async (req, res) => {
 
@@ -21,7 +22,7 @@ const getFaculty = async (req, res) => {
             throw Error("Please send the room_id for the Faculty Room.");
         }
 
-        const faculty = await mapQuery.queryFaculty(room_id);
+        const faculty = await mapQuery.queryFacultyByRoom(room_id);
 
         res.status(200).send(faculty);
     }
