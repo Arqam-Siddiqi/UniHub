@@ -115,6 +115,36 @@ const queryAllReposOfUser = async (user_id) => {
     return repos.rows;
 }
 
+const queryAllPublicReposOfUser = async (user_id) => {
+
+    const repos = await query(`
+        SELECT 
+            r.*,
+            ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS "tags",
+            COALESCE ((
+                SELECT COUNT(*) FROM Likes l
+                GROUP BY l.repo_id 
+                HAVING l.repo_id = r.id
+            ), 0) AS "likes" ,
+            COALESCE ((
+                SELECT COUNT(*) FROM Comments c
+                GROUP BY c.repo_id
+                HAVING c.repo_id = r.id
+            ), 0) AS "num_of_comments",
+            EXISTS (
+                SELECT * FROM Likes l
+                WHERE l.repo_id = r.id AND l.user_id = $1
+            ) AS "liked"
+        FROM Repos r
+        LEFT JOIN Repo_Tags rt ON r.id = rt.repo_id
+        LEFT JOIN Tags t ON rt.tag_id = t.id
+        WHERE r.user_id = $1 AND r.visibility = 'public'
+        GROUP BY r.id;
+    `, [user_id]);
+
+    return repos.rows;
+}
+
 const queryReposByID = async (user_id, repo_id) => {
     
     const repo = await query(`
@@ -267,5 +297,6 @@ module.exports = {
     doesUserOwnRepo,
     queryReposByID,
     toggleLike,
-    searchTitleAndTags
+    searchTitleAndTags,
+    queryAllPublicReposOfUser
 }

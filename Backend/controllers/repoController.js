@@ -207,6 +207,24 @@ const getAllAlgoliaRepos = async (req, res) => {
 
 }
 
+const getPublicReposOfUser = async (req, res) => {
+
+    try {
+        const {user_id} = req.body;
+        if(!user_id){
+            throw Error("Please fill all the required fields.");
+        }
+
+        const repos = await repoQuery.queryAllPublicReposOfUser(user_id);
+
+        res.status(200).send(repos);
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 module.exports = {
     getAllPublicRepos,
     createRepo,
@@ -216,5 +234,6 @@ module.exports = {
     getRepoByID,
     toggleLikeRepo,
     searchMatch,
-    getAllAlgoliaRepos
+    getAllAlgoliaRepos,
+    getPublicReposOfUser
 }

@@ -134,6 +134,10 @@ const validateQuizParams = ({num_of_questions, type_of_questions}) => {
         throw Error("Question types can only be \"subjective\" or \"objective\".");
     }
 
+    if(num_of_questions > 25){
+        throw Error("You cannot ask for more than 25 questions.");
+    }
+
     return {
         num_of_questions,
         type_of_questions
