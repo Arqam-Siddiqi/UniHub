@@ -1,6 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const credentials = require('./credentials.json');
+const credentials = require('./credentials3.json');
 const userQuery = require('../database/userQuery');
 const authQuery = require('../database/authQuery');
 
