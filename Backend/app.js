@@ -17,7 +17,7 @@ const mapRoutes = require('./routes/mapRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
 const { dbSetup } = require('./database/psqlWrapper');
-const {initializeStorage} = require('./cloud_storage/cloud');
+const {authorize} = require('./cloud_storage/drive');
 const {insertAllFaculty, insertAllRooms} = require('./indexing/algolia');
 
 const app = express();
@@ -29,7 +29,7 @@ app.use(cors({
 dbSetup()
   .then(async () => {
     console.log(`Connected to PostgreSQL on ${process.env.HOSTING_SITE ? "Supabase" : "PGAdmin"}...`);
-    await initializeStorage();
+    await authorize();
     await insertAllFaculty();
     await insertAllRooms();
 

@@ -69,9 +69,12 @@ const dbSetup = async function() {
         name VARCHAR(255) NOT NULL,
         extension VARCHAR(8) NOT NULL,
         fileSize INT NOT NULL,
+        google_file_id VARCHAR(255) UNIQUE,
+        mimeType VARCHAR(64) NOT NULL,
         repo_id UUID REFERENCES Repos(id) ON DELETE CASCADE NOT NULL,
         folder_id UUID REFERENCES Folders(id) ON DELETE CASCADE, -- NULL if the file is directly in the repository's root
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (id, google_file_id)
       );
       
       CREATE TABLE IF NOT EXISTS Comments (

@@ -30,26 +30,29 @@ const queryFilesByParent = async ({repo_id, folder_id}) => {
     return files.rows;
 }
 
-const createFile = async ({name, extension, fileSize, repo_id, folder_id}) => {
+const createFile = async ({name, extension, fileSize, repo_id, folder_id, mimeType}) => {
     
     const file = await query(`
-        INSERT INTO Files (name, extension, fileSize, repo_id, folder_id)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO Files (name, extension, fileSize, repo_id, folder_id, mimetype)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;
-    `, [name, extension, fileSize, repo_id, folder_id ?? null]);
+    `, [name, extension, fileSize, repo_id, folder_id ?? null, mimeType]);
 
     return file.rows[0];
 
 }
 
-const updateFileByID = async (id, {name, extension, folder_id}) => {
+const updateFileByID = async (id, {name, extension, mimeType, google_file_id}) => {
 
     const file = await query(`
         UPDATE Files
-        SET name = COALESCE($1, name), extension = COALESCE($2, extension)
-        WHERE id = $3
+        SET name = COALESCE($1, name), 
+            extension = COALESCE($2, extension), 
+            mimeType = COALESCE($3, mimeType),
+            google_file_id = COALESCE($4, google_file_id)
+        WHERE id = $5
         RETURNING *;
-    `, [name, extension, id]);
+    `, [name, extension, mimeType, google_file_id, id]);
 
     return file.rows[0];
 
@@ -78,11 +81,25 @@ const queryFileByID = async (id) => {
 
 }
 
+const queryFileByIDAndUser = async (id, user_id) => {
+
+    const file = await query(`
+        SELECT * FROM Files f
+        JOIN Repos r ON f.repo_id = r.id
+        JOIN Users u ON r.user_id = u.id
+        WHERE f.id = $1 AND u.id = $2;
+    `, [id, user_id]);
+
+    return file.rows[0];
+
+}
+
 module.exports = {
     queryFilesFromRepo,
     queryFilesByParent,
     createFile,
     updateFileByID,
     deleteFileByID,
-    queryFileByID
+    queryFileByID,
+    queryFileByIDAndUser
 }
