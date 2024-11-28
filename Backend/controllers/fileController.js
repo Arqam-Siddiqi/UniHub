@@ -138,9 +138,10 @@ const getFilePreview = async (req, res) => {
 
         const file = await fileQuery.queryFileByID(id);
 
-        const link = `https://drive.google.com/file/d/${file.google_file_id}/view?usp=drivesdk`
+        const preview = `https://drive.google.com/file/d/${file.google_file_id}/preview?usp=drivesdk`;
+        const link = `https://drive.google.com/file/d/${file.google_file_id}/view?usp=drivesdk`;
         
-        res.status(200).send({preview: link});
+        res.status(200).send({preview, link});
     }
     catch(error){
         res.status(400).send({"Error": error.message});
