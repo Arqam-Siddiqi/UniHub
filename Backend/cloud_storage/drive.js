@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
@@ -9,8 +9,11 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = path.join(process.cwd(), './cloud_storage/token.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), './config/credentials.json');
+const TOKEN_PATH = path.join(process.cwd(), './credentials/token.json');
+const CREDENTIALS_PATH = path.join(process.cwd(), './credentials/credentials.json');
+
+let client = null;
+const folderId = '10iR6YmOikDEkEVqsQK2hvfTGj4dKv4ce';
 
 /**
  * Reads previously authorized credentials from the save file.
@@ -19,7 +22,7 @@ const CREDENTIALS_PATH = path.join(process.cwd(), './config/credentials.json');
  */
 async function loadSavedCredentialsIfExist() {
   try {
-    const content = await fs.readFile(TOKEN_PATH);
+    const content = await fs.promises.readFile(TOKEN_PATH);
     const credentials = JSON.parse(content);
     return google.auth.fromJSON(credentials);
   } catch (err) {
@@ -34,7 +37,7 @@ async function loadSavedCredentialsIfExist() {
  * @return {Promise<void>}
  */
 async function saveCredentials(client) {
-  const content = await fs.readFile(CREDENTIALS_PATH);
+  const content = await fs.promises.readFile(CREDENTIALS_PATH);
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
   const payload = JSON.stringify({
@@ -43,7 +46,7 @@ async function saveCredentials(client) {
     client_secret: key.client_secret,
     refresh_token: client.credentials.refresh_token,
   });
-  await fs.writeFile(TOKEN_PATH, payload);
+  await fs.promises.writeFile(TOKEN_PATH, payload);
 }
 
 /**
@@ -51,26 +54,30 @@ async function saveCredentials(client) {
  *
  */
 async function authorize() {
-  let client = await loadSavedCredentialsIfExist();
-  if (client) {
-    return client;
+  let load_client = await loadSavedCredentialsIfExist();
+  
+  if (load_client) {
+    client = load_client;
+    return;
   }
-  client = await authenticate({
+
+  load_client = await authenticate({
     scopes: SCOPES,
     keyfilePath: CREDENTIALS_PATH,
   });
-  if (client.credentials) {
-    await saveCredentials(client);
+  if (load_client.credentials) {
+    await saveCredentials(load_client);
   }
-  return client;
+  
+  client = load_client;
 }
 
 /**
  * Lists the names and IDs of up to 10 files.
  * @param {OAuth2Client} authClient An authorized OAuth2 client.
  */
-async function listFiles(authClient) {
-  const drive = google.drive({version: 'v3', auth: authClient});
+async function listFiles() {
+  const drive = google.drive({version: 'v3', client});
   const res = await drive.files.list({
     pageSize: 10,
     fields: 'nextPageToken, files(id, name)',
@@ -93,18 +100,20 @@ async function listFiles(authClient) {
  * @param {string} folderId - Optional folder ID to specify the location on Drive
  * @returns {Promise<{fileId: string, fileLink: string}>} - Returns file ID and link
  */
-async function uploadFile(buffer, authClient, originalname, mimetype, folderId = null) {
-  const drive = google.drive({version: 'v3', auth: authClient});
-
+async function uploadFile(buffer, originalname, mimeType) {
+  
+  const drive = google.drive({version: 'v3', auth: client});
+  
   // File metadata with optional folder
   const fileMetadata = {
       name: originalname,
       parents: folderId ? [folderId] : [],  // Use folder ID if provided
   };
 
+  const { Readable } = require('stream');
   // Convert buffer to a readable stream
   const media = {
-      mimeType: mimetype,
+      mimeType: mimeType,
       body: Readable.from(buffer),  // Convert the buffer to a stream
   };
 
@@ -126,10 +135,76 @@ async function uploadFile(buffer, authClient, originalname, mimetype, folderId =
       throw error;
   }
 }
-const folder_id = '10iR6YmOikDEkEVqsQK2hvfTGj4dKv4ce';
-const {readFileSync} = require('fs');
-const { Readable } = require('stream');
-const buffer = readFileSync('./cloud_storage/temp.txt');
 
-authorize()
-  .then(data => uploadFile(buffer, data, 'temp.txt', 'text/plain', folder_id));
+async function downloadFile(file_id) {
+
+  const drive = google.drive({version: 'v3', auth: client});
+
+  await drive.files.get(
+    {fileId: file_id, alt: "media",},
+    {responseType: "stream"},
+    (err, { data }) => {
+      if (err) {
+        console.log("dsaodposadsjkaposa");
+        console.log(err);
+        return;
+      }
+      console.log("dsao");
+      let buf = [];
+      data.on("data", (e) => {
+        buf.push(e)
+        console.log("Pushed");
+      });
+      data.on("end", () => {
+        const buffer = Buffer.concat(buf);
+        return buffer;
+      });
+    }
+  );
+
+}
+
+async function deleteFile(file_id){
+
+  const drive = google.drive({version: 'v3', auth: client});
+
+  const response = await drive.files.delete({
+    fileId: file_id
+  });
+
+  console.log(response);
+  return response;
+
+}
+
+async function test() {
+  
+  await authorize();
+
+  // const t1 = performance.now();
+  // const buffer = fs.readFileSync('./cloud_storage/temp.pdf');
+
+  // await uploadFile(buffer, 'tempp.pdf', 'application/pdf');
+
+  // const t2 = performance.now();
+  // console.log(t2-t1);
+
+  const buffer = await downloadFile('1wvIPBY0gADfkV4KztkhxOgPely7PqJVU');
+
+  console.log(typeof buffer);
+
+  fs.writeFile('something.pdf', buffer, (err) => {
+    if (err) {
+      console.error('Error writing the file:', err);
+    } else {
+      console.log('PDF file has been successfully written to disk!');
+    }
+  });
+
+  // await deleteFile('1ye8EGD-hQM2Ie-JZtLMtOPBFV0mflfA-');
+
+}
+
+
+
+test();
