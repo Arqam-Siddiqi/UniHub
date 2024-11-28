@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
-const {google} = require('googleapis');
+const {google, drive_v3} = require('googleapis');
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -12,7 +12,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 const TOKEN_PATH = path.join(process.cwd(), './credentials/token.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), './credentials/credentials.json');
 
-let client = null;
+let drive = null;
 const folderId = '10iR6YmOikDEkEVqsQK2hvfTGj4dKv4ce';
 
 /**
@@ -54,22 +54,25 @@ async function saveCredentials(client) {
  *
  */
 async function authorize() {
-  let load_client = await loadSavedCredentialsIfExist();
+  let client = await loadSavedCredentialsIfExist();
   
-  if (load_client) {
-    client = load_client;
-    return;
+  if (client) {
+    drive = google.drive({version: 'v3', auth: client});
   }
 
-  load_client = await authenticate({
-    scopes: SCOPES,
-    keyfilePath: CREDENTIALS_PATH,
-  });
-  if (load_client.credentials) {
-    await saveCredentials(load_client);
+  if(!client){
+    client = await authenticate({
+      scopes: SCOPES,
+      keyfilePath: CREDENTIALS_PATH,
+    });
+    if (client.credentials) {
+      await saveCredentials(client);
+    }
+    
+    drive = google.drive({version: 'v3', auth: client});
   }
-  
-  client = load_client;
+
+  console.log("Connected to Google Drive...");
 }
 
 /**
@@ -77,7 +80,7 @@ async function authorize() {
  * @param {OAuth2Client} authClient An authorized OAuth2 client.
  */
 async function listFiles() {
-  const drive = google.drive({version: 'v3', client});
+
   const res = await drive.files.list({
     pageSize: 10,
     fields: 'nextPageToken, files(id, name)',
@@ -102,8 +105,6 @@ async function listFiles() {
  */
 async function uploadFile(buffer, originalname, mimeType) {
   
-  const drive = google.drive({version: 'v3', auth: client});
-  
   // File metadata with optional folder
   const fileMetadata = {
       name: originalname,
@@ -127,8 +128,6 @@ async function uploadFile(buffer, originalname, mimeType) {
       const fileId = response.data.id;
       const fileLink = response.data.webViewLink;  // Shareable link to the file
 
-      console.log(`File uploaded successfully. File ID: ${fileId}`);
-      console.log(`File link: ${fileLink}`);
       return { fileId, fileLink };
   } catch (error) {
       console.error('Error uploading file:', error.message);
@@ -138,73 +137,29 @@ async function uploadFile(buffer, originalname, mimeType) {
 
 async function downloadFile(file_id) {
 
-  const drive = google.drive({version: 'v3', auth: client});
-
-  await drive.files.get(
+  const buffer = await drive.files.get(
     {fileId: file_id, alt: "media",},
-    {responseType: "stream"},
-    (err, { data }) => {
-      if (err) {
-        console.log("dsaodposadsjkaposa");
-        console.log(err);
-        return;
-      }
-      console.log("dsao");
-      let buf = [];
-      data.on("data", (e) => {
-        buf.push(e)
-        console.log("Pushed");
-      });
-      data.on("end", () => {
-        const buffer = Buffer.concat(buf);
-        return buffer;
-      });
-    }
+    {responseType: "arraybuffer"}
   );
+
+  return Buffer.from(buffer.data);
 
 }
 
 async function deleteFile(file_id){
 
-  const drive = google.drive({version: 'v3', auth: client});
-
   const response = await drive.files.delete({
     fileId: file_id
   });
 
-  console.log(response);
   return response;
 
 }
 
-async function test() {
-  
-  await authorize();
 
-  // const t1 = performance.now();
-  // const buffer = fs.readFileSync('./cloud_storage/temp.pdf');
-
-  // await uploadFile(buffer, 'tempp.pdf', 'application/pdf');
-
-  // const t2 = performance.now();
-  // console.log(t2-t1);
-
-  const buffer = await downloadFile('1wvIPBY0gADfkV4KztkhxOgPely7PqJVU');
-
-  console.log(typeof buffer);
-
-  fs.writeFile('something.pdf', buffer, (err) => {
-    if (err) {
-      console.error('Error writing the file:', err);
-    } else {
-      console.log('PDF file has been successfully written to disk!');
-    }
-  });
-
-  // await deleteFile('1ye8EGD-hQM2Ie-JZtLMtOPBFV0mflfA-');
-
+module.exports = {
+    uploadFile,
+    downloadFile,
+    deleteFile,
+    authorize
 }
-
-
-
-test();

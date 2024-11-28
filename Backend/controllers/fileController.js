@@ -33,7 +33,6 @@ const createFile = async (req, res, next) => {
         console.log(file);
 
         // customization for documentController
-        req.file.originalname = file.id + "." + file.extension;
         req.file.id = file.id;
         req.file.repo_id = file.repo_id;
 
@@ -114,9 +113,34 @@ const getFileDetails = async (req, res, next) => {
             throw Error("File does not exist.");
         }
         
-        req.file = file.id + "." + file.extension;
+        req.file = {
+            google_file_id: file.google_file_id,
+            name: file.name,
+            extension: file.extension
+        }
         
         next();
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
+const getFilePreview = async (req, res) => {
+
+    try{
+        const {id} = req.body;
+
+        if(!id){
+            throw Error("Please fill all the required fields.");
+        }
+
+        const file = await fileQuery.queryFileByID(id);
+
+        const link = `https://drive.google.com/file/d/${file.google_file_id}/view?usp=drivesdk`
+        
+        res.status(200).send({preview: link});
     }
     catch(error){
         res.status(400).send({"Error": error.message});
@@ -130,5 +154,6 @@ module.exports = {
     createFile,
     updateFileByID,
     deleteFileByID,
-    getFileDetails
+    getFileDetails,
+    getFilePreview
 }

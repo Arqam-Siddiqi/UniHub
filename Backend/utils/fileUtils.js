@@ -5,9 +5,9 @@ const folderQuery = require('../database/folderQuery');
 const path = require('path');
 
 // call with await
-const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) => {
+const validateFileParams = async ({originalname, size, mimetype}, {repo_id, folder_id}) => {
 
-    if(!originalname || !size){
+    if(!originalname || !size || !mimetype){
         throw Error("File was not properly parsed by upload().");
     }
 
@@ -30,7 +30,7 @@ const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) =>
     const file_name = files.map(data => data.name + "." +  data.extension);
 
     if(file_name.includes(name + "." + extension)){
-        throw Error(`There already exists a file named \"${name}\" in the same directory.`)
+        throw Error(`There already exists a file named \"${name}.${extension}\" in the same directory.`)
     }
 
     if(fileSize > parseInt(process.env.MAX_FILE_SIZE, 10)){
@@ -42,7 +42,8 @@ const validateFileParams = async ({originalname, size}, {repo_id, folder_id}) =>
         extension,
         fileSize,
         repo_id,
-        folder_id
+        folder_id,
+        mimeType: mimetype
     }
 
 }
