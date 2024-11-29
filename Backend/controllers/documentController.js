@@ -47,7 +47,7 @@ const downloadFile = async (req, res) => {
     }
     
     res.setHeader('Content-Disposition', `inline; filename="${name + '.' + extension}"`);
-    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('Content-Length', fileBuffer.length);
 
     // Send the file buffer as response
