@@ -58,8 +58,10 @@ const queryAllFaculty = async () => {
 
     const faculty = await query(`
         SELECT
+            r.id AS "room_id",
             fc.name, 
             r.name AS "room_name", 
+            s.direction AS "direction",
             f.name AS "floor_name", 
             b.name AS "building_name"
         FROM Faculty fc
@@ -77,6 +79,8 @@ const queryAllRooms = async () => {
 
     const rooms = await query(`
         SELECT 
+            r.id AS "room_id",
+            s.direction AS "direction",
             b.name AS "building_name",
             f.name AS "floor_name",
             r.name AS "room_name",

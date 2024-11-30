@@ -1,5 +1,7 @@
 const algoliasearch = require('algoliasearch');
 
+const mapQuery = require('../database/mapQuery');
+
 const client = algoliasearch(
     process.env.ALGOLIA_APPLICATION_ID,
     process.env.ALGOLIA_ADMIN_API_KEY
@@ -70,15 +72,15 @@ const getAllFaculty = async () => {
 
 const insertAllFaculty = async () => {
 
-    const test = await getAllFaculty();
+    // await facultyIndex.clearObjects().wait();
 
+    const test = await getAllFaculty();
+    
     if(test.length > 0){
         return;
     }
 
     console.log("Reinitializing Faculty...");
-
-    const mapQuery = require('../database/mapQuery');
 
     const faculty = await mapQuery.queryAllFaculty();
 
@@ -115,8 +117,6 @@ const insertAllRooms = async () => {
     }
 
     console.log("Reinitializing Rooms...");
-
-    const mapQuery = require('../database/mapQuery');
 
     const rooms = await mapQuery.queryAllRooms();
 

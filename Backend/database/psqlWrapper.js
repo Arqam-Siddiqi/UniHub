@@ -528,11 +528,6 @@ const mapSetup = async () => {
 
 
 
-
-
-
-
-
           --faculty
           --A faculty
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Huma Hafeez', 6);
@@ -638,38 +633,31 @@ const mapSetup = async () => {
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Syed Zain Ul Hasan',83);
 
 
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Iqra Fahad',84);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Bakhtawar Abbasi',84);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Nida Munawar',84);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Sobia Iftikhar',84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Iqra Fahad', 84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Bakhtawar Abbasi', 84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Nida Munawar', 84);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Sobia Iftikhar', 84);
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Faisal Ali Syed', 92);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Nauraiz Subhan', 92);
 
 
-          INSERT INTO FACULTY (name, room_id) VALUES ('Mr faisal ali syed', 92);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Mr nauraiz subhan', 92);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Abdul Aziz', 93);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Nadeem Kafi', 93);
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Imran Ali Bhatti', 94);
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Hira Tunio', 95);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Zain Noreen', 95);
+
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Alina Arshad', 96);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Syeda Ravia Ejaz', 96);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Ms Filza Akhkaq', 96);
 
 
-          INSERT INTO FACULTY (name, room_id) VALUES ('Dr abdul aziz(HOD SE)', 93);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Dr nadeem kafi', 93);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad Nouman Durrani', 97);
 
-          INSERT INTO FACULTY (name, room_id) VALUES ('Dr imran ali bhatti', 94);
-
-
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms hira tunio', 95);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms zain noreen', 95);
-
-
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms alina arshad', 96);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms syeda ravia ejaz', 96);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Ms filza akhkaq', 96);
-
-
-          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Muhammad nouman durrani', 97);
-
-
-
-          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Anam qureshi', 98);
-
-
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Anam Qureshi', 98);
 
 
           INSERT INTO FACULTY (name, room_id) VALUES ('Dr Farrukh Hasan Syed', 99);
@@ -698,9 +686,9 @@ const mapSetup = async () => {
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Adil Sheraz', 106);
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Kashif', 106);
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Shoaib Raza', 106);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Eng Abdul Rahman', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Engr Abdul Rahman', 106);
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Fahad Hussain', 106);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Muhammad Usman', 106);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Usman', 106);
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Fizza Aqeel', 106);
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Ayesha Ali', 106);
 
@@ -721,7 +709,6 @@ const mapSetup = async () => {
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Ramsha Iqbal', 120);
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rabia Ahmed',120);
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Abeer Gauher', 120);
-
 
 
           INSERT INTO FACULTY (name, room_id) VALUES ('Ms Abeeha Sattar',124);
@@ -767,8 +754,13 @@ const mapSetup = async () => {
           INSERT INTO FACULTY (name, room_id) VALUES ('Dr Sufian Hameed', 29);
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Nauman', 29);
           INSERT INTO FACULTY (name, room_id) VALUES ('Mr Sandesh Kumar', 29);
-          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Fahad Samad', 29);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Fahad Samad', 29);          
 
+          --INSERTING HEADS AS FACULTY
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr Burhan Khan', 22);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr. Atif Tahir', 112);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr. Zulfiqar Ali Memon', 122);
+          INSERT INTO FACULTY (name, room_id) VALUES ('Dr. Jawwad A. Shamsi', 158);
           
         END IF;
     END $$;
