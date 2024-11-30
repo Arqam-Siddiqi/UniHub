@@ -22,6 +22,8 @@ router.get('/algolia', repoController.getAllAlgoliaRepos);
 
 router.post('/user', repoController.getPublicReposOfUser);
 
+router.get('/popular', repoController.getPopularRepos);
+
 router.get('/:id', optionalAuth, repoController.getRepoByID);
 
 module.exports = router;

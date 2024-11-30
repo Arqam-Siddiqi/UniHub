@@ -1,6 +1,6 @@
 const {query} = require('./psqlWrapper');
 
-const queryAllRepos = async (order_by) => {
+const queryAllRepos = async (order_by, limit) => {
 
     const repos = await query(`
         SELECT 
@@ -21,7 +21,9 @@ const queryAllRepos = async (order_by) => {
         LEFT JOIN Tags t ON rt.tag_id = t.id
         WHERE r.visibility='public'
         GROUP BY r.id
-        ${order_by ? `ORDER BY ${order_by} DESC;` : `;`};
+        ${order_by ? `ORDER BY ${order_by} DESC` : ''}
+        ${limit ? `LIMIT ${limit}` : ''}
+        ;
     `);
     
     return repos.rows;

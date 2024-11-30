@@ -225,6 +225,19 @@ const getPublicReposOfUser = async (req, res) => {
 
 }
 
+const getPopularRepos = async (req, res) => {
+
+    try{
+        const repos = await repoQuery.queryAllRepos('likes', 5);
+
+        res.status(200).send(repos);
+    }
+    catch(error){
+        res.status(400).send({"Error": error.message});
+    }
+
+}
+
 module.exports = {
     getAllPublicRepos,
     createRepo,
@@ -235,5 +248,6 @@ module.exports = {
     toggleLikeRepo,
     searchMatch,
     getAllAlgoliaRepos,
-    getPublicReposOfUser
+    getPublicReposOfUser,
+    getPopularRepos
 }

@@ -50,6 +50,8 @@ const createQuiz = async (req, res) => {
 const createNotes = async (req, res) => {
 
     try{
+        const t1 = performance.now();
+        
         const {model, fileManager} = initializeGemini(5000);
         let text;
         let count = 1;
@@ -77,6 +79,9 @@ const createNotes = async (req, res) => {
         const formatted_text = {};
         formatted_text.notes = text.notes.replace(/(?<!")\\n(?!")/g, '\n');
         // console.log(formatted_text.notes);
+
+        const t2 = performance.now();
+        console.log("Time taken to create Notes: ", t2 - t1);
 
         res.status(200).send(formatted_text);
     }
