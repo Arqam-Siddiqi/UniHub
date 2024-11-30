@@ -27,22 +27,17 @@ const checkFileType = (file, cb) => {
     const allowedTypes = [
       'image/jpeg',        // JPEG images
       'image/png',         // PNG images
-      'image/gif',         // GIF images
-      'image/svg+xml',     // SVG images
       'application/pdf',   // PDF files
       'text/plain',        // Plain text files (.txt)
-      'audio/mpeg',        // MP3 audio files
-      'audio/wav',         // WAV audio files
-      'video/mp4',         // MP4 video files
-      'application/rtf',   // Rich Text Format files
       'application/msword', // MS Word (.doc)
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // MS Word (.docx)
-      'application/vnd.ms-excel', // MS Excel (.xls)
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // MS Excel (.xlsx)
       'application/vnd.ms-powerpoint', // MS PowerPoint (.ppt)
       'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PowerPoint (.pptx)
+      
+      'image/svg+xml',     // SVG images
       'text/csv',           // CSV files
-
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // MS Excel (.xlsx)
+      'application/vnd.ms-excel', // MS Excel (.xls)
       'text/x-c',                    // C source files (.c)
       'text/x-csrc',                 // C source files (alternative)
       'text/x-c++src',               // C++ source files (.cpp)
