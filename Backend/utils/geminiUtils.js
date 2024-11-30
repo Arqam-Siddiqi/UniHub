@@ -4,41 +4,6 @@ const { GoogleAIFileManager } = require("@google/generative-ai/server");
 const fs = require('fs');
 const tmp = require('tmp');
 
-const mammoth = require("mammoth");
-const puppeteer = require("puppeteer");
-
-async function convertDocxBufferToPdf(docxBuffer, fileManager) {
-    try {
-        // Step 1: Convert .docx to HTML
-        const { value: html } = await mammoth.convertToHtml({ buffer: docxBuffer });
-        
-        // Step 2: Use Puppeteer to render HTML to PDF
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.setContent(html);
-
-        const tempFile = tmp.fileSync({ postfix: '.pdf' });
-        // fs.writeFileSync(tempFile.name, fileBuffer);
-        
-        
-        await page.pdf({ path: tempFile.name, format: "A4" });
-
-        const uploadResponse = await fileManager.uploadFile(tempFile.name, {
-            mimeType: "application/pdf",
-            displayName: "Gemini 1.5 PDF",
-        });
-        
-        await browser.close();
-        console.log("PDF created.");
-        
-        tempFile.removeCallback();
-
-        return uploadResponse;
-    } catch (err) {
-        console.error("Error during conversion:", err);
-    }
-}
-
 const initializeGemini = (maxOutputTokens) => {
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
@@ -228,7 +193,7 @@ const notesTextPrompt = () => {
         Focus on the most relevant points for university students, including: code structure, functions, and algorithms, while avoiding unnecessary details.
         Your notes should be as detailed as possible.
 
-        Here is an example of how to anotate code:
+        Here is an example of how to anotate code (if it is present in the document):
         Document Contents:
         def insertion_sort(arr):
             for i in range(1, len(arr)):
@@ -238,7 +203,8 @@ const notesTextPrompt = () => {
                     arr[j + 1] = arr[j]
                     j -= 1
                 arr[j + 1] = key
-        
+        If there is no code, then ignore the above example.
+
         Your/Gemini annotation:
         def insertion_sort(arr):
         # Iterate through each element in the list starting from index 1
@@ -264,6 +230,5 @@ module.exports = {
     initializeGemini,
     uploadFileBuffer,
     generateContent,
-    parseQuiz,
-    convertDocxBufferToPdf
+    parseQuiz
 }

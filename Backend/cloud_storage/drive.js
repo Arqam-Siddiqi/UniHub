@@ -138,11 +138,63 @@ async function uploadFile(buffer, originalname, mimeType) {
 async function downloadFile(file_id) {
 
   const buffer = await drive.files.get(
-    {fileId: file_id, alt: "media",},
-    {responseType: "arraybuffer"}
+    {
+      fileId: file_id, 
+      alt: "media"
+    },
+    {
+      responseType: "arraybuffer"
+    }
   );
 
   return Buffer.from(buffer.data);
+
+}
+
+async function convertToGoogleDoc(fileId) {
+  try {
+    const response = await drive.files.copy({
+      fileId,
+      requestBody: {
+        mimeType: 'application/vnd.google-apps.document', // Convert to Google Doc
+      },
+    });
+    console.log('File converted to Google Doc:', response.data.id);
+    return response.data.id; // Return the new Google Doc file ID
+  } catch (error) {
+    console.error('Error converting file to Google Doc:', error.message);
+    throw error;
+  }
+}
+
+// Function to export a Google Doc as a PDF
+async function downloadAsPDF(fileId) {
+  try {
+    const response = await drive.files.export(
+      {
+        fileId,
+        mimeType: 'application/pdf',
+      },
+      { responseType: 'arraybuffer' } // Fetch as arraybuffer for Buffer conversion
+    );
+
+    const fileBuffer = Buffer.from(response.data);
+    console.log('PDF file buffer created');
+    return fileBuffer; // Return the Buffer
+  } catch (error) {
+    console.error('Error exporting file as PDF:', error.message);
+    throw error;
+  }
+}
+async function downloadFileAsPDF(file_id) {
+  
+  const googleDocId = await convertToGoogleDoc(file_id); // Convert to Google Doc
+  const buffer = await downloadAsPDF(googleDocId); // Export the Google Doc to PDF
+  
+  return {
+    fileBuffer: buffer, 
+    google_doc_id: googleDocId
+  };
 
 }
 
@@ -160,6 +212,7 @@ async function deleteFile(file_id){
 module.exports = {
     uploadFile,
     downloadFile,
+    downloadFileAsPDF,
     deleteFile,
     authorize
 }

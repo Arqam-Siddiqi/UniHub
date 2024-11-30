@@ -1,21 +1,22 @@
-const { load } = require('@pspdfkit/nodejs');
-const { download } = require('../cloud_storage/cloud');
-const { validateQuizParams, initializeGemini, uploadFileBuffer, generateContent, parseQuiz, convertDocxBufferToPdf } = require("../utils/geminiUtils");
+const { downloadFileAsPDF, deleteFile } = require('../cloud_storage/drive');
+const { validateQuizParams, initializeGemini, uploadFileBuffer, generateContent, parseQuiz } = require("../utils/geminiUtils");
 
 const createQuiz = async (req, res) => {
 
     try{
+        const t1 = performance.now();
+
         const validated_params = validateQuizParams(req.body);
         
         const {model, fileManager} = initializeGemini();
         let text;
         let count = 1;
-        
-        // console.log(req.file);
-        const fileBuffer = await download(req.file);
-        // const uploadResponse = await convertDocxBufferToPdf(fileBuffer, fileManager);
-        
+
+        const {google_file_id} = req.file;
+
+        const {fileBuffer, google_doc_id} = await downloadFileAsPDF(google_file_id);
         const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
+        await deleteFile(google_doc_id);
 
         do {
             text = await generateContent(model, uploadResponse, 'quiz', validated_params);
@@ -32,6 +33,9 @@ const createQuiz = async (req, res) => {
         await fileManager.deleteFile(uploadResponse.file.name);
 
         const parsed_text = parseQuiz(text);
+        
+        const t2 = performance.now();
+        console.log("Time taken to create Quiz: ", t2 - t1);
 
         res.status(200).send(parsed_text);
     }
@@ -49,9 +53,12 @@ const createNotes = async (req, res) => {
         const {model, fileManager} = initializeGemini(5000);
         let text;
         let count = 1;
-        
-        const fileBuffer = await download(req.file);
+
+        const {google_file_id} = req.file;
+
+        const {fileBuffer, google_doc_id} = await downloadFileAsPDF(google_file_id);
         const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
+        await deleteFile(google_doc_id);
 
         do {
             text = await generateContent(model, uploadResponse, 'notes');
@@ -69,7 +76,7 @@ const createNotes = async (req, res) => {
 
         const formatted_text = {};
         formatted_text.notes = text.notes.replace(/(?<!")\\n(?!")/g, '\n');
-        console.log(formatted_text.notes);
+        // console.log(formatted_text.notes);
 
         res.status(200).send(formatted_text);
     }
