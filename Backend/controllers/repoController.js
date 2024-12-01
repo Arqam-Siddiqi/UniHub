@@ -6,7 +6,8 @@ const algolia = require('../indexing/algolia');
 const getAllPublicRepos = async (req, res) => {
 
     try{
-        const repos = await repoQuery.queryAllRepos();
+        const user_id = req.user;
+        const repos = await repoQuery.queryAllRepos(user_id);
     
         res.status(200).send(repos);
     }

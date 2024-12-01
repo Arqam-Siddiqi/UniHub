@@ -67,7 +67,7 @@ const checkFileType = (file, cb) => {
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type. Only PNG, JPG, JPEG, TXT, PDF, DOC, and DOCX are allowed.'));
+      cb(new Error('This file type is not included in the allowed types.'));
     }
 }
 

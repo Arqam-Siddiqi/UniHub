@@ -1,6 +1,6 @@
 const {query} = require('./psqlWrapper');
 
-const queryAllRepos = async (order_by, limit) => {
+const queryAllRepos = async (order_by, limit, user_id) => {
 
     const repos = await query(`
         SELECT 
@@ -15,7 +15,11 @@ const queryAllRepos = async (order_by, limit) => {
                 SELECT COUNT(*) FROM Comments c
                 GROUP BY c.repo_id
                 HAVING c.repo_id = r.id
-            ), 0) AS "num_of_comments"
+            ), 0) AS "num_of_comments",
+            EXISTS (
+                SELECT * FROM Likes l
+                WHERE l.repo_id = r.id AND l.user_id = $1
+            ) AS "liked"
         FROM Repos r
         LEFT JOIN Repo_Tags rt ON r.id = rt.repo_id
         LEFT JOIN Tags t ON rt.tag_id = t.id
@@ -24,7 +28,7 @@ const queryAllRepos = async (order_by, limit) => {
         ${order_by ? `ORDER BY ${order_by} DESC` : ''}
         ${limit ? `LIMIT ${limit}` : ''}
         ;
-    `);
+    `, [user_id]);
     
     return repos.rows;
 
