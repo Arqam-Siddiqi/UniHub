@@ -131,12 +131,13 @@ const getFilePreview = async (req, res) => {
 
     try{
         const {id} = req.body;
+        const user_id = req.user;
 
         if(!id){
             throw Error("Please fill all the required fields.");
         }
 
-        const file = await fileQuery.queryFileByID(id);
+        const file = await fileQuery.queryFileByID(id, user_id);
 
         const preview = `https://drive.google.com/file/d/${file.google_file_id}/preview?usp=drivesdk`;
         const link = `https://drive.google.com/file/d/${file.google_file_id}/view?usp=drivesdk`;

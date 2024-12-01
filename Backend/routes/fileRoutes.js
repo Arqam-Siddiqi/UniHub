@@ -2,20 +2,22 @@ const router = require('express').Router();
 const fileController = require('../controllers/fileController');
 
 const multerLayer = require('../middleware/multerLayer');
+const requireAuth = require('../middleware/requireAuth');
+const optionalAuth = require('../middleware/optionalAuth');
 const documentController = require('../controllers/documentController');
 
 router.post('/', fileController.getAllFilesFromRepo);
 
-router.post('/create', multerLayer, fileController.createFile, documentController.uploadFile);
+router.post('/create', requireAuth, multerLayer, fileController.createFile, documentController.uploadFile);
 
-router.post('/preview', fileController.getFilePreview);
+router.delete('/delete', requireAuth, fileController.getFileDetails, documentController.deleteFile);
 
-router.post('/download', fileController.getFileDetails, documentController.downloadFile);
+router.patch('/update', requireAuth, fileController.updateFileByID);
 
-router.post('/parent', fileController.getAllFilesFromFolder);
+router.post('/preview', optionalAuth, fileController.getFilePreview);
 
-router.delete('/delete', fileController.getFileDetails, documentController.deleteFile);
+router.post('/download', optionalAuth, fileController.getFileDetails, documentController.downloadFile);
 
-router.patch('/update', fileController.updateFileByID);
+router.post('/parent', optionalAuth, fileController.getAllFilesFromFolder);
 
 module.exports = router;

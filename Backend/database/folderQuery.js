@@ -4,7 +4,7 @@ const queryAllFolders = async (user_id) => {
     const folders = await query(`
         SELECT * FROM folders f
         JOIN Repos r ON f.repo_id = r.id
-        WHERE visibility = 'public' OR r.user_id = $1
+        WHERE r.visibility = 'public' OR r.user_id = $1
     `, [user_id]);
     
     return folders.rows;
@@ -14,7 +14,7 @@ const queryFoldersByRepo = async (id, user_id) => {
     const folders = await query(`
         SELECT * FROM folders f
         JOIN Repos r ON f.repo_id = r.id
-        WHERE repo_id = $1 AND (visibility = 'public' OR r.user_id = $2)
+        WHERE repo_id = $1 AND (r.visibility = 'public' OR r.user_id = $2)
     `, [id, user_id]);
 
     return folders.rows;

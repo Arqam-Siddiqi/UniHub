@@ -11,20 +11,24 @@ const queryFilesFromRepo = async (repo_id) => {
 
 }
 
-const queryFilesByParent = async ({repo_id, folder_id}) => {
+const queryFilesByParent = async ({repo_id, folder_id}, user_id) => {
 
     let files;
     if(folder_id){
         files = await query(`
-            SELECT * FROM Files
-            WHERE repo_id = $1 AND folder_id = $2;
-        `, [repo_id, folder_id]);
+            SELECT * FROM Files f
+            JOIN Repos r ON f.repo_id = r.id
+            JOIN Users u ON r.user_id = u.id
+            WHERE f.repo_id = $1 AND f.folder_id = $2 AND (r.visibility = 'public' OR r.user_id = $3);
+        `, [repo_id, folder_id, user_id]);
     }
     else{
         files = await query(`
-            SELECT * FROM Files
-            WHERE repo_id = $1 AND folder_id IS NULL;
-        `, [repo_id]);
+            SELECT * FROM Files f
+            JOIN Repos r ON f.repo_id = r.id
+            JOIN Users u ON r.user_id = u.id
+            WHERE f.repo_id = $1 AND f.folder_id IS NULL AND (r.visibility = 'public' OR r.user_id = $2);
+        `, [repo_id, user_id]);
     }
     
     return files.rows;
@@ -70,12 +74,14 @@ const deleteFileByID = async (id) => {
 
 }
 
-const queryFileByID = async (id) => {
+const queryFileByID = async (id, user_id) => {
 
     const file = await query(`
-        SELECT * FROM Files
-        WHERE id = $1;
-    `, [id]);
+        SELECT * FROM Files f
+        JOIN Repos r ON f.repo_id = r.id
+        JOIN Users u ON r.user_id = u.id
+        WHERE f.id = $1 AND (r.visibility = 'public' OR r.user_id = $2)
+    `, [id, user_id]);
 
     return file.rows[0];
 
