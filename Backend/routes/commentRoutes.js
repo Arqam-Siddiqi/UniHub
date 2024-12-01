@@ -7,9 +7,9 @@ const optionalAuth = require('../middleware/optionalAuth');
 
 router.get('/', optionalAuth, commentController.getAllComments);
 
-router.get('/self/user', optionalAuth, commentController.getAllUserComments);
+router.get('/user', optionalAuth, commentController.getAllUserComments);
 
-router.post('/self/repo', optionalAuth, commentController.getAllRepoComments);
+router.post('/repo', optionalAuth, commentController.getAllRepoComments);
 
 router.post('/create', requireAuth, commentController.createComment);
 

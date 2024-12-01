@@ -51,10 +51,13 @@ const getAllUserComments = async(req, res)=>{
 const getAllRepoComments = async(req, res)=>{
     
     try{
-        if(!req.body.repo_id){
+        const {repo_id} = req.body;
+        const user_id = req.user;
+
+        if(!repo_id){
             throw Error('Please send repo_id.');
         }
-        const comments = await commentQuery.queryByRepo(req.body.repo_id);
+        const comments = await commentQuery.queryByRepo(repo_id, user_id);
         
         res.status(200).send(comments);
     }

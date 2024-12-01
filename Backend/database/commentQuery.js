@@ -11,54 +11,52 @@ const queryByID = async(id) => {
 }
 
 const queryAllComments = async ()=>{
-    const comments=await query(
-        `SELECT * FROM Comments`
-    );
+    const comments = await query(`
+        SELECT * FROM Comments;
+    `);
 
     return comments.rows;
 }
 
 const queryByUser = async (user_id)=>{
-    const comments=await query(
-        `SELECT * FROM Comments
-        where user_id=$1`,
-        [user_id]
-    );
+    const comments = await query(`
+        SELECT * FROM Comments
+        WHERE user_id = $1;
+    `, [user_id]);
 
     return comments.rows;
 }
 
-const queryByRepo = async(repo_id) => {
+const queryByRepo = async (repo_id, user_id) => {
 
     const comments=await query(`
-        SELECT c.*, u.name AS "username", u.email FROM Comments c 
+        SELECT c.*, u.name AS "username", u.email FROM Comments c
         JOIN Users u ON c.user_id = u.id
-        WHERE repo_id=$1
+        JOIN Repos r ON c.repo_id = r.id
+        WHERE c.repo_id = $1 AND (r.visibility = 'public' OR r.user_id = $2)
         ORDER BY c.created_at DESC;
-        `, [repo_id]
-    );
+    `, [repo_id, user_id]);
 
     return comments.rows;
 }
 
 const comment = async(user_id,repo_id, content)=>{
-    const comment=await query(`
+    const comment = await query(`
         INSERT INTO Comments (user_id, repo_id, content)
         VALUES ($1,$2,$3)
-        RETURNING *;`,
-    [user_id,repo_id, content]);
+        RETURNING *;
+    `, [user_id, repo_id, content]);
 
     return comment.rows[0];
 }
 
 const update = async (id, content)=>{
-    const comment = await query(
-        `UPDATE Comments 
+    const comment = await query(`
+        UPDATE Comments 
         SET content=$2
         WHERE id= $1
-        RETURNING *;`,
-        [id, content]
-    );
+        RETURNING * ;
+    `, [id, content]); 
 
     return comment.rows[0];
 } 
