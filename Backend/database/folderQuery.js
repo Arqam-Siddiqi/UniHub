@@ -15,28 +15,29 @@ const queryFoldersByRepo = async (id, user_id) => {
         SELECT * FROM folders f
         JOIN Repos r ON f.repo_id = r.id
         WHERE repo_id = $1 AND (visibility = 'public' OR r.user_id = $2)
-        `, [id, user_id]
-    );
+    `, [id, user_id]);
 
     return folders.rows;
 }
 
-const queryFoldersByParent = async({repo_id, parent_id})=>{
+const queryFoldersByParent = async({repo_id, parent_id}, user_id)=>{
     
     let folders;
 
     if(!parent_id){
         folders = await query(`
-            SELECT * FROM folders
-            WHERE repo_id = $1 AND parent_id IS NULL;
-        `, [repo_id]
+            SELECT * FROM folders f
+            JOIN Repos r ON f.repo_id = r.id
+            WHERE repo_id = $1 AND parent_id IS NULL AND (visibility = 'public' OR r.user_id = $2)
+        `, [repo_id, user_id]
         );
     }
     else{
         folders = await query(`
-            SELECT * FROM folders
-            WHERE repo_id = $1 AND parent_id = $2;
-        `, [repo_id, parent_id]
+            SELECT * FROM folders f
+            JOIN Repos r ON f.repo_id = r.id
+            WHERE repo_id = $1 AND parent_id = $2 AND (visibility = 'public' OR r.user_id = $3)
+        `, [repo_id, parent_id, user_id]
         );
     }
     

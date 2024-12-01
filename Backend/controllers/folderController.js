@@ -66,11 +66,13 @@ const getFoldersByParent = async (req, res) => {
 
     try{
         const params = req.body;
+        const user_id = req.user;
+
         if(!params.repo_id){
             throw Error("Please send the repo_id.");
         }
 
-        const folders = await folderQuery.queryFoldersByParent(params);
+        const folders = await folderQuery.queryFoldersByParent(params, user_id);
 
         res.status(200).send(folders);
     }
