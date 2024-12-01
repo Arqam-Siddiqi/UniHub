@@ -5,7 +5,8 @@ const repoQuery = require('../database/repoQuery');
 const getAllFolders = async (req, res) => {
 
     try{
-        const folders = await folderQuery.queryAllFolders();
+        const user_id = req.user;
+        const folders = await folderQuery.queryAllFolders(user_id);
 
         res.status(200).send(folders);
     }
@@ -17,10 +18,13 @@ const getAllFolders = async (req, res) => {
 
 const getAllFoldersByRepo = async (req,res)=>{
     try{
-        if(!req.body.repo_id){
+        const {repo_id} = req.body;
+
+        if(!repo_id){
             throw Error("Please send the repo_id.");
         }
-        const folders = await folderQuery.queryFoldersByRepo(req.body.repo_id);
+
+        const folders = await folderQuery.queryFoldersByRepo(repo_id, req.user);
 
         res.status(200).send(folders);
     }
