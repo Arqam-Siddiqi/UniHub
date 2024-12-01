@@ -5,11 +5,13 @@ const getAllFilesFromRepo = async (req, res) => {
 
     try{
         const params = req.body;
+        const user_id = req.user;
+
         if(!params.repo_id){
             throw Error("Please send the repo_id.");
         }
 
-        const files = await fileQuery.queryFilesFromRepo(params.repo_id);
+        const files = await fileQuery.queryFilesFromRepo(params.repo_id, user_id);
 
         res.status(200).send(files);
     }
@@ -49,11 +51,12 @@ const getAllFilesFromFolder = async (req, res) => {
 
     try{
         const params = req.body;
+        const user_id = req.user;
         if(!params.repo_id){
             throw Error("Please send the repo_id.");
         }
 
-        const files = await fileQuery.queryFilesByParent(params);
+        const files = await fileQuery.queryFilesByParent(params, user_id);
 
         res.status(200).send(files);
     }

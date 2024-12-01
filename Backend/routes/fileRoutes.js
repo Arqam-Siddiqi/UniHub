@@ -6,7 +6,7 @@ const requireAuth = require('../middleware/requireAuth');
 const optionalAuth = require('../middleware/optionalAuth');
 const documentController = require('../controllers/documentController');
 
-router.post('/', fileController.getAllFilesFromRepo);
+router.post('/', optionalAuth, fileController.getAllFilesFromRepo);
 
 router.post('/create', requireAuth, multerLayer, fileController.createFile, documentController.uploadFile);
 

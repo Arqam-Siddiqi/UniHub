@@ -2,16 +2,19 @@ const router = require('express').Router();
 
 const commentController = require('../controllers/commentController');
 
-router.get('/', commentController.getAllComments);
+const requireAuth = require('../middleware/requireAuth');
+const optionalAuth = require('../middleware/optionalAuth');
 
-router.get('/self/user', commentController.getAllUserComments);
+router.get('/', optionalAuth, commentController.getAllComments);
 
-router.post('/self/repo', commentController.getAllRepoComments);
+router.get('/self/user', optionalAuth, commentController.getAllUserComments);
 
-router.post('/create',commentController.createComment);
+router.post('/self/repo', optionalAuth, commentController.getAllRepoComments);
 
-router.patch('/update', commentController.updateComment);
+router.post('/create', requireAuth, commentController.createComment);
 
-router.delete('/delete', commentController.deleteComment);
+router.patch('/update', requireAuth, commentController.updateComment);
+
+router.delete('/delete', requireAuth, commentController.deleteComment);
 
 module.exports = router;

@@ -76,11 +76,12 @@ app.use('/user', userRoutes);
 app.use('/folder', folderRoutes);
 app.use('/file', fileRoutes);
 
+app.use('/comment', commentRoutes);
+
 app.use(requireAuth);
 
 // Protected Endpoints
 app.use('/course', courseRoutes);
-app.use('/comment', commentRoutes);
 app.use('/gemini', geminiRoutes);
 
 
