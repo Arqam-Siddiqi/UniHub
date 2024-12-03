@@ -41,7 +41,6 @@ const queryFoldersByParent = async({repo_id, parent_id}, user_id)=>{
         );
     }
     
-    console.log(folders.rows);
     return folders.rows;
 } 
 
@@ -100,8 +99,6 @@ const updateFolder = async ({id,name, parent_id})=>{
     } 
     
     
-   
-    console.log(folders.rows[0]);
     return folders.rows[0];
 }
 
