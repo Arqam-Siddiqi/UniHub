@@ -41,6 +41,38 @@ const queryByRepo = async (repo_id, user_id) => {
 }
 
 const comment = async(user_id,repo_id, content)=>{
+
+    await query(`
+        CREATE OR REPLACE FUNCTION validate_comment_fk()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            IF NOT EXISTS (SELECT 1 FROM Repos WHERE id = NEW.repo_id) THEN
+                RAISE EXCEPTION 'repo_id % does not exist in Repos', NEW.repo_id;
+            END IF;
+    
+            IF NOT EXISTS (SELECT 1 FROM Users WHERE id = NEW.user_id) THEN
+                RAISE EXCEPTION 'user_id % does not exist in Users', NEW.user_id;
+            END IF;
+    
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+    
+        -- Create the trigger once
+        DO $$ BEGIN
+          IF NOT EXISTS (
+            SELECT 1 
+            FROM pg_trigger 
+            WHERE tgname = 'check_comment_fk'
+          ) THEN
+            CREATE TRIGGER check_comment_fk
+            BEFORE INSERT ON Comments
+            FOR EACH ROW
+            EXECUTE FUNCTION validate_comment_fk();
+          END IF;
+        END $$;
+    `);
+
     const comment = await query(`
         INSERT INTO Comments (user_id, repo_id, content)
         VALUES ($1,$2,$3)
