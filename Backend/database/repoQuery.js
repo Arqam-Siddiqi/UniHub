@@ -36,15 +36,19 @@ const queryAllRepos = async (order_by, limit, user_id) => {
 
 const createRepo = async (user_id, {name,  description, visibility, tags} ) => {
 
-    const fetch_repo = await query(`
-        INSERT INTO Repos (name, user_id, visibility, description) VALUES
-        ($1, $2, $3, $4)
-        RETURNING *;
-    `, [name, user_id, visibility, description]);
-
-    const repo_id = fetch_repo.rows[0].id;
+    let repo_id = null;
     
     try{
+        await query('BEGIN'); 
+
+        const fetch_repo = await query(`
+            INSERT INTO Repos (name, user_id, visibility, description) VALUES
+            ($1, $2, $3, $4)
+            RETURNING *;
+        `, [name, user_id, visibility, description]);
+
+        repo_id = fetch_repo.rows[0].id;
+
         if(tags && tags.length > 0){
 
             await query(`
@@ -65,17 +69,16 @@ const createRepo = async (user_id, {name,  description, visibility, tags} ) => {
                 ${tag_ids.map((_, i) => `($1, $${i+2})`).join(', ')};
             `, [repo_id, ...tag_ids]);
         }
+
+        await query('COMMIT');
     }
     catch(error){
-
-        await query(`
-            DELETE FROM Repos
-            WHERE Repos.id = $1;
-        `, [repo_id]);
+        await query('ROLLBACK');
         
         throw Error(error.message);
     }
     
+
     const repo = await query(`
         SELECT 
             r.*, 
@@ -218,7 +221,7 @@ const deleteRepoOfUser = async ( {id} )=>{
     return repos.rows[0];
 }
 
-// Can be improved??
+
 const doesUserOwnRepo = async (user_id, repo_id) => {
 
     const repos = await query(`
