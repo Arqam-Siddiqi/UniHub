@@ -40,7 +40,7 @@ const queryByRepo = async (repo_id, user_id) => {
     return comments.rows;
 }
 
-const comment = async(user_id,repo_id, content)=>{
+const comment = async (user_id, repo_id, content)=>{
 
     await query(`
         CREATE OR REPLACE FUNCTION validate_comment_fk()

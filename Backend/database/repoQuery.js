@@ -242,6 +242,39 @@ const doesUserOwnRepo = async (user_id, repo_id) => {
 const toggleLike = async (user_id, repo_id) => {
 
     await query(`
+        CREATE OR REPLACE FUNCTION validate_like_fk()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            -- Check if user_id exists in Users table
+            IF NOT EXISTS (SELECT 1 FROM Users WHERE id = NEW.user_id) THEN
+                RAISE EXCEPTION 'user_id % does not exist in Users', NEW.user_id;
+            END IF;
+    
+            -- Check if repo_id exists in Repos table
+            IF NOT EXISTS (SELECT 1 FROM Repos WHERE id = NEW.repo_id) THEN
+                RAISE EXCEPTION 'repo_id % does not exist in Repos', NEW.repo_id;
+            END IF;
+    
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+
+        -- Create the trigger for Likes table if it doesn't exist
+        DO $$ BEGIN
+            IF NOT EXISTS (
+                SELECT 1 
+                FROM pg_trigger 
+                WHERE tgname = 'validate_like_fk_trigger'
+            ) THEN
+                CREATE TRIGGER validate_like_fk_trigger
+                BEFORE INSERT ON Likes
+                FOR EACH ROW
+                EXECUTE FUNCTION validate_like_fk();
+            END IF;
+        END $$;
+    `);
+
+    await query(`
         WITH toggle AS (
             DELETE FROM Likes
             WHERE user_id = $1 AND repo_id = $2

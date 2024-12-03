@@ -53,7 +53,7 @@ const dbSetup = async function() {
         name VARCHAR(64) NOT NULL,
         user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
         visibility repo_visibility DEFAULT 'public' NOT NULL,
-        description TEXT NOT NULL,
+        description TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
   

@@ -11,7 +11,7 @@ const validateRepoParams = (user_id, parameters, type) => {
     
     if(type==='c'){
         
-        if(!user_id || !parameters.name || !parameters.visibility || !parameters.description){
+        if(!user_id || !parameters.name || !parameters.visibility){
             throw Error("Please fill all the required fields.");
         }
 
