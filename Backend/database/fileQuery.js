@@ -93,7 +93,7 @@ const queryFileByID = async (id, user_id) => {
 const queryFileByIDAndUser = async (id, user_id) => {
 
     const file = await query(`
-        SELECT * FROM Files f
+        SELECT f.* FROM Files f
         JOIN Repos r ON f.repo_id = r.id
         JOIN Users u ON r.user_id = u.id
         WHERE f.id = $1 AND u.id = $2;
