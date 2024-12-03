@@ -60,6 +60,8 @@ const checkFileType = (file, cb) => {
       'application/json',            // JSON files (.json)
       'text/css',                    // CSS files (.css)
       'text/html',                   // HTML files (.html, .htm)
+      'application/sql',
+      'text/markdown'
     ];
 
     console.log(file.mimetype);

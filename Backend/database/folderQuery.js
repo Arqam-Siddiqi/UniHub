@@ -2,7 +2,7 @@ const {query} = require('./psqlWrapper');
 
 const queryAllFolders = async (user_id) => {
     const folders = await query(`
-        SELECT * FROM folders f
+        SELECT f.* FROM folders f
         JOIN Repos r ON f.repo_id = r.id
         WHERE r.visibility = 'public' OR r.user_id = $1
     `, [user_id]);
@@ -12,7 +12,7 @@ const queryAllFolders = async (user_id) => {
 
 const queryFoldersByRepo = async (id, user_id) => {
     const folders = await query(`
-        SELECT * FROM folders f
+        SELECT f.* FROM folders f
         JOIN Repos r ON f.repo_id = r.id
         WHERE repo_id = $1 AND (r.visibility = 'public' OR r.user_id = $2)
     `, [id, user_id]);
@@ -26,7 +26,7 @@ const queryFoldersByParent = async({repo_id, parent_id}, user_id)=>{
 
     if(!parent_id){
         folders = await query(`
-            SELECT * FROM folders f
+            SELECT f.* FROM folders f
             JOIN Repos r ON f.repo_id = r.id
             WHERE repo_id = $1 AND parent_id IS NULL AND (visibility = 'public' OR r.user_id = $2)
         `, [repo_id, user_id]
@@ -34,13 +34,14 @@ const queryFoldersByParent = async({repo_id, parent_id}, user_id)=>{
     }
     else{
         folders = await query(`
-            SELECT * FROM folders f
+            SELECT f.* FROM folders f
             JOIN Repos r ON f.repo_id = r.id
             WHERE repo_id = $1 AND parent_id = $2 AND (visibility = 'public' OR r.user_id = $3)
         `, [repo_id, parent_id, user_id]
         );
     }
     
+    console.log(folders.rows);
     return folders.rows;
 } 
 
@@ -107,8 +108,7 @@ const updateFolder = async ({id,name, parent_id})=>{
 const getFolder = async (id)=>{
     const folders = await query(
         `SELECT * FROM folders
-        WHERE id = $1
-        ;
+        WHERE id = $1;
         `, [id]
     );
     

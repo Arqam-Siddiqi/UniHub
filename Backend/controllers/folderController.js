@@ -47,12 +47,15 @@ const createFolder = async (req, res) => {
         }
 
         const folders = await folderQuery.queryFoldersByParent(validated_params);
+        
         const fnames = folders.map(data=>data.name);
+        console.log(fnames);
 
         if(fnames.includes(validated_params.name)){
             throw Error(`Folder already present with the name ${validated_params.name}`);
         }
 
+        console.log(validated_params);
         const folder = await folderQuery.createFolder(validated_params);
         res.status(200).send(folder);
     }
