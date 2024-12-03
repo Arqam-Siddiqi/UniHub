@@ -73,6 +73,8 @@ const getAllFaculty = async () => {
 const insertAllFaculty = async () => {
 
     // await facultyIndex.clearObjects().wait();
+    // await repoIndex.clearObjects().wait();
+    // await roomIndex.clearObjects().wait();
 
     const test = await getAllFaculty();
     

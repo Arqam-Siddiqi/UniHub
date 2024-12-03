@@ -328,41 +328,41 @@ const mapSetup = async () => {
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (18,(SELECT id FROM segments WHERE floor_id=4 and direction='LR'), 'Lab 8', 'LR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (19,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Male faculty wash room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (20,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Female prayer area', 'PR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (21,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Faculty office(S & H)', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (19,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Male Faculty Wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (20,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Female Prayer Area', 'PR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (21,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'Faculty Office (S & H)', 'FR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (22,(SELECT id FROM segments WHERE floor_id=5 and direction='UL'), 'HOD office', 'HEAD');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (23,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Faculty office(AI & DS)', 'FR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (24,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Faculty office(SOM 2)', 'FR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (25,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Guest room 1', 'GR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (26,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Guest room 2', 'GR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (27,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Male faculty wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (23,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Faculty Office (AI & DS)', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (24,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Faculty Office (SOM 2)', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (25,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Guest Room 1', 'GR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (26,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Guest Room 2', 'GR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (27,(SELECT id FROM segments WHERE floor_id=5 and direction='UR'), 'Male Faculty Wash room', 'WR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (28,(SELECT id FROM segments WHERE floor_id=5 and direction='LL'), 'Faculty office', 'FR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (29,(SELECT id FROM segments WHERE floor_id=5 and direction='LL'), 'Faculty office(CYS)', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (28,(SELECT id FROM segments WHERE floor_id=5 and direction='LL'), 'Faculty Office', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (29,(SELECT id FROM segments WHERE floor_id=5 and direction='LL'), 'Faculty Office (CYS)', 'FR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (30,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'Conference room', 'CR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (30,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'Conference Room', 'CR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (31,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'B9', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (32,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'B10', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (33,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'B11', 'SR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (34,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'Faculty office(SOM 1)', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (34,(SELECT id FROM segments WHERE floor_id=5 and direction='LR'), 'Faculty Office (SOM 1)', 'FR');
   
   
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (35,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'Male wash room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (36,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'Empty room(for events)', 'ER');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (35,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'Male Wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (36,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'Empty Room (for events)', 'ER');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (37,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'C20', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (38,(SELECT id FROM segments WHERE floor_id=6 and direction='UL'), 'C21', 'SR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (39,(SELECT id FROM segments WHERE floor_id=6 and direction='UR'), 'C16', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (40,(SELECT id FROM segments WHERE floor_id=6 and direction='UR'), 'C15', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (41,(SELECT id FROM segments WHERE floor_id=6 and direction='UR'), 'Project Lab', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (42,(SELECT id FROM segments WHERE floor_id=6 and direction='UR'), 'Female faculty wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (42,(SELECT id FROM segments WHERE floor_id=6 and direction='UR'), 'Female Faculty Wash room', 'WR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (43,(SELECT id FROM segments WHERE floor_id=6 and direction='LL'), 'Lab 7', 'LR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (44,(SELECT id FROM segments WHERE floor_id=6 and direction='LL'), 'C19', 'SR');
@@ -373,19 +373,19 @@ const mapSetup = async () => {
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (47,(SELECT id FROM segments WHERE floor_id=6 and direction='LR'), 'C14', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (48,(SELECT id FROM segments WHERE floor_id=6 and direction='LR'), 'C13', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (49,(SELECT id FROM segments WHERE floor_id=6 and direction='LR'), 'C12', 'SR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (50,(SELECT id FROM segments WHERE floor_id=6 and direction='LR'), 'Faculty office', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (50,(SELECT id FROM segments WHERE floor_id=6 and direction='LR'), 'Faculty Office', 'FR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (51,(SELECT id FROM segments WHERE floor_id=7 and direction='UL'), 'Female wash room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (52,(SELECT id FROM segments WHERE floor_id=7 and direction='UL'), 'Library reading hall', 'LH');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (51,(SELECT id FROM segments WHERE floor_id=7 and direction='UL'), 'Female Wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (52,(SELECT id FROM segments WHERE floor_id=7 and direction='UL'), 'Library Reading Hall', 'LH');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (53,(SELECT id FROM segments WHERE floor_id=7 and direction='UL'), 'Lab 10', 'LR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (54,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Lab 8(networking & CYS lab)', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (55,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Security lab', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (54,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Lab 8 (Networking & CYS lab)', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (55,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Security Lab', 'LR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (56,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Lab 9', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (57,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Network operation center', 'OC');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (58,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Female wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (57,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Network Operation Center', 'OC');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (58,(SELECT id FROM segments WHERE floor_id=7 and direction='UR'), 'Female Wash room', 'WR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (59,(SELECT id FROM segments WHERE floor_id=7 and direction='LL'), 'D28', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (60,(SELECT id FROM segments WHERE floor_id=7 and direction='LL'), 'D27', 'SR');
@@ -397,15 +397,15 @@ const mapSetup = async () => {
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (65,(SELECT id FROM segments WHERE floor_id=7 and direction='LR'), 'D22', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (66,(SELECT id FROM segments WHERE floor_id=7 and direction='LR'), 'GCR', 'GCR');
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (67,(SELECT id FROM segments WHERE floor_id=8 and direction='UL'), 'Male wash room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (68,(SELECT id FROM segments WHERE floor_id=8 and direction='UL'), 'Empty room', 'ER');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (67,(SELECT id FROM segments WHERE floor_id=8 and direction='UL'), 'Male Wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (68,(SELECT id FROM segments WHERE floor_id=8 and direction='UL'), 'Empty Room', 'ER');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (69,(SELECT id FROM segments WHERE floor_id=8 and direction='UL'), 'Lab 12', 'LR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (70,(SELECT id FROM segments WHERE floor_id=8 and direction='UL'), 'Lab 11(AI)', 'LR');
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (71,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Electro-mechanical system lab', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (72,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Electronics lab', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (73,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Physics lab', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (74,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Male wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (71,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Electro-mechanical System Lab', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (72,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Electronics Lab', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (73,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Physics Lab', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (74,(SELECT id FROM segments WHERE floor_id=8 and direction='UR'), 'Male Wash room', 'WR');
   
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (75,(SELECT id FROM segments WHERE floor_id=8 and direction='LL'), 'E35', 'SR');
@@ -437,7 +437,7 @@ const mapSetup = async () => {
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (98,(SELECT id FROM segments WHERE floor_id=1 and direction='UL'), 'Room 2', 'FR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (99,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Room 1', 'FR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (100,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Lab 4(CS)', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (100,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Lab 4 (CS)', 'LR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (101,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Room 20', 'FR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (102,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Room 21', 'FR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (103,(SELECT id FROM segments WHERE floor_id=1 and direction='LM'), 'Room 22', 'FR');
@@ -448,38 +448,38 @@ const mapSetup = async () => {
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (107,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Accounts Department', 'DEP');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (108,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Mr Abdul Saeed', 'FR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (109,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Assistant manager admin office', 'Adm');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (109,(SELECT id FROM segments WHERE floor_id=0 and direction='UR'), 'Assistant Manager Admin Office', 'Adm');
   
   
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (110,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Male wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (110,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Male Wash room', 'WR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (111,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'S2', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (112,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 17 (HOD office)', 'HEAD');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (113,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 15(Secretariat)', 'Adm');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (113,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 15 (Secretariat)', 'Adm');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (114,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'Room 14', 'FR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (115,(SELECT id FROM segments WHERE floor_id=2 and direction='UL'), 'R11', 'SR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (117,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'HR & QEC Department', 'DEP');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (118,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 8(Manager Administration)', 'Adm');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (118,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 8 (Manager Administration)', 'Adm');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (119,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 6B', 'FR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (120,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 6A', 'FR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (121,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 3(Director Secretariat)', 'Adm');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (122,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 2(Director)', 'HEAD');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (121,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 3 (Director Secretariat)', 'Adm');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (122,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'Room 2 (Director)', 'HEAD');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (123,(SELECT id FROM segments WHERE floor_id=2 and direction='UR'), 'OneStop', 'Adm');
   
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (124,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'Room 16', 'FR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (125,(SELECT id FROM segments WHERE floor_id=2 and direction='LR'), 'LLC', 'SR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (126,(SELECT id FROM segments WHERE floor_id=2 and direction='LR'), 'Room 5(Conference Room)', 'CR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (126,(SELECT id FROM segments WHERE floor_id=2 and direction='LR'), 'Room 5 (Conference Room)', 'CR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (127,(SELECT id FROM segments WHERE floor_id=2 and direction='LR'), 'Room 4', 'FR');
   
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (128,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'E4', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (129,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'E5', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (130,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'E6', 'SR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (131,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'Male faculty wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (131,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'Male Faculty Wash room', 'WR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (132,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'GCR', 'GCR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (133,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), 'R109', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (134,(SELECT id FROM segments WHERE floor_id=3 and direction='UL'), '107a', 'FR');
@@ -493,7 +493,7 @@ const mapSetup = async () => {
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (141,(SELECT id FROM segments WHERE floor_id=3 and direction='UR'), 'E3', 'SR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (142,(SELECT id FROM segments WHERE floor_id=3 and direction='LL'), 'Lab 3', 'LR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (143,(SELECT id FROM segments WHERE floor_id=3 and direction='LL'), 'Lab 2(Networking& CYS Lab)', 'LR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (143,(SELECT id FROM segments WHERE floor_id=3 and direction='LL'), 'Lab 2 (Networking & CYS Lab)', 'LR');
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (144,(SELECT id FROM segments WHERE floor_id=3 and direction='LR'), 'R106', 'SR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (145,(SELECT id FROM segments WHERE floor_id=3 and direction='LR'), 'Network Operation Center', 'OC');
@@ -512,21 +512,21 @@ const mapSetup = async () => {
   
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (150,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Medical room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (151,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Male wash room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (152,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Female wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (151,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Male Wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (152,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Female Wash room', 'WR');
   
   
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (153,(SELECT id FROM segments WHERE floor_id=11 and direction='M'), 'Cafeteria', 'Cafe');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (154,(SELECT id FROM segments WHERE floor_id=11 and direction='LL'), 'Male wash room', 'WR');
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (155,(SELECT id FROM segments WHERE floor_id=11 and direction='LL'), 'Female wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (154,(SELECT id FROM segments WHERE floor_id=11 and direction='LL'), 'Male Wash room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (155,(SELECT id FROM segments WHERE floor_id=11 and direction='LL'), 'Female Wash room', 'WR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (156,(SELECT id FROM segments WHERE floor_id=6 and direction='M'), 'Faculty office', 'FR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (156,(SELECT id FROM segments WHERE floor_id=6 and direction='M'), 'Faculty Office', 'FR');
   
-            INSERT INTO Rooms (id, segment_id, name, type) VALUES (157, (SELECT id FROM segments WHERE floor_id=0 and direction='RM'),'Procurement Department','DEP');
+            INSERT INTO Rooms (id, segment_id, name, type) VALUES (157, (SELECT id FROM segments WHERE floor_id=0 and direction='RM'), 'Procurement Department','DEP');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (158,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'Room 13(Professor & Dean of Computing)', 'HEAD');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (158,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'Room 13 (Professor & Dean of Computing)', 'HEAD');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (159,(SELECT id FROM segments WHERE floor_id=2 and direction='LL'), 'R12', 'SR');
   
   
@@ -625,9 +625,6 @@ const mapSetup = async () => {
             INSERT INTO FACULTY (name, room_id) VALUES ('Mr Muhammad Shahid Ashraf', 156);
             INSERT INTO FACULTY (name, room_id) VALUES ('Mr Nadeem Khan', 156);
             INSERT INTO FACULTY (name, room_id) VALUES ('Ms Rabia Ijaz', 156);
-  
-  
-  
   
             --CS faculty
             INSERT INTO FACULTY (name, room_id) VALUES ('Ms Atiya Jokhio',83);
