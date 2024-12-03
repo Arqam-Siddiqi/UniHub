@@ -2,17 +2,28 @@ const {query} = require('./psqlWrapper');
 
 const createGoogleUser = async (profile, access_token, refresh_token) => {
 
-    await query(`
-        INSERT INTO Google_Tokens (google_id, access_token, refresh_token)
-        VALUES ($1, $2, $3)
-    `, [profile.id, access_token, refresh_token]);
+    let user = null;
+    try{
+        await query('BEGIN');
 
-    const user = await query(`
-        INSERT INTO Users (google_id, name, email)
-        VALUES ($1, $2, $3)
-        ON CONFLICT (email) DO NOTHING
-        RETURNING *;`
-    , [profile.id, profile.displayName, profile.emails[0].value]);
+        await query(`
+            INSERT INTO Google_Tokens (google_id, access_token, refresh_token)
+            VALUES ($1, $2, $3)
+        `, [profile.id, access_token, refresh_token]);
+        
+        user = await query(`
+            INSERT INTO Users (google_id, name, email)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (email) DO NOTHING
+            RETURNING *;`
+        , [profile.id, profile.displayName, profile.emails[0].value]);
+
+        await query('COMMIT');
+    }
+    catch(error){
+        await query('ROLLBACK');
+        throw error;
+    }
 
     return user.rows[0];
 
