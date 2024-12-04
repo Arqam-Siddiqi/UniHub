@@ -37,7 +37,7 @@ const createRepo = async (req, res, next) => {
         repo.liked = false;
 
         try {
-            if(process.env.HOSTING_SITE)
+            if(process.env.HOSTING_SITE && repo.visibility == 'public')
                 await algolia.createRepo(repo);
         }
         catch(error) {
