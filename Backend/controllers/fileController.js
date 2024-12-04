@@ -102,6 +102,7 @@ const getFileDetails = async (req, res, next) => {
     
     try{
         const params = req.body;
+        const user_id = req.user;
         if(!params.id){
             throw Error("Please send the id of the file.");
         }
@@ -110,7 +111,7 @@ const getFileDetails = async (req, res, next) => {
         //     throw Error("Please send the repo_id.");
         // }
 
-        const file = await fileQuery.queryFileByID(params.id);
+        const file = await fileQuery.queryFileByID(params.id, user_id);
         
         if(!file){
             throw Error("File does not exist.");
