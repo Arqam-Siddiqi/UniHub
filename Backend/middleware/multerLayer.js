@@ -1,4 +1,6 @@
 const multer = require('multer');
+const mime = require('mime-types');
+const path = require('path');
 
 const storage = multer.memoryStorage();
 
@@ -18,12 +20,45 @@ const upload = multer({
   storage: storage,
   limits: {fileSize: parseInt(process.env.MAX_FILE_SIZE, 10)},   // 30 MB
   fileFilter: (req, file, cb) => {
-    checkFileType(file, cb);
+    checkFileType(req, file, cb);
   }
 }).single('document');
 
 // Allowed extensions
-const checkFileType = (file, cb) => {
+const checkFileType = async (req, file, cb) => {
+
+    const customMimeMap = {
+      csv: 'text/csv',
+      c: 'text/x-c',
+      csrc: 'text/x-csrc',
+      cpp: 'text/x-c++src',
+      java: 'text/x-java-source',
+      py: 'text/x-python',
+      rb: 'text/x-ruby',
+      pl: 'text/x-perl',
+      sh: 'text/x-shellscript',
+      hs: 'text/x-haskell',
+      go: 'text/x-go',
+      sql: 'text/x-sql',
+      swift: 'text/x-swift',
+      kt: 'text/x-kotlin',
+      m: 'text/x-matlab',
+      r: 'text/x-r',
+      rs: 'text/x-rust',
+      tex: 'text/x-tex',
+      md: 'text/x-markdown',
+      xml: 'application/xml',
+      json: 'application/json',
+      css: 'text/css',
+      html: 'text/html',
+      htm: 'text/html'
+    };
+
+    if(file.mimetype === 'application/octet-stream'){
+      const ext = path.extname(file.originalname).substring(1);
+      file.mimetype = mime.lookup(file.originalname) || customMimeMap[ext] || file.mimetype;
+    }
+
     const allowedTypes = [
       'image/jpeg',        // JPEG images
       'image/png',         // PNG images
@@ -34,7 +69,6 @@ const checkFileType = (file, cb) => {
       'application/vnd.ms-powerpoint', // MS PowerPoint (.ppt)
       'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PowerPoint (.pptx)
       
-      'image/svg+xml',     // SVG images
       'text/csv',           // CSV files
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // MS Excel (.xlsx)
       'application/vnd.ms-excel', // MS Excel (.xls)
@@ -60,11 +94,10 @@ const checkFileType = (file, cb) => {
       'application/json',            // JSON files (.json)
       'text/css',                    // CSS files (.css)
       'text/html',                   // HTML files (.html, .htm)
-      'application/sql',
       'text/markdown'
     ];
 
-    console.log(file.mimetype);
+    console.log('File MimeType: ', file.mimetype);
   
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);

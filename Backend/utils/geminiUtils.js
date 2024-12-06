@@ -40,7 +40,6 @@ const uploadFileBuffer = async (fileBuffer, fileManager) => {
     return uploadResponse;
 }
 
-
 const generateContent = async (model, uploadResponse, type, validated_params) => {
     
     let result;
@@ -58,6 +57,7 @@ const generateContent = async (model, uploadResponse, type, validated_params) =>
         ]);
     }
     catch(error){
+        console.log(error.message);
         throw Error("Gemini is currently unavailable for use.");
     }
     

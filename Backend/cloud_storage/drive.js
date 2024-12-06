@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const {authenticate} = require('@google-cloud/local-auth');
-const {google, drive_v3} = require('googleapis');
+const {google} = require('googleapis');
+const PDFDocument = require('pdfkit');
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
@@ -97,6 +98,17 @@ async function listFiles() {
   });
 }
 
+
+async function deleteFile(file_id){
+
+  const response = await drive.files.delete({
+    fileId: file_id
+  });
+
+  return response;
+
+}
+
 /**
  * Upload a file to Google Drive and get the link
  * @param {object} file - File object from the frontend
@@ -159,7 +171,6 @@ async function convertToGoogleDoc(fileId) {
         mimeType: 'application/vnd.google-apps.document', // Convert to Google Doc
       },
     });
-    console.log('File converted to Google Doc:', response.data.id);
     return response.data.id; // Return the new Google Doc file ID
   } catch (error) {
     console.error('Error converting file to Google Doc:', error.message);
@@ -167,8 +178,38 @@ async function convertToGoogleDoc(fileId) {
   }
 }
 
-// Function to export a Google Doc as a PDF
-async function downloadAsPDF(fileId) {
+async function convertToGoogleSlide(fileId) {
+  try {
+    const response = await drive.files.copy({
+      fileId,
+      requestBody: {
+        mimeType: 'application/vnd.google-apps.presentation', // Convert to Google Slide
+      },
+    });
+    return response.data.id; // Return the new Google Slide file ID
+  } catch (error) {
+    console.error('Error converting file to Google Slide:', error.message);
+    throw error;
+  }
+}
+
+async function convertToGoogleSheet(fileId) {
+  try {
+    const response = await drive.files.copy({
+      fileId,
+      requestBody: {
+        mimeType: 'application/vnd.google-apps.spreadsheet', // Convert to Google Sheet
+      },
+    });
+    return response.data.id; // Return the new Google Slide file ID
+  } catch (error) {
+    console.error('Error converting file to Google Slide:', error.message);
+    throw error;
+  }
+}
+
+// Function to export a file as a PDF
+async function downloadFileAsPDF(fileId) {
   try {
     const response = await drive.files.export(
       {
@@ -179,40 +220,103 @@ async function downloadAsPDF(fileId) {
     );
 
     const fileBuffer = Buffer.from(response.data);
-    console.log('PDF file buffer created');
-    return fileBuffer; // Return the Buffer
+    
+    return fileBuffer;
   } catch (error) {
     console.error('Error exporting file as PDF:', error.message);
     throw error;
   }
 }
-async function downloadFileAsPDF(file_id) {
+
+async function downloadFileAsDocPDF(google_file_id) {
   
-  const googleDocId = await convertToGoogleDoc(file_id); // Convert to Google Doc
-  const buffer = await downloadAsPDF(googleDocId); // Export the Google Doc to PDF
+  const googleDocId = await convertToGoogleDoc(google_file_id); // Convert to Google Doc
+  const buffer = await downloadFileAsPDF(googleDocId); // Export the Google Doc to PDF
+  await deleteFile(googleDocId);
   
-  return {
-    fileBuffer: buffer, 
-    google_doc_id: googleDocId
-  };
+  return buffer;
 
 }
 
-async function deleteFile(file_id){
+async function downloadFileAsSlidePDF(google_file_id) {
+  
+  const googleSlideId = await convertToGoogleSlide(google_file_id);
+  const buffer = await downloadFileAsPDF(googleSlideId);
+  await deleteFile(googleSlideId);
 
-  const response = await drive.files.delete({
-    fileId: file_id
+  return buffer;
+
+}
+
+async function downloadFileAsSheetPDF(google_file_id) {
+  
+  const googleSheetId = await convertToGoogleSheet(google_file_id);
+  const buffer = await downloadFileAsPDF(googleSheetId);
+  await deleteFile(googleSheetId);
+
+  return buffer;
+
+}
+
+function convertTxtToPdfBuffer(txtContent) {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument();
+    const buffers = [];
+    
+    // Stream PDF data into memory
+    doc.on('data', (chunk) => buffers.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(buffers)));
+    doc.on('error', reject);
+
+    doc.text(txtContent);
+    doc.end();
   });
-
-  return response;
-
 }
 
+async function downloadFileForAnyType(file){
+
+  const {google_file_id, mimeType} = file; 
+
+  const powerPointTypes = [
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  ];
+
+  const excelTypes = [
+    'application/vnd.ms-excel', 
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ];
+
+  if(powerPointTypes.includes(mimeType)){
+      console.log('Converting PPT -> Slides -> PDF.');
+
+      return await downloadFileAsSlidePDF(google_file_id);
+  }
+  else if(excelTypes.includes(mimeType)){
+    console.log('Converting Excel -> Sheets -> PDF.');
+    
+    return await downloadFileAsSheetPDF(google_file_id);
+  }
+  else if(mimeType.startsWith('text/')){
+    console.log('Converting TXT -> PDF.');
+    
+    const buffer = await downloadFile(google_file_id);
+    return await convertTxtToPdfBuffer(buffer);
+  }
+  else if(mimeType === 'application/pdf'){
+    return await downloadFile(google_file_id);
+  }
+  
+  console.log('Converting File -> Docs -> PDF.');
+  
+  return await downloadFileAsDocPDF(google_file_id)
+
+}
 
 module.exports = {
     uploadFile,
     downloadFile,
-    downloadFileAsPDF,
+    downloadFileForAnyType,
     deleteFile,
     authorize
 }

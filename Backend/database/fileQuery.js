@@ -25,7 +25,6 @@ const queryFilesByParent = async ({repo_id, folder_id}, user_id) => {
         `, [repo_id, folder_id, user_id]);
     }
     else{
-        console.log(repo_id, user_id)
         files = await query(`
             SELECT f.* FROM Files f
             JOIN Repos r ON f.repo_id = r.id

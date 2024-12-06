@@ -5,7 +5,7 @@ const folderQuery = require('../database/folderQuery');
 const path = require('path');
 
 // call with await
-const validateFileParams = async ({originalname, size, mimetype}, {repo_id, folder_id}) => {
+const validateFileParams = async ({originalname, size, mimetype}, {repo_id, folder_id}, user_id) => {
 
     if(!originalname || !size || !mimetype){
         throw Error("File was not properly parsed by upload().");
@@ -26,7 +26,7 @@ const validateFileParams = async ({originalname, size, mimetype}, {repo_id, fold
         throw Error("Extensions can only be of 8 or less letters.");
     }
 
-    const files = await fileQuery.queryFilesByParent({repo_id, folder_id});
+    const files = await fileQuery.queryFilesByParent({repo_id, folder_id}, user_id);
     const file_name = files.map(data => data.name + "." +  data.extension);
 
     if(file_name.includes(name + "." + extension)){
@@ -80,7 +80,7 @@ const validateFileParamsForPatch = async (user_id, {id, name, extension, repo_id
         }
     }
 
-    const files = await fileQuery.queryFilesByParent({repo_id, folder_id});
+    const files = await fileQuery.queryFilesByParent({repo_id, folder_id}, user_id);
     const file_name = files.map(data => data.name + "." +  data.extension);
 
     if(file_name.includes(name + "." + extension)){

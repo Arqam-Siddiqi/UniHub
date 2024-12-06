@@ -24,11 +24,12 @@ const getAllFilesFromRepo = async (req, res) => {
 const createFile = async (req, res, next) => {
 
     try{
+        const user_id = req.user;
         if(!req.file){
             throw Error("File was not uploaded.");
         }
 
-        const validated_params = await validateFileParams(req.file, req.body);
+        const validated_params = await validateFileParams(req.file, req.body, user_id);
 
         const file = await fileQuery.createFile(validated_params);
 
@@ -120,7 +121,8 @@ const getFileDetails = async (req, res, next) => {
         req.file = {
             google_file_id: file.google_file_id,
             name: file.name,
-            extension: file.extension
+            extension: file.extension,
+            mimeType: file.mimetype
         }
         
         next();

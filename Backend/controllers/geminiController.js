@@ -1,4 +1,4 @@
-const { downloadFileAsPDF, deleteFile } = require('../cloud_storage/drive');
+const { downloadFileForAnyType } = require('../cloud_storage/drive');
 const { validateQuizParams, initializeGemini, uploadFileBuffer, generateContent, parseQuiz } = require("../utils/geminiUtils");
 
 const createQuiz = async (req, res) => {
@@ -10,13 +10,11 @@ const createQuiz = async (req, res) => {
         
         const {model, fileManager} = initializeGemini();
         let text;
-        let count = 1;
+        let count = 1
 
-        const {google_file_id} = req.file;
-
-        const {fileBuffer, google_doc_id} = await downloadFileAsPDF(google_file_id);
+        const fileBuffer = await downloadFileForAnyType(req.file);
+        
         const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
-        await deleteFile(google_doc_id);
 
         do {
             text = await generateContent(model, uploadResponse, 'quiz', validated_params);
@@ -30,6 +28,7 @@ const createQuiz = async (req, res) => {
 
         } while(!text);
         
+
         await fileManager.deleteFile(uploadResponse.file.name);
 
         const parsed_text = parseQuiz(text);
@@ -56,12 +55,11 @@ const createNotes = async (req, res) => {
         let text;
         let count = 1;
 
-        const {google_file_id} = req.file;
-
-        const {fileBuffer, google_doc_id} = await downloadFileAsPDF(google_file_id);
+        const fileBuffer = await downloadFileForAnyType(req.file);
+        
         const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
-        await deleteFile(google_doc_id);
 
+        const t3 = performance.now();
         do {
             text = await generateContent(model, uploadResponse, 'notes');
 
@@ -73,12 +71,13 @@ const createNotes = async (req, res) => {
             }
 
         } while(!text);
+        const t4 = performance.now();
+        console.log('Generation time:', t4 - t3);
         
         await fileManager.deleteFile(uploadResponse.file.name);
 
         const formatted_text = {};
         formatted_text.notes = text.notes.replace(/(?<!")\\n(?!")/g, '\n');
-        // console.log(formatted_text.notes);
 
         const t2 = performance.now();
         console.log("Time taken to create Notes: ", t2 - t1);
