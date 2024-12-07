@@ -2,6 +2,7 @@ const {query} = require('./psqlWrapper');
 
 const queryAllRepos = async (order_by, limit, user_id) => {
 
+    console.log(order_by, limit, user_id)
     const repos = await query(`
         SELECT 
             r.*,
@@ -82,8 +83,10 @@ const createRepo = async (user_id, {name,  description, visibility, tags} ) => {
     const repo = await query(`
         SELECT 
             r.*, 
-            ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS "tags" 
+            ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS "tags",
+            u.name AS "user_name"
         FROM Repos r
+        JOIN Users u ON r.user_id = u.id
         LEFT JOIN Repo_Tags rt ON r.id = rt.repo_id
         LEFT JOIN Tags t ON rt.tag_id = t.id
         WHERE r.id = $1

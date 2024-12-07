@@ -38,7 +38,7 @@ const createRepo = async (req, res, next) => {
 
         try {
             if(process.env.HOSTING_SITE && repo.visibility == 'public')
-                await algolia.createRepo(repo);
+                await algolia.createOrUpdateRepo(repo);
         }
         catch(error) {
             await repoQuery.deleteRepoOfUser(repo);
@@ -86,9 +86,20 @@ const updateRepo =async (req, res)=>{
             }
         }
        
-        const repos= await repoQuery.updateRepoOfUser(validated_params);
+        const new_repo = await repoQuery.updateRepoOfUser(validated_params);
+
+        const formatted_new_repo = await repoQuery.queryReposByID(user_id, new_repo.id);
+
+        if(process.env.HOSTING_SITE){
+            if(formatted_new_repo.visibility === 'public' && (repo.visibility === 'public' || repo.visibility === 'private')){
+                await algolia.createOrUpdateRepo(formatted_new_repo);
+            }
+            else if(formatted_new_repo.visibility === 'private' && repo.visibility === 'public'){
+                await algolia.deleteRepo(formatted_new_repo.id);
+            }
+        }
        
-        res.status(200).send(repos);
+        res.status(200).send(formatted_new_repo);
     } catch (error) {
         res.status(400).send({"Error": error.message});
     }
@@ -107,7 +118,8 @@ const deleteRepo = async (req, res, next)=>{
             throw Error(`This user does not have a Repository with id "${req.body.id}".`);
         }
         
-        await algolia.deleteRepo(validated_params.id);
+        if(process.env.HOSTING_SITE)
+            await algolia.deleteRepo(validated_params.id);
 
         let repo;
         try{   
@@ -115,7 +127,9 @@ const deleteRepo = async (req, res, next)=>{
         }
         catch(error){
             repo = await repoQuery.queryReposByID(validated_params.id);
-            await algolia.createRepo(repo);
+
+            if(process.env.HOSTING_SITE)
+                await algolia.createRepoOrUpdate(repo);
             
             throw Error(error.message);
         }

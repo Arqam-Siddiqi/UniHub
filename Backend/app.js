@@ -17,7 +17,7 @@ const mapRoutes = require('./routes/mapRoutes');
 require('./config/googleStrategy');
 const requireAuth = require('./middleware/requireAuth');
 const { dbSetup } = require('./database/psqlWrapper');
-const {authorize} = require('./cloud_storage/drive');
+const { authorize } = require('./cloud_storage/drive');
 const {insertAllFaculty, insertAllRooms} = require('./indexing/algolia');
 
 const app = express();

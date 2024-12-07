@@ -55,9 +55,12 @@ const createNotes = async (req, res) => {
         let text;
         let count = 1;
 
+        const t5 = performance.now();
         const fileBuffer = await downloadFileForAnyType(req.file);
         
         const uploadResponse = await uploadFileBuffer(fileBuffer, fileManager);
+        const t6 = performance.now();
+        console.log('Downloading time: ', t6 - t5);
 
         const t3 = performance.now();
         do {

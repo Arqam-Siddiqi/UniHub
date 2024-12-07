@@ -11,6 +11,14 @@ const repoIndex = client.initIndex('repo_index');
 const facultyIndex = client.initIndex('faculty_index');
 const roomIndex = client.initIndex('room_index');
 
+repoIndex.setSettings({
+    searchableAttributes: [
+        'tags',
+        'name',
+        'description'
+    ]
+});
+
 facultyIndex.setSettings({
     searchableAttributes: ['name']
 });
@@ -19,7 +27,7 @@ roomIndex.setSettings({
     searchableAttributes: ['name']
 });
 
-const createRepo = async (data) => {
+const createOrUpdateRepo = async (data) => {
 
     const repo = {
         objectID: data.id,
@@ -28,7 +36,8 @@ const createRepo = async (data) => {
         tags: data.tags || [],
         likes: Number(data.likes),
         numOfComments: Number(data.num_of_comments),
-        user_id: data.user_id
+        user_id: data.user_id,
+        user_name: data.user_name
     };
     
     await repoIndex.saveObject(repo);
@@ -90,9 +99,6 @@ const insertAllFaculty = async () => {
         autoGenerateObjectIDIfNotExist: true
     }).wait();
 
-    // const result = await getAllFaculty();
-    // console.log(result.length);
-
 }
 
 const getAllRooms = async () => {
@@ -126,13 +132,10 @@ const insertAllRooms = async () => {
         autoGenerateObjectIDIfNotExist: true
     }).wait();
 
-    // const result = await getAllRooms();
-    // console.log(result.length);
-
 }
 
 module.exports = {
-    createRepo,
+    createOrUpdateRepo,
     deleteRepo,
     getAllPublicRepos,
     getAllFaculty,
