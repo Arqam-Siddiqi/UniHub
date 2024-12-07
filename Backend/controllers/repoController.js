@@ -27,11 +27,11 @@ const createRepo = async (req, res, next) => {
         const names = repos.map(data => data.name);
         
         if(names && names.includes(validated_params.name)){
-            throw Error(`This User alreay has a repository named \"${validated_params.name}\".`);
+            throw Error(`This User already has a repository named \"${validated_params.name}\".`);
         }
 
         const repo = await repoQuery.createRepo(user_id, validated_params);
-        const user = await repoQuery.getUserFromRepo(user_id);
+        const user = await repoQuery.getUserFromRepo(repo.id);
 
         repo.likes = 0;
         repo.num_of_comments = 0;

@@ -337,7 +337,7 @@ const getUserFromRepo = async (id) => {
         JOIN Users u ON r.user_id = u.id
         WHERE r.id = $1;
     `, [id]);
-
+    
     return user.rows[0];
 
 }
