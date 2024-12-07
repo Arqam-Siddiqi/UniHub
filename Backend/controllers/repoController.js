@@ -39,7 +39,7 @@ const createRepo = async (req, res, next) => {
         repo.user_name = user.user_name;
 
         try {
-            // if(process.env.HOSTING_SITE && repo.visibility == 'public')
+            if(process.env.HOSTING_SITE && repo.visibility == 'public')
                 await algolia.createOrUpdateRepo(repo);
         }
         catch(error) {
@@ -95,14 +95,14 @@ const updateRepo =async (req, res)=>{
         const formatted_new_repo = await repoQuery.queryReposByID(user_id, new_repo.id);
         formatted_new_repo.user_name = user.user_name;
 
-        // if(process.env.HOSTING_SITE){
+        if(process.env.HOSTING_SITE){
             if(formatted_new_repo.visibility === 'public'){
                 await algolia.createOrUpdateRepo(formatted_new_repo);
             }
             else if(formatted_new_repo.visibility === 'private' && old_repo.visibility === 'public'){
                 await algolia.deleteRepo(formatted_new_repo.id);
             }
-        // }
+        }
        
         res.status(200).send(formatted_new_repo);
     } catch (error) {
