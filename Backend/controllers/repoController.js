@@ -39,7 +39,7 @@ const createRepo = async (req, res, next) => {
         repo.user_name = user.user_name;
 
         try {
-            if(process.env.HOSTING_SITE && repo.visibility == 'public')
+            // if(process.env.HOSTING_SITE && repo.visibility == 'public')
                 await algolia.createOrUpdateRepo(repo);
         }
         catch(error) {
@@ -73,10 +73,10 @@ const updateRepo =async (req, res)=>{
     try {
         const user_id = req.user;
         const validated_params = validateRepoParams(user_id, req.body, 'u');
-        const repo = await repoQuery.queryAllReposOfUser(user_id);
-        const ids = repo.map(data => data.id);
-        const names = repo.map(data=>data.name);
-        const currName= await repoQuery.queryRepoNameOfUser( req.body.id);
+        const repos = await repoQuery.queryAllReposOfUser(user_id);
+        const ids = repos.map(data => data.id);
+        const names = repos.map(data=>data.name);
+        const currName= await repoQuery.queryRepoNameOfUser(req.body.id);
         
         if(!ids.includes(req.body.id)){
             throw Error(`This user does not have a Repository with id  "${req.body.id}".`);
@@ -88,18 +88,21 @@ const updateRepo =async (req, res)=>{
             }
         }
        
+        const old_repo = await repoQuery.queryReposByID(user_id, req.body.id);
         const new_repo = await repoQuery.updateRepoOfUser(validated_params);
+        const user = await repoQuery.getUserFromRepo(new_repo.id);
 
         const formatted_new_repo = await repoQuery.queryReposByID(user_id, new_repo.id);
+        formatted_new_repo.user_name = user.user_name;
 
-        if(process.env.HOSTING_SITE){
-            if(formatted_new_repo.visibility === 'public' && (repo.visibility === 'public' || repo.visibility === 'private')){
+        // if(process.env.HOSTING_SITE){
+            if(formatted_new_repo.visibility === 'public'){
                 await algolia.createOrUpdateRepo(formatted_new_repo);
             }
-            else if(formatted_new_repo.visibility === 'private' && repo.visibility === 'public'){
+            else if(formatted_new_repo.visibility === 'private' && old_repo.visibility === 'public'){
                 await algolia.deleteRepo(formatted_new_repo.id);
             }
-        }
+        // }
        
         res.status(200).send(formatted_new_repo);
     } catch (error) {
