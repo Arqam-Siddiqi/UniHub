@@ -31,10 +31,12 @@ const createRepo = async (req, res, next) => {
         }
 
         const repo = await repoQuery.createRepo(user_id, validated_params);
+        const user = await repoQuery.getUserFromRepo(user_id);
 
         repo.likes = 0;
         repo.num_of_comments = 0;
         repo.liked = false;
+        repo.user_name = user.user_name;
 
         try {
             if(process.env.HOSTING_SITE && repo.visibility == 'public')
@@ -153,9 +155,9 @@ const getRepoByID = async (req, res) => {
             throw Error("This is not a valid UUID.");
         }
 
-        const repos = await repoQuery.queryReposByID(user_id, id);
+        const repo = await repoQuery.queryReposByID(user_id, id);
         
-        res.status(200).send(repos);
+        res.status(200).send(repo);
     }
     catch(error){
         res.status(400).send({"Error": error.message});
