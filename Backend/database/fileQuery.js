@@ -6,7 +6,8 @@ const queryFilesFromRepo = async (repo_id, user_id) => {
         SELECT f.* FROM Files f
         JOIN Repos r ON f.repo_id = r.id
         JOIN Users u ON r.user_id = u.id
-        WHERE f.repo_id = $1 AND (r.visibility = 'public' OR r.user_id = $2);
+        WHERE f.repo_id = $1 AND (r.visibility = 'public' OR r.user_id = $2)
+        ORDER BY created_at DESC;
     `, [repo_id, user_id]);
 
     return files.rows;
