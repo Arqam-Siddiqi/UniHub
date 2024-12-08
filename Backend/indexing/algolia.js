@@ -24,7 +24,7 @@ facultyIndex.setSettings({
 });
 
 roomIndex.setSettings({
-    searchableAttributes: ['name']
+    searchableAttributes: ['room_name']
 });
 
 const createOrUpdateRepo = async (data) => {
