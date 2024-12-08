@@ -75,7 +75,7 @@ const refreshUserCourses = async (req, res, next) => {
                 }
 
                 const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours, assignment.dueTime.minutes);
-                formatted_dueDate.setHours(formatted_dueDate.getHours() + 5);   // Adjusting to PST
+                today.setHours(today.getHours() - 5);
 
                 if(formatted_dueDate < today){
                     break;
