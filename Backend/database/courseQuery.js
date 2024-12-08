@@ -37,6 +37,13 @@ const createAssignment = async (course_id, {title, alternateLink, description, m
     const assignment = await query(`
         INSERT INTO Assignments (course_id, title, link, description, max_points, due_date, created_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ON CONFLICT (link) DO UPDATE
+        SET 
+            title = EXCLUDED.title,
+            description = EXCLUDED.description,
+            max_points = EXCLUDED.max_points,
+            due_date = EXCLUDED.due_date,
+            created_at = EXCLUDED.created_at
         RETURNING *;
     `, [course_id, title, alternateLink, description, maxPoints, dueDate, creationTime]);
     

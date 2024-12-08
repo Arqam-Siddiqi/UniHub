@@ -104,7 +104,7 @@ const dbSetup = async function() {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         course_id UUID REFERENCES Courses(id) ON DELETE CASCADE NOT NULL,
         title VARCHAR(255) NOT NULL,
-        link TEXT NOT NULL,
+        link TEXT NOT NULL UNIQUE,
         description TEXT,
         max_points INT,
         due_date TIMESTAMP NOT NULL,

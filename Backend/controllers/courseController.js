@@ -75,11 +75,12 @@ const refreshUserCourses = async (req, res, next) => {
                 }
 
                 const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours, assignment.dueTime.minutes);
-                
+                formatted_dueDate.setHours(formatted_dueDate.getHours() + 5);   // Adjusting to PST
+
                 if(formatted_dueDate < today){
                     break;
                 }
-                
+
                 assignment.dueDate = formatted_dueDate;
                     
                 const submissions_res = await classroom.courses.courseWork.studentSubmissions.list({
