@@ -88,11 +88,16 @@ const dbSetup = async function() {
 
       CREATE TABLE IF NOT EXISTS Courses (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
         name VARCHAR(255) NOT NULL,
-        link TEXT NOT NULL,
+        link TEXT NOT NULL UNIQUE,
         description TEXT,
-        created_at TIMESTAMP NOT NULL
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS User_Courses (
+        user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+        course_id UUID REFERENCES Courses(id) ON DELETE CASCADE NOT NULL,
+        PRIMARY KEY (user_id, course_id)
       );
 
       CREATE TABLE IF NOT EXISTS Assignments (

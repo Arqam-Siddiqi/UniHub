@@ -13,6 +13,61 @@ const queryFilesFromRepo = async (repo_id, user_id) => {
 
 }
 
+// Used to find all children files of a Folder X.
+// This includes children files that belong to a child folder of Folder X
+const queryFilesByFolder = async (folder_id, user_id) => {
+
+    try {
+        await query('BEGIN');
+
+        const subfolderResult = await client.query(`
+            WITH RECURSIVE Subfolders AS (
+                SELECT folder_id
+                FROM Folders
+                WHERE parent_folder_id = $1
+                UNION ALL
+                SELECT f.folder_id
+                FROM Folders f
+                INNER JOIN Subfolders sf ON f.parent_folder_id = sf.folder_id
+            )
+            SELECT folder_id FROM Subfolders;
+        `, [folder_id]);
+
+        const subfolderIds = subfolderResult.rows.map(row => row.folder_id);
+
+        const allFolderIds = [folder_id, ...subfolderIds];
+
+        const fileResult = await client.query(`
+            SELECT google_file_id 
+            FROM Files 
+            WHERE folder_id = ANY($1);
+        `, [allFolderIds]);
+
+        const fileIds = fileResult.rows.map(row => row.google_file_id);
+
+        if (fileIds.length > 0) {
+            // work on this
+            await deleteFilesFromDrive(fileIds);
+        }
+
+        await client.query(`
+            DELETE FROM Files 
+            WHERE folder_id = ANY($1);
+        `, [allFolderIds]);
+
+        await client.query(`
+            DELETE FROM Folders WHERE folder_id = ANY($1);
+        `, [allFolderIds]);
+
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error during folder deletion:', error);
+        throw error;
+    }
+
+}
+
 const queryFilesByParent = async ({repo_id, folder_id}, user_id) => {
 
     let files;
@@ -109,5 +164,6 @@ module.exports = {
     updateFileByID,
     deleteFileByID,
     queryFileByID,
-    queryFileByIDAndUser
+    queryFileByIDAndUser,
+    queryFilesByFolder
 }

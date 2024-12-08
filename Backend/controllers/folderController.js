@@ -1,4 +1,5 @@
 const folderQuery = require('../database/folderQuery');
+const fileQuery = require('../database/fileQuery');
 const {validateFolderParams} = require('../utils/folderUtils');
 const repoQuery = require('../database/repoQuery');
 
@@ -131,15 +132,21 @@ const deleteFolder = async (req,res)=>{
         
         const user_id=req.user;
         const validated_params = validateFolderParams(req.body, 'd');
+
         const repo=await folderQuery.getFolder(validated_params.id);
         if(repo===undefined){
             throw Error('No such folder present');
         }
+
         let repos=await repoQuery.queryAllReposOfUser(user_id);
-            repos=repos.map(data=>data.id);
-            if(!repos.includes(repo.repo_id)){
-                throw Error(`This repo does not belong to current user".`);
-            }
+        repos=repos.map(data=>data.id);
+        if(!repos.includes(repo.repo_id)){
+            throw Error(`This repo does not belong to current user".`);
+        }
+        
+        const files = await fileQuery.queryFilesByFolder(validated_params.id, user_id);
+        console.log(files);
+
         const folder = await folderQuery.deleteFolder(validated_params);
         res.status(200).send(folder);
     } catch (error) {
