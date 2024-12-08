@@ -144,8 +144,8 @@ const deleteFolder = async (req,res)=>{
             throw Error(`This repo does not belong to current user".`);
         }
         
-        const files = await fileQuery.queryFilesByFolder(validated_params.id, user_id);
-        console.log(files);
+        // const files = await fileQuery.queryFilesByFolder(validated_params.id, user_id);
+        // console.log(files);
 
         const folder = await folderQuery.deleteFolder(validated_params);
         res.status(200).send(folder);
