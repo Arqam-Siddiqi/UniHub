@@ -44,11 +44,11 @@ const refreshUserCourses = async (req, res, next) => {
         const courses_res = await classroom.courses.list({
             courseStates: 'ACTIVE'
         });
+
         const courses = courses_res.data.courses || [];
         
         const today = new Date();
         result = [];
-
         
         for(const course of courses){
             const courseId = course.id;
@@ -82,7 +82,7 @@ const refreshUserCourses = async (req, res, next) => {
                 }
 
                 assignment.dueDate = formatted_dueDate;
-                    
+                
                 const submissions_res = await classroom.courses.courseWork.studentSubmissions.list({
                     courseId,
                     courseWorkId: assignment.id,
@@ -92,13 +92,15 @@ const refreshUserCourses = async (req, res, next) => {
 
                 const hasSubmitted = submissions.some(submission => submission.state === 'TURNED_IN' || submission.state === 'RETURNED');
                 
-                if(!hasSubmitted){  
-                    await courseQuery.createAssignment(course_insert.id, assignment);      
+                if(!hasSubmitted){ 
+                    await courseQuery.createAssignment(course_insert.id, user_id, assignment);      
                 }
                 
             }
 
         }
+
+        await courseQuery.deleteInActiveAssignments();
 
         next();
     }

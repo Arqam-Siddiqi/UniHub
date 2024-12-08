@@ -111,6 +111,12 @@ const dbSetup = async function() {
         created_at TIMESTAMP NOT NULL
       );
 
+      CREATE TABLE IF NOT EXISTS User_Assignments (
+        user_id UUID REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+        assignment_id UUID REFERENCES Assignments(id) ON DELETE CASCADE NOT NULL,
+        PRIMARY KEY (user_id, assignment_id)
+      );
+
       CREATE TABLE IF NOT EXISTS Buildings (
         id INT PRIMARY KEY,
         name VARCHAR(64) NOT NULL UNIQUE  -- e.g., 'CS', 'EE', 'Multi-purpose'
@@ -303,8 +309,8 @@ const mapSetup = async () => {
             INSERT INTO room_types (code, name) VALUES ('OC','Operation center');
             INSERT INTO room_types (code, name) VALUES ('DEP','Department');
             INSERT INTO room_types (code, name) VALUES ('HEAD','Heads');
-  
-  
+            INSERT INTO room_types (code, name) VALUES ('MR','Medical Room');
+
             --select * from room_types;
   
             --EE rooms
@@ -516,7 +522,7 @@ const mapSetup = async () => {
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (149,(SELECT id FROM segments WHERE floor_id=10 and direction='UR'), 'Conference Room', 'CR');
   
   
-            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (150,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Medical room', 'WR');
+            INSERT INTO Rooms  (id,segment_id, name, type) VALUES (150,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Medical room', 'MR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (151,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Male Wash room', 'WR');
             INSERT INTO Rooms  (id,segment_id, name, type) VALUES (152,(SELECT id FROM segments WHERE floor_id=10 and direction='LL'), 'Female Wash room', 'WR');
   
