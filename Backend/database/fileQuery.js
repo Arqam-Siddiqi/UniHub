@@ -16,7 +16,7 @@ const queryFilesFromRepo = async (repo_id, user_id) => {
 
 // Used to find all children files of a Folder X.
 // This includes children files that belong to a child folder of Folder X
-const deleteChildrenByFolder = async (folder_id, user_id) => {
+const deleteChildrenOfFolder = async (folder_id, user_id) => {
 
     // Validate that the folder belongs to a repo owned by the user
     const repoValidationResult = await query(`
@@ -37,7 +37,7 @@ const deleteChildrenByFolder = async (folder_id, user_id) => {
         WITH RECURSIVE Subfolders AS (
             SELECT id
             FROM Folders
-            WHERE parent_id = $1 AND repo_id = $2
+            WHERE id = $1 AND repo_id = $2
 
             UNION ALL
             
@@ -48,10 +48,9 @@ const deleteChildrenByFolder = async (folder_id, user_id) => {
         )
         SELECT id FROM Subfolders;
     `, [folder_id, repo_id]);
-
+    
     // Combine the given folder ID and its subfolder IDs
-    const subfolderIds = subfolderResult.rows.map(row => row.folder_id);
-    const allFolderIds = [folder_id, ...subfolderIds];
+    const allFolderIds = subfolderResult.rows.map(row => row.id);
 
     // Fetch all google_file_ids for files in these folders
     const fileResult = await query(`
@@ -65,8 +64,8 @@ const deleteChildrenByFolder = async (folder_id, user_id) => {
     // Delete all folders (Files will be automatically deleted due to CASCADE)
     await query(`
         DELETE FROM Folders 
-        WHERE id = ANY($1) AND repo_id = $2;
-    `, [subfolderIds, repo_id]);
+        WHERE id = ANY($1) AND repo_id = $2 AND id != $3;
+    `, [allFolderIds, repo_id, folder_id]);
 
     // Return the Google file IDs to the caller
     return fileIds;
@@ -169,5 +168,5 @@ module.exports = {
     deleteFileByID,
     queryFileByID,
     queryFileByIDAndUser,
-    deleteChildrenByFolder
+    deleteChildrenOfFolder
 }

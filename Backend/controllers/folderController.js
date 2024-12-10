@@ -145,7 +145,7 @@ const deleteFolder = async (req,res)=>{
             throw Error(`This repo does not belong to current user".`);
         }
         
-        const fileIds = await fileQuery.deleteChildrenByFolder(validated_params.id, user_id);
+        const fileIds = await fileQuery.deleteChildrenOfFolder(validated_params.id, user_id);
         console.log(fileIds);
 
         await drive.deleteFiles(fileIds);
