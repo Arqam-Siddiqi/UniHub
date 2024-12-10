@@ -313,10 +313,19 @@ async function downloadFileForAnyType(file){
 
 }
 
+async function deleteFiles(fileIds) {
+  
+  const deletionPromises = fileIds.map(fileId => drive.files.delete({ fileId: fileId}));
+
+  await Promise.all(deletionPromises);
+
+}
+
 module.exports = {
     uploadFile,
     downloadFile,
     downloadFileForAnyType,
     deleteFile,
+    deleteFiles,
     authorize
 }

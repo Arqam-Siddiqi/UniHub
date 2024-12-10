@@ -112,8 +112,6 @@ const getFolder = async (id)=>{
     return folders.rows[0];
 }
 
-
-
 const deleteFolder = async ({id})=>{
     const folders = await query(`
         DELETE FROM folders
@@ -123,6 +121,17 @@ const deleteFolder = async ({id})=>{
 
     return folders.rows[0];
 }
+
+const deleteFolders = async(folderIds) => {
+
+    // File children will be automatically deleted by CASCADE.
+    await query(`
+        DELETE FROM Folders
+        WHERE id = ANY($1);
+    `, [folderIds]);
+
+}
+
 module.exports={
     queryAllFolders,
     queryFoldersByRepo,
@@ -131,5 +140,6 @@ module.exports={
     doesRepoOwnFolder,
     getFolder,
     deleteFolder,
-    updateFolder
+    updateFolder,
+    deleteFolders
 }
