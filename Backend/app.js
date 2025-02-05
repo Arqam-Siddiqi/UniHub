@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
-require('dotenv').config();
+require('dotenv').config({override: true});
 const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
