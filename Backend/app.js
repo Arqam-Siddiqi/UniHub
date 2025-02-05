@@ -60,8 +60,8 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/nonAuth', (req, res) => {
-  res.status(200).send({"Message": "non Auth API works."});
+app.get('/', (req, res) => {
+  res.status(200).send({"Root": "Server launched successfully."});
 });
 
 
