@@ -59,14 +59,14 @@ Once your `.env` file is configured, start the backend:
 
 ### Linux/macOS:
 ```sh
-npm install  # Install dependencies
-npm start    # Start the backend
+npm install
+npm start
 ```
 
-### Windows (Command Prompt or PowerShell):
+### Windows:
 ```sh
-npm install  # Install dependencies
-npm start    # Start the backend
+npm install
+npm start
 ```
 
 For any issues, feel free to open a GitHub issue. 🚀
