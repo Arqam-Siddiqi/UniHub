@@ -23,9 +23,15 @@ const folderId = '10iR6YmOikDEkEVqsQK2hvfTGj4dKv4ce';
  */
 async function loadSavedCredentialsIfExist() {
   try {
-    const content = await fs.promises.readFile(TOKEN_PATH);
-    const credentials = JSON.parse(content);
-    return google.auth.fromJSON(credentials);
+    // const content = await fs.promises.readFile(TOKEN_PATH);
+    // const credentials = JSON.parse(content);
+    // return google.auth.fromJSON(credentials);
+    return google.auth.fromJSON({
+      "type": "authorized_user",
+      "client_id": process.env.GOOGLE_CLIENT_ID,
+      "client_secret": process.env.GOOGLE_CLIENT_SECRET,
+      "refresh_token": process.env.GOOGLE_REFRESH_TOKEN
+    });
   } catch (err) {
     return null;
   }
