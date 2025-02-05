@@ -38,10 +38,8 @@ dbSetup()
   })
   .catch((err) => {
       console.log('Error:', err);
-    }
-  );
+  });
 
-app.use
 app.use(express.json());
 
 app.use( 
