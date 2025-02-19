@@ -49,14 +49,14 @@ const refreshUserCourses = async (req, res, next) => {
         
         const today = new Date();
         result = [];
-        
+
         for(const course of courses){
             const courseId = course.id;
-
+            
             if(differenceInMonths(today, new Date(course.creationTime)) >= 5){
                 continue;
             }
-            
+        
             const course_insert = await courseQuery.createCourse(user_id, course);
 
             const assignments_res = await classroom.courses.courseWork.list({
@@ -64,7 +64,6 @@ const refreshUserCourses = async (req, res, next) => {
                 orderBy: 'dueDate desc'
             });
 
-            
             // the scope for coursework only has .me in it???
             const assignments = assignments_res.data.courseWork || [];
             
@@ -74,7 +73,8 @@ const refreshUserCourses = async (req, res, next) => {
                     continue;
                 }
 
-                const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours, assignment.dueTime.minutes);
+                const formatted_dueDate = new Date(assignment.dueDate.year, assignment.dueDate.month - 1, assignment.dueDate.day, assignment.dueTime.hours || 0, assignment.dueTime.minutes || 0);
+                
                 today.setHours(today.getHours() - 5);
 
                 if(formatted_dueDate < today){
@@ -93,7 +93,7 @@ const refreshUserCourses = async (req, res, next) => {
                 const hasSubmitted = submissions.some(submission => submission.state === 'TURNED_IN' || submission.state === 'RETURNED');
                 
                 if(!hasSubmitted){ 
-                    await courseQuery.createAssignment(course_insert.id, user_id, assignment);      
+                    await courseQuery.createAssignment(course_insert.id, user_id, assignment);
                 }
                 
             }
