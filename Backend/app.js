@@ -23,7 +23,7 @@ const {insertAllFaculty, insertAllRooms} = require('./indexing/algolia');
 const app = express();
 
 app.use(cors({
-  origin: 'https://unihub-frontend.vercel.app',
+  origin: ['https://unihub-frontend.vercel.app', 'http://localhost:3000'],
   credentials: true
 }));
 
