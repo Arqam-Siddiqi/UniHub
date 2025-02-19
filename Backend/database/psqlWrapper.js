@@ -2,7 +2,7 @@ const Pool = require("pg").Pool;
 
 let pool;
 
-if(true){
+if(process.env.HOSTING_SITE){
   pool = new Pool({
     connectionString: process.env.SUPABASE_DB
   });
