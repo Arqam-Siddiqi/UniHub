@@ -89,7 +89,7 @@ const queryUserCourses = async (user_id) => {
         ) -- Ensures assignments are tied to the course
         LEFT JOIN Assignments a ON ua.assignment_id = a.id -- Include assignments only if they exist
         WHERE uc.user_id = $1
-        ORDER BY c.name, a.due_date;
+        ORDER BY a.due_date, c.name;
     `, [user_id]);
     
     return courses.rows;
